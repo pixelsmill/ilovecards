@@ -1,0 +1,53 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# next.js
+.next/
+out/
+build/
+dist/
+
+# production
+*.tsbuildinfo
+next-env.d.ts
+
+# environments
+.env
+.env*.local
+.env.development
+.env.production
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# testing
+coverage/
+.nyc_output/
+
+# bmad — on garde .bmad-core/ versionné mais on ignore les artefacts runtime
+.bmad-cache/
+
+# turbo
+.turbo
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo

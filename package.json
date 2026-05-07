@@ -1,0 +1,20 @@
+{
+  "name": "markdeck",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Le pont entre la production de l'IA et ta mémoire à toi. Un Skill Cowork qui transforme un fichier Markdown en cartes belles et révisables, et une PWA mobile qui te les fait intérioriser au fil du temps.",
+  "author": "Hubert <uberblooo@gmail.com>",
+  "license": "UNLICENSED",
+  "scripts": {
+    "dev": "echo \"Le scaffold Next.js viendra avec la première story BMAD.\" && exit 1"
+  },
+  "keywords": [
+    "spaced-repetition",
+    "markdown",
+    "flashcards",
+    "memory",
+    "tools-for-thought",
+    "cowork",
+    "skill"
+  ]
+}
