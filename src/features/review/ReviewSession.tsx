@@ -3,7 +3,7 @@
 import { useReducer } from "react"
 import Link from "next/link"
 import CardRenderer from "@/components/card-renderer/CardRenderer"
-import GestureHandler from "./GestureHandler"
+import SwipeCard from "./SwipeCard"
 
 interface ReviewCard {
   id: string
@@ -26,6 +26,7 @@ interface SessionState {
 type SessionAction =
   | { type: "PASS" }
   | { type: "FLIP" }
+  | { type: "UNFLIP" }
   | { type: "DISMISS" }
   | { type: "FAILED" }
 
@@ -35,6 +36,9 @@ function sessionReducer(state: SessionState, action: SessionAction): SessionStat
   switch (action.type) {
     case "FLIP":
       return { ...state, side: "verso" }
+
+    case "UNFLIP":
+      return { ...state, side: "recto" }
 
     case "PASS": {
       const next = [...rest, current]
@@ -80,6 +84,7 @@ export default function ReviewSession({ initialCards }: Props) {
     switch (direction) {
       case "left":
         if (state.side === "recto") dispatch({ type: "PASS" })
+        else dispatch({ type: "UNFLIP" })
         break
       case "right":
         if (state.side === "recto") dispatch({ type: "FLIP" })
@@ -119,53 +124,53 @@ export default function ReviewSession({ initialCards }: Props) {
   }
 
   return (
-    <GestureHandler onGesture={handleGesture}>
-      <main className="h-dvh bg-zinc-950 flex flex-col select-none">
-        {/* Progress bar */}
-        <div className="flex-shrink-0 h-0.5 bg-zinc-800">
-          <div
-            className="h-full transition-all duration-500"
-            style={{ width: `${progress}%`, backgroundColor: current.deck.accentColor }}
-          />
-        </div>
+    <main className="h-dvh bg-zinc-950 flex flex-col select-none">
+      {/* Progress bar */}
+      <div className="flex-shrink-0 h-0.5 bg-zinc-800">
+        <div
+          className="h-full transition-all duration-500"
+          style={{ width: `${progress}%`, backgroundColor: current.deck.accentColor }}
+        />
+      </div>
 
-        {/* Top bar */}
-        <div className="flex-shrink-0 flex items-center justify-between px-4 py-3">
-          <span className="text-zinc-500 text-xs">
-            {state.cards.length} restante{state.cards.length !== 1 ? "s" : ""}
-          </span>
-          <Link href="/dashboard" className="text-zinc-600 text-xs hover:text-zinc-400 transition-colors">
-            Terminer
-          </Link>
-        </div>
+      {/* Top bar */}
+      <div className="flex-shrink-0 flex items-center justify-between px-4 py-3">
+        <span className="text-zinc-500 text-xs">
+          {state.cards.length} restante{state.cards.length !== 1 ? "s" : ""}
+        </span>
+        <Link href="/dashboard" className="text-zinc-600 text-xs hover:text-zinc-400 transition-colors">
+          Terminer
+        </Link>
+      </div>
 
-        {/* Card area */}
-        <div className="flex-1 flex items-center justify-center px-4">
+      {/* Card area — SwipeCard fills this zone */}
+      <div className="flex-1 flex items-center justify-center px-4 overflow-hidden">
+        <SwipeCard key={current.id} onSwipe={handleGesture} side={state.side}>
           <CardRenderer
-            key={current.id}
             card={current}
             size="full"
             flipped={state.side === "verso"}
             accentColor={current.deck.accentColor}
           />
-        </div>
+        </SwipeCard>
+      </div>
 
-        {/* Gesture hints */}
-        <div className="flex-shrink-0 flex justify-center gap-6 py-4 text-zinc-700 text-xs">
-          {state.side === "recto" ? (
-            <>
-              <span>← passer</span>
-              <span>→ retourner</span>
-              <span>↑ maîtrisé</span>
-            </>
-          ) : (
-            <>
-              <span>↑ maîtrisé</span>
-              <span>↓ à revoir</span>
-            </>
-          )}
-        </div>
-      </main>
-    </GestureHandler>
+      {/* Gesture hints */}
+      <div className="flex-shrink-0 flex justify-center gap-6 py-4 text-zinc-700 text-xs">
+        {state.side === "recto" ? (
+          <>
+            <span>← passer</span>
+            <span>→ retourner</span>
+            <span>↑ maîtrisé</span>
+          </>
+        ) : (
+          <>
+            <span>← retour</span>
+            <span>↑ maîtrisé</span>
+            <span>↓ à revoir</span>
+          </>
+        )}
+      </div>
+    </main>
   )
 }
