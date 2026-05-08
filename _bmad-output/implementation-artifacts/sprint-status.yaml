@@ -50,8 +50,8 @@ development_status:
   # ─────────────────────────────────────────────
   epic-1: in-progress
   1-1-initialisation-du-projet-et-deploiement-continu: done
-  1-2-base-de-donnees-et-schema-auth: backlog
-  1-3-authentification-magic-link: backlog
+  1-2-base-de-donnees-et-schema-auth: done
+  1-3-authentification-magic-link: in-progress
   1-4-gestion-du-compte-suppression-et-export: backlog
   epic-1-retrospective: optional
 

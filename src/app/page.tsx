@@ -1,7 +1,8 @@
-export default function HomePage() {
-  return (
-    <div className="flex min-h-screen items-center justify-center">
-      <h1 className="text-2xl font-semibold text-zinc-800">ilovecards</h1>
-    </div>
-  )
+import { redirect } from "next/navigation"
+import { auth } from "@/lib/auth"
+
+export default async function HomePage() {
+  const session = await auth()
+  if (session) redirect("/dashboard")
+  redirect("/login")
 }

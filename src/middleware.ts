@@ -1,9 +1,16 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { auth } from "@/lib/auth"
 
-// Stub minimal — sera remplacé en story 1.3 avec Auth.js v5
-export default function middleware(_request: NextRequest) {
-  return NextResponse.next()
+export default auth((req) => {
+  const isAuthenticated = !!req.auth
+  const isAuthRoute = req.nextUrl.pathname.startsWith("/login") ||
+    req.nextUrl.pathname.startsWith("/verify") ||
+    req.nextUrl.pathname.startsWith("/api/auth")
+
+  if (!isAuthenticated && !isAuthRoute) {
+    return Response.redirect(new URL("/login", req.url))
+  }
+})
+
+export const config = {
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 }
-
-export const config = { matcher: ['/app/:path*', '/api/:path*'] }
