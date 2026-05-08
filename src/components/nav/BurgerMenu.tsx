@@ -6,10 +6,10 @@ import Link from "next/link"
 import { signOut } from "next-auth/react"
 
 const NAV = [
-  { href: "/dashboard", label: "Dashboard", num: "01" },
-  { href: "/review",    label: "Réviser",   num: "02" },
-  { href: "/decks",     label: "Mes decks", num: "03" },
-  { href: "/import",    label: "Import IA", num: "04" },
+  { href: "/dashboard", label: "Dashboard",  num: "01" },
+  { href: "/review",    label: "Réviser",    num: "02" },
+  { href: "/decks",     label: "Mes decks",  num: "03" },
+  { href: "/import",    label: "Import IA",  num: "04" },
   { href: "/account",   label: "Mon compte", num: "05" },
 ]
 
@@ -36,11 +36,11 @@ export default function BurgerMenu({ userEmail }: Props) {
 
   return (
     <>
-      {/* Trigger */}
+      {/* Trigger — inline in TopBar, pas fixed */}
       <button
         onClick={() => setOpen(v => !v)}
-        className="fixed top-4 right-4 z-50 w-10 h-10 rounded-xl flex items-center justify-center"
-        style={{ backgroundColor: open ? '#FBF9F4' : '#1A1814' }}
+        className="w-10 h-10 flex items-center justify-center rounded-lg"
+        style={{ backgroundColor: open ? '#FBF9F4' : 'transparent' }}
         aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
       >
         <span className="flex flex-col gap-[5px] w-[18px]">
@@ -67,7 +67,7 @@ export default function BurgerMenu({ userEmail }: Props) {
         onClick={() => setOpen(false)}
         className="fixed inset-0 z-40 transition-opacity duration-300"
         style={{
-          backgroundColor: 'rgba(26,24,20,0.4)',
+          backgroundColor: 'rgba(26,24,20,0.5)',
           opacity: open ? 1 : 0,
           pointerEvents: open ? 'auto' : 'none',
         }}
@@ -78,26 +78,25 @@ export default function BurgerMenu({ userEmail }: Props) {
         className="fixed top-0 right-0 bottom-0 z-40 flex flex-col transition-transform duration-300 ease-[cubic-bezier(0.25,1,0.5,1)]"
         style={{
           backgroundColor: '#1A1814',
-          width: 'min(340px, 90vw)',
+          width: 'min(320px, 88vw)',
           transform: open ? 'translateX(0)' : 'translateX(100%)',
           pointerEvents: open ? 'auto' : 'none',
         }}
       >
-        {/* Top spacer for burger button */}
-        <div className="h-16 flex-shrink-0" />
+        <div className="h-14 flex-shrink-0" />
 
-        {/* Nav items */}
         <nav className="flex-1 flex flex-col justify-center px-10 gap-1">
           {NAV.map((item, i) => {
-            const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
+            const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href + "/"))
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="group flex items-baseline gap-4 py-3 border-b border-white/8 transition-opacity duration-200 hover:opacity-100"
+                className="flex items-baseline gap-4 py-3"
                 style={{
-                  opacity: isActive ? 1 : (open ? 0.55 : 0),
+                  borderBottom: '1px solid rgba(251,249,244,0.07)',
+                  opacity: open ? (isActive ? 1 : 0.5) : 0,
                   transform: open ? 'none' : 'translateY(12px)',
                   transition: `opacity 0.35s ${i * 55}ms, transform 0.35s ${i * 55}ms`,
                 }}
@@ -122,7 +121,6 @@ export default function BurgerMenu({ userEmail }: Props) {
           })}
         </nav>
 
-        {/* Footer */}
         <div
           className="flex-shrink-0 px-10 pb-10 flex items-center justify-between"
           style={{
@@ -137,7 +135,7 @@ export default function BurgerMenu({ userEmail }: Props) {
           )}
           <button
             onClick={() => signOut({ callbackUrl: '/login' })}
-            className="text-[11px] transition-colors hover:opacity-80 ml-auto"
+            className="text-[11px] hover:opacity-80 transition-opacity ml-auto"
             style={{ color: '#6B6356' }}
           >
             Déconnexion

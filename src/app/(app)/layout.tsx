@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation"
 import { auth } from "@/lib/auth"
-import BurgerMenu from "@/components/nav/BurgerMenu"
+import TopBar from "@/components/nav/TopBar"
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const session = await auth()
@@ -8,8 +8,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <>
-      <BurgerMenu userEmail={session.user?.email ?? null} />
-      {children}
+      <TopBar userEmail={session.user?.email ?? null} />
+      <div className="pt-14">{children}</div>
     </>
   )
 }

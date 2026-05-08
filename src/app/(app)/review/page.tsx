@@ -34,7 +34,7 @@ export default async function ReviewPage({
 
   if (cards.length === 0) {
     return (
-      <main className="h-dvh bg-zinc-700 flex flex-col items-center justify-center gap-6 px-6">
+      <main className="h-[calc(100dvh-3.5rem)] bg-zinc-700 flex flex-col items-center justify-center gap-6 px-6">
         <div className="text-center space-y-2">
           <p className="text-4xl">🎉</p>
           <p className="text-white text-xl font-semibold">Rien à réviser aujourd&apos;hui !</p>

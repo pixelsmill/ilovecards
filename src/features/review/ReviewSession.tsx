@@ -89,7 +89,7 @@ export default function ReviewSession({ initialCards }: Props) {
 
   if (!current) {
     return (
-      <main className="h-dvh bg-zinc-700 flex flex-col items-center justify-center gap-6 px-6">
+      <main className="h-[calc(100dvh-3.5rem)] bg-zinc-700 flex flex-col items-center justify-center gap-6 px-6">
         <div className="text-center space-y-2">
           <p className="text-4xl">✓</p>
           <p className="text-white text-xl font-semibold">Session terminée</p>
@@ -108,7 +108,7 @@ export default function ReviewSession({ initialCards }: Props) {
   }
 
   return (
-    <main className="h-dvh bg-zinc-700 flex flex-col select-none">
+    <main className="h-[calc(100dvh-3.5rem)] bg-zinc-700 flex flex-col select-none">
       {/* Progress bar */}
       <div className="flex-shrink-0 h-0.5 bg-zinc-600">
         <div
