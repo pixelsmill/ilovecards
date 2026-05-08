@@ -20,8 +20,8 @@ export default async function DeckDetailPage({ params }: { params: Promise<{ id:
     <main className="min-h-screen bg-zinc-50 px-4 py-8">
       <div className="max-w-2xl mx-auto space-y-6">
         <div className="space-y-1">
-          <Link href="/dashboard" className="text-sm text-zinc-400 hover:text-zinc-600 transition-colors">
-            ← Dashboard
+          <Link href="/decks" className="text-sm text-zinc-400 hover:text-zinc-600 transition-colors">
+            ← Mes decks
           </Link>
           <div className="flex items-center gap-3">
             <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: deck.accentColor }} />
@@ -72,10 +72,6 @@ export default async function DeckDetailPage({ params }: { params: Promise<{ id:
             </div>
           )}
         </div>
-
-        <Link href="/decks" className="block text-sm text-zinc-400 hover:text-zinc-600 transition-colors">
-          ← Mes decks
-        </Link>
       </div>
     </main>
   )

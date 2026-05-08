@@ -4,41 +4,40 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import ImportFlow from "@/features/extraction/ImportFlow"
 
+const MS_PER_DAY = 86_400_000
+const MAX_CREDITS = 30
+
 export default async function ImportPage({ searchParams }: { searchParams: Promise<{ deckId?: string }> }) {
   const session = await auth()
   if (!session?.user?.id) redirect("/login")
 
   const { deckId } = await searchParams
 
-  const decks = await prisma.deck.findMany({
-    where: { userId: session.user.id },
-    select: { id: true, name: true, accentColor: true },
-    orderBy: { createdAt: "desc" },
-  })
+  const [decks, user] = await Promise.all([
+    prisma.deck.findMany({
+      where: { userId: session.user.id },
+      select: { id: true, name: true, accentColor: true },
+      orderBy: { createdAt: "desc" },
+    }),
+    prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { aiCredits: true, lastCreditAt: true },
+    }),
+  ])
 
-  if (decks.length === 0) {
-    return (
-      <main className="min-h-screen bg-zinc-50 px-4 py-8">
-        <div className="max-w-sm mx-auto text-center space-y-4 py-12">
-          <p className="text-zinc-500 text-sm">Crée d&apos;abord un deck pour pouvoir importer des cartes.</p>
-          <Link href="/decks/new" className="inline-block rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-zinc-700 transition-colors">
-            Créer un deck
-          </Link>
-        </div>
-      </main>
-    )
-  }
+  const daysSince = user ? Math.floor((Date.now() - user.lastCreditAt.getTime()) / MS_PER_DAY) : 0
+  const credits = user ? Math.min(MAX_CREDITS, user.aiCredits + daysSince) : 0
 
   return (
     <main className="min-h-screen bg-zinc-50 px-4 py-8">
       <div className="max-w-md mx-auto space-y-6">
         <div className="space-y-1">
-          <h1 className="text-xl font-bold tracking-tight">Import IA</h1>
+          <h1 className="text-xl font-bold tracking-tight">Générer des cartes</h1>
           <Link href="/dashboard" className="text-sm text-zinc-400 hover:text-zinc-600 transition-colors">
             ← Dashboard
           </Link>
         </div>
-        <ImportFlow decks={decks} defaultDeckId={deckId} />
+        <ImportFlow decks={decks} defaultDeckId={deckId} credits={credits} />
       </div>
     </main>
   )

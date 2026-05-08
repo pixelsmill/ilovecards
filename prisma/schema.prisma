@@ -17,6 +17,8 @@ model User {
   accounts      Account[]
   sessions      Session[]
   decks         Deck[]
+  aiCredits     Int       @default(30)
+  lastCreditAt  DateTime  @default(now())
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }

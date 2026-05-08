@@ -55,24 +55,15 @@ export default function CardRenderer({ card, size, flipped = false, accentColor 
           <TemplateComponent notion={card.notion} accentColor={accentColor} size={size} />
           {showLabel && (
             <div
-              className="absolute top-3 left-3 flex items-center gap-1.5 rounded-full pointer-events-none select-none"
-              style={{
-                background: 'rgba(0,0,0,0.28)',
-                backdropFilter: 'blur(6px)',
-                padding: size === 'full' ? '4px 10px' : '2px 7px',
-              }}
+              className={`absolute top-3 left-3 flex items-center gap-1.5 pointer-events-none select-none ${size === 'thumb' ? 'top-1.5 left-1.5' : ''}`}
             >
               <div
-                className="rounded-full flex-shrink-0"
-                style={{
-                  backgroundColor: accentColor,
-                  width: size === 'full' ? '6px' : '4px',
-                  height: size === 'full' ? '6px' : '4px',
-                }}
+                className={`rounded-full flex-shrink-0 ${size === 'thumb' ? 'w-1 h-1' : size === 'full' ? 'w-2.5 h-2.5' : 'w-1.5 h-1.5'}`}
+                style={{ backgroundColor: '#ffffff' }}
               />
               <span
-                className="text-white font-medium tracking-wide truncate max-w-[120px]"
-                style={{ fontSize: size === 'full' ? '10px' : '7px' }}
+                className={`text-white uppercase tracking-widest truncate max-w-[120px] ${size === 'thumb' ? 'text-[3px]' : size === 'full' ? 'text-[10px]' : 'text-[5px]'}`}
+                style={{ fontWeight: 500 }}
               >
                 {deckName}
               </span>
