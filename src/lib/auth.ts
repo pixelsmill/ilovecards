@@ -1,21 +1,10 @@
 import NextAuth from "next-auth"
 import { PrismaAdapter } from "@auth/prisma-adapter"
-import Resend from "next-auth/providers/resend"
+import { authConfig } from "./auth.config"
 import { prisma } from "@/lib/prisma"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  trustHost: true,
+  ...authConfig,
   adapter: PrismaAdapter(prisma),
   session: { strategy: "database" },
-  providers: [
-    Resend({
-      apiKey: process.env.AUTH_RESEND_KEY,
-      from: "onboarding@resend.dev",
-    }),
-  ],
-  pages: {
-    signIn: "/login",
-    verifyRequest: "/verify",
-    error: "/login",
-  },
 })

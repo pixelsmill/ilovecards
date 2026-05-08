@@ -1,8 +1,12 @@
-import { auth } from "@/lib/auth"
+import NextAuth from "next-auth"
+import { authConfig } from "@/lib/auth.config"
+
+const { auth } = NextAuth(authConfig)
 
 export default auth((req) => {
   const isAuthenticated = !!req.auth
-  const isAuthRoute = req.nextUrl.pathname.startsWith("/login") ||
+  const isAuthRoute =
+    req.nextUrl.pathname.startsWith("/login") ||
     req.nextUrl.pathname.startsWith("/verify") ||
     req.nextUrl.pathname.startsWith("/api/auth")
 
