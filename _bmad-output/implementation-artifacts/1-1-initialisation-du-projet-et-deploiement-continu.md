@@ -1,6 +1,6 @@
 # Story 1.1 : Initialisation du projet & déploiement continu
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
@@ -70,14 +70,13 @@ afin que chaque story soit validée dans un vrai environnement dès le premier j
   - [x] Warning middleware déprécié (Next.js 16 : proxy vs middleware) — non bloquant, à corriger en story 1.3
   - [ ] `npm run dev` — à vérifier par l'utilisateur
 
-- [ ] Déploiement Vercel (AC: 7, 8) — NÉCESSITE ACTION UTILISATEUR
-  - [ ] Créer le repo GitHub `ilovecards` (public ou privé) sur github.com
-  - [ ] `git remote add origin https://github.com/<USERNAME>/ilovecards.git`
-  - [ ] `git push -u origin main`
-  - [ ] Connecter le repo à Vercel (nouveau projet sur vercel.com)
-  - [ ] Configurer les variables d'environnement dans Vercel (DATABASE_URL, NEXTAUTH_SECRET, AUTH_RESEND_KEY, ANTHROPIC_API_KEY)
-  - [ ] Vérifier que le premier déploiement réussit
-  - [ ] Ajouter `console.error("Test Vercel logs - story 1.1")` temporaire dans `src/app/page.tsx`, pusher, vérifier dans les logs Vercel, puis le retirer
+- [x] Déploiement Vercel (AC: 7, 8)
+  - [x] Repo GitHub : https://github.com/pixelsmill/ilovecards
+  - [x] Remote origin configuré + push
+  - [x] Vercel connecté — https://ilovecards.vercel.app/ (Ready, ~32s)
+  - [x] Variables d'environnement configurées dans Vercel
+  - [x] Premier déploiement réussi
+  - [x] console.error("Test Vercel logs - story 1.1") ajouté, déployé, vérifié dans logs Vercel, retiré
 
 ## Dev Notes
 

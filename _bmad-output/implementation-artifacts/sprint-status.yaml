@@ -49,7 +49,7 @@ development_status:
   # FRs: FR1, FR2, FR3, FR4, FR33, FR34
   # ─────────────────────────────────────────────
   epic-1: in-progress
-  1-1-initialisation-du-projet-et-deploiement-continu: in-progress
+  1-1-initialisation-du-projet-et-deploiement-continu: done
   1-2-base-de-donnees-et-schema-auth: backlog
   1-3-authentification-magic-link: backlog
   1-4-gestion-du-compte-suppression-et-export: backlog
