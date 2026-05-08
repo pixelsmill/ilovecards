@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation"
 import Link from "next/link"
-import { auth } from "@/lib/auth"
+import { auth, signOut } from "@/lib/auth"
 import DeleteAccountButton from "./DeleteAccountButton"
 
 export default async function AccountPage() {
@@ -24,6 +24,15 @@ export default async function AccountPage() {
           >
             Exporter mes données
           </a>
+        </div>
+
+        <div className="space-y-3">
+          <h2 className="text-sm font-medium text-zinc-700">Session</h2>
+          <form action={async () => { "use server"; await signOut({ redirectTo: "/login" }) }}>
+            <button type="submit" className="w-full rounded-lg border border-zinc-200 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 transition-colors">
+              Se déconnecter
+            </button>
+          </form>
         </div>
 
         <div className="space-y-3">
