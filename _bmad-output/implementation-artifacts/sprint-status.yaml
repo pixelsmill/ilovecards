@@ -72,10 +72,10 @@ development_status:
   # Un utilisateur peut réviser ses cartes dues avec des gestes et l'algorithme SM-2.
   # FRs: FR20, FR21, FR22, FR23, FR24, FR25, FR26, FR27
   # ─────────────────────────────────────────────
-  epic-3: backlog
-  3-1-moteur-sm2-fonction-pure-et-tests: backlog
-  3-2-session-de-revision-affichage-et-navigation: backlog
-  3-3-session-de-revision-notation-et-persistance-sm2: backlog
+  epic-3: done
+  3-1-moteur-sm2-fonction-pure-et-tests: done
+  3-2-session-de-revision-affichage-et-navigation: done
+  3-3-session-de-revision-notation-et-persistance-sm2: done
   epic-3-retrospective: optional
 
   # ─────────────────────────────────────────────

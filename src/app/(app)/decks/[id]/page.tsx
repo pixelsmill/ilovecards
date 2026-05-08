@@ -28,8 +28,14 @@ export default async function DeckDetailPage({ params }: { params: Promise<{ id:
 
         <div className="flex gap-2 flex-wrap">
           <Link
-            href={`/decks/${id}/cards/new`}
+            href="/review"
             className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-700 transition-colors"
+          >
+            Réviser
+          </Link>
+          <Link
+            href={`/decks/${id}/cards/new`}
+            className="rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 transition-colors"
           >
             + Nouvelle carte
           </Link>
