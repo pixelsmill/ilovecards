@@ -21,6 +21,7 @@ function stripHtml(html: string): string {
 export async function POST(req: Request) {
   const session = await auth()
   if (!session?.user?.id) return apiError("Non authentifié", "UNAUTHORIZED", 401)
+  const userId = userId
 
   const formData = await req.formData().catch(() => null)
   if (!formData) return apiError("Données invalides", "INVALID_INPUT", 400)
@@ -34,7 +35,7 @@ export async function POST(req: Request) {
 
   // Credit check + daily refill
   const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
+    where: { id: userId },
     select: { aiCredits: true, lastCreditAt: true },
   })
   if (!user) return apiError("Utilisateur introuvable", "UNAUTHORIZED", 401)
@@ -43,7 +44,7 @@ export async function POST(req: Request) {
   const refilled = Math.min(MAX_CREDITS, user.aiCredits + daysSince)
   if (daysSince > 0) {
     await prisma.user.update({
-      where: { id: session.user.id },
+      where: { id: userId },
       data: { aiCredits: refilled, lastCreditAt: new Date() },
     })
   }
@@ -140,7 +141,7 @@ export async function POST(req: Request) {
         // Deduct credits and send usage info
         const creditsLeft = Math.max(0, currentCredits - cardCount)
         await prisma.user.update({
-          where: { id: session.user.id },
+          where: { id: userId },
           data: { aiCredits: { decrement: cardCount } },
         })
         controller.enqueue(encoder.encode(JSON.stringify({ _usage: { cardsGenerated: cardCount, creditsLeft } }) + "\n"))
