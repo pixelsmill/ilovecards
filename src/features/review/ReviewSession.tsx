@@ -118,13 +118,10 @@ export default function ReviewSession({ initialCards }: Props) {
       </div>
 
       {/* Top bar */}
-      <div className="flex-shrink-0 flex items-center justify-between px-4 py-3">
+      <div className="flex-shrink-0 flex items-center px-4 py-3 pr-16">
         <span className="text-zinc-400 text-xs">
           {state.index + 1} / {state.cards.length}
         </span>
-        <Link href="/dashboard" className="text-zinc-500 text-xs hover:text-zinc-300 transition-colors">
-          Terminer
-        </Link>
       </div>
 
       {/* Card area */}
