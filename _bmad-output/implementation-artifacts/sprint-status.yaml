@@ -1,5 +1,5 @@
 # generated: 2026-05-07
-# last_updated: 2026-05-07
+# last_updated: 2026-05-08
 # project: ilovecards
 # project_key: NOKEY
 # tracking_system: file-system
@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-05-07
-last_updated: 2026-05-07
+last_updated: 2026-05-08
 project: ilovecards
 project_key: NOKEY
 tracking_system: file-system
@@ -60,11 +60,11 @@ development_status:
   # Un utilisateur peut créer des decks et des cartes avec 8 templates visuels.
   # FRs: FR5, FR6, FR7, FR8, FR9, FR10, FR11, FR12, FR13
   # ─────────────────────────────────────────────
-  epic-2: in-progress
-  2-1-creation-et-gestion-des-decks: in-progress
-  2-2-composant-cardrenderer-et-8-templates-css: backlog
-  2-3-creation-dune-carte-avec-selecteur-de-template: backlog
-  2-4-modification-et-suppression-de-cartes: backlog
+  epic-2: done
+  2-1-creation-et-gestion-des-decks: done
+  2-2-composant-cardrenderer-et-8-templates-css: done
+  2-3-creation-dune-carte-avec-selecteur-de-template: done
+  2-4-modification-et-suppression-de-cartes: done
   epic-2-retrospective: optional
 
   # ─────────────────────────────────────────────

@@ -1,6 +1,6 @@
 # Story 2.1 : Création et gestion des decks
 
-Status: in-progress
+Status: done
 
 ## Story
 

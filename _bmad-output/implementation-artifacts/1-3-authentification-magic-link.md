@@ -1,6 +1,6 @@
 # Story 1.3 : Authentification magic link
 
-Status: in-progress
+Status: done
 
 ## Story
 
@@ -21,31 +21,31 @@ afin d'accéder à ilovecards sans mot de passe.
 
 ## Tasks / Subtasks
 
-- [ ] Upgrader next-auth v4 → v5 (AC: 6)
-  - [ ] `npm install next-auth@5`
-  - [ ] Vérifier que `@auth/prisma-adapter` est toujours compatible
+- [x] Upgrader next-auth v4 → v5 (AC: 6)
+  - [x] `npm install next-auth@5`
+  - [x] Vérifier que `@auth/prisma-adapter` est toujours compatible
 
-- [ ] Créer `src/lib/auth.ts` (AC: 6, 8)
-  - [ ] Config NextAuth avec PrismaAdapter, strategy database, provider Resend
+- [x] Créer `src/lib/auth.ts` (AC: 6, 8)
+  - [x] Config NextAuth avec PrismaAdapter, strategy database, provider Resend
 
-- [ ] Créer le route handler Auth.js (AC: 7)
-  - [ ] `src/app/api/auth/[...nextauth]/route.ts`
+- [x] Créer le route handler Auth.js (AC: 7)
+  - [x] `src/app/api/auth/[...nextauth]/route.ts`
 
-- [ ] Créer la page de login (AC: 1, 2)
-  - [ ] `src/app/(auth)/login/page.tsx` — formulaire email + Server Action signIn
-  - [ ] `src/app/(auth)/verify/page.tsx` — "Vérifiez votre email"
+- [x] Créer la page de login (AC: 1, 2)
+  - [x] `src/app/(auth)/login/page.tsx` — formulaire email + Server Action signIn
+  - [x] `src/app/(auth)/verify/page.tsx` — "Vérifiez votre email"
 
-- [ ] Mettre à jour le middleware (AC: 5)
-  - [ ] `src/middleware.ts` — Auth.js v5, protège tout sauf login/verify/api/auth
+- [x] Mettre à jour le middleware (AC: 5)
+  - [x] `src/middleware.ts` — Auth.js v5, protège tout sauf login/verify/api/auth
 
-- [ ] Mettre à jour la page root (AC: 3, 5)
-  - [ ] `src/app/page.tsx` — redirect vers /dashboard si auth, /login sinon
+- [x] Mettre à jour la page root (AC: 3, 5)
+  - [x] `src/app/page.tsx` — redirect vers /dashboard si auth, /login sinon
 
-- [ ] Mettre à jour `src/app/(app)/layout.tsx` (AC: 5)
-  - [ ] Vérifier session côté serveur, redirect si non auth
+- [x] Mettre à jour `src/app/(app)/layout.tsx` (AC: 5)
+  - [x] Vérifier session côté serveur, redirect si non auth
 
-- [ ] Vérifier le build (AC: tous)
-  - [ ] `npm run build` sans erreur
+- [x] Vérifier le build (AC: tous)
+  - [x] `npm run build` sans erreur
 
 ## Dev Notes
 

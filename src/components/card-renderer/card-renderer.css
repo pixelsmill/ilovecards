@@ -1,0 +1,54 @@
+/* Card Renderer — flip animation & size variants */
+
+.card-renderer {
+  display: block;
+  flex-shrink: 0;
+  perspective: 1000px;
+  overflow: hidden;
+}
+
+.card-renderer--thumb {
+  width: 72px;
+  height: 112px;
+  border-radius: 6px;
+}
+
+.card-renderer--preview {
+  width: 180px;
+  height: 280px;
+  border-radius: 10px;
+}
+
+.card-renderer--full {
+  height: 85svh;
+  width: min(calc(85svh * 9 / 14), calc(100vw - 2rem));
+  border-radius: 16px;
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+.card-inner.flipped {
+  transform: rotateY(180deg);
+}
+
+.card-face,
+.card-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.card-back {
+  transform: rotateY(180deg);
+}
