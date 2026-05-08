@@ -5,11 +5,11 @@ completedAt: '2026-05-07'
 inputDocuments: ['_bmad-output/planning-artifacts/prd.md', '_bmad-output/planning-artifacts/architecture.md']
 ---
 
-# Markdeck - Epic Breakdown
+# ilovecards - Epic Breakdown
 
 ## Overview
 
-Ce document décompose les exigences du PRD et de l'Architecture en epics et stories implémentables pour Markdeck — une PWA mobile-first de répétition espacée avec templates visuels et navigation gestuelle.
+Ce document décompose les exigences du PRD et de l'Architecture en epics et stories implémentables pour ilovecards — une PWA mobile-first de répétition espacée avec templates visuels et navigation gestuelle.
 
 ## Requirements Inventory
 
@@ -63,7 +63,7 @@ NFR8: La suppression de compte efface toutes les données utilisateur de façon 
 
 ### Additional Requirements
 
-- AR1: Initialisation projet via `npx create-next-app@latest markdeck --typescript --tailwind --eslint --app --src-dir --import-alias "@/*"`
+- AR1: Initialisation projet via `npx create-next-app@latest ilovecards --typescript --tailwind --eslint --app --src-dir --import-alias "@/*"`
 - AR2: Setup Prisma schema (User, Deck, Card, Review) + migrations Neon Postgres
 - AR3: Auth.js v5 avec sessions BDD via `@auth/prisma-adapter` (pas JWT — révocation RGPD)
 - AR4: Middleware Next.js pour protection des routes `(app)/*` et `/api/*`
@@ -162,7 +162,7 @@ afin que chaque story soit validée dans un vrai environnement dès le premier j
 
 **Critères d'acceptation :**
 
-**Étant donné** qu'on exécute `npx create-next-app@latest markdeck --typescript --tailwind --eslint --app --src-dir --import-alias "@/*"` et qu'on installe les dépendances (prisma, @prisma/client, next-auth, @auth/prisma-adapter, resend, @anthropic-ai/sdk, @ducanh2912/next-pwa, recharts, zod)
+**Étant donné** qu'on exécute `npx create-next-app@latest ilovecards --typescript --tailwind --eslint --app --src-dir --import-alias "@/*"` et qu'on installe les dépendances (prisma, @prisma/client, next-auth, @auth/prisma-adapter, resend, @anthropic-ai/sdk, @ducanh2912/next-pwa, recharts, zod)
 **Quand** `npm run build` est exécuté
 **Alors** le build passe sans erreur et la structure de fichiers correspond à l'architecture (src/app/, src/lib/, src/components/, src/features/)
 
@@ -210,7 +210,7 @@ afin que les sessions et tokens puissent être persistés.
 
 En tant qu'utilisateur,
 je veux créer un compte et me connecter via un magic link envoyé à mon email,
-afin d'accéder à Markdeck sans mot de passe.
+afin d'accéder à ilovecards sans mot de passe.
 
 **Critères d'acceptation :**
 
@@ -608,7 +608,7 @@ Un utilisateur peut installer l'app sur son téléphone et réviser sans connexi
 ### Story 6.1 : Installation PWA sur iOS et Android
 
 En tant qu'utilisateur,
-je veux installer Markdeck sur l'écran d'accueil de mon téléphone,
+je veux installer ilovecards sur l'écran d'accueil de mon téléphone,
 afin de l'ouvrir comme une app native sans passer par le navigateur.
 
 **Critères d'acceptation :**
@@ -619,11 +619,11 @@ afin de l'ouvrir comme une app native sans passer par le navigateur.
 
 **Étant donné** que `public/manifest.json` est présent
 **Quand** on l'inspecte
-**Alors** il contient : name "Markdeck", short_name "Markdeck", icons (192×192 et 512×512), display "standalone", theme_color, background_color, start_url "/"
+**Alors** il contient : name "ilovecards", short_name "ilovecards", icons (192×192 et 512×512), display "standalone", theme_color, background_color, start_url "/"
 
 **Étant donné** que j'ouvre l'app dans iOS Safari
 **Quand** les critères PWA sont remplis
-**Alors** je peux ajouter Markdeck à mon écran d'accueil via le menu Partager
+**Alors** je peux ajouter ilovecards à mon écran d'accueil via le menu Partager
 
 **Étant donné** que j'ouvre l'app dans Android Chrome
 **Quand** les critères PWA sont remplis

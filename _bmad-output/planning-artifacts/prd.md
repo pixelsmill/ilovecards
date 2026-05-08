@@ -10,7 +10,7 @@ classification:
   projectContext: greenfield
 ---
 
-# Document de Spécifications Produit — Markdeck
+# Document de Spécifications Produit — ilovecards
 
 **Auteur :** Hubert
 **Date :** 2026-05-07
@@ -19,11 +19,11 @@ classification:
 
 ## Résumé Exécutif
 
-Markdeck est une PWA mobile-first de répétition espacée qui traite la révision comme un moment sensoriel — cartes visuellement variées et dopaminiques, navigation par gestes, interface qui donne envie d'ouvrir l'app plutôt que de l'éviter. Là où Anki et Mochi traitent la mémorisation comme un workflow utilitaire, Markdeck pose que l'esthétique d'une carte fait partie de sa pédagogie : une belle carte crée de l'envie, l'envie crée la régularité, la régularité crée la mémoire.
+ilovecards est une PWA mobile-first de répétition espacée qui traite la révision comme un moment sensoriel — cartes visuellement variées et dopaminiques, navigation par gestes, interface qui donne envie d'ouvrir l'app plutôt que de l'éviter. Là où Anki et Mochi traitent la mémorisation comme un workflow utilitaire, ilovecards pose que l'esthétique d'une carte fait partie de sa pédagogie : une belle carte crée de l'envie, l'envie crée la régularité, la régularité crée la mémoire.
 
 **Cible :** Quiconque doit intérioriser des connaissances denses — étudiants en cursus exigeants, professionnels dont le domaine évolue vite, personnes souhaitant entretenir leur mémoire sur la durée.
 
-**Problème central :** Les outils SRS existants sont abandonnés parce qu'ils sont laids et froids. Markdeck résout l'abandon, pas l'oubli.
+**Problème central :** Les outils SRS existants sont abandonnés parce qu'ils sont laids et froids. ilovecards résout l'abandon, pas l'oubli.
 
 ### Ce qui le rend unique
 
@@ -115,9 +115,9 @@ On peut juger sans ouvrir (haut au recto) ou ouvrir puis juger. Aucun SRS exista
 
 **Scène d'ouverture.** Léa a cours de chimie organique dans 3 jours. Elle a un document de 8 pages sur les mécanismes réactionnels — dense, peu lisible, des formules partout. Elle sait qu'elle va tout oublier si elle ne fait rien.
 
-**Action montante.** Elle ouvre Markdeck sur son téléphone, crée un deck "Chimie orga S1". Elle colle ses 8 pages dans l'interface d'import. 30 secondes plus tard, l'IA lui propose 11 cartes — une par notion-clé identifiée. Elle en rejette 2 trop vagues, en reformule 3, choisit un template pour chacune (Equation/Code pour les formules, Poster pour les grands principes, Quote pour les règles à retenir). Elle valide. Le deck est prêt.
+**Action montante.** Elle ouvre ilovecards sur son téléphone, crée un deck "Chimie orga S1". Elle colle ses 8 pages dans l'interface d'import. 30 secondes plus tard, l'IA lui propose 11 cartes — une par notion-clé identifiée. Elle en rejette 2 trop vagues, en reformule 3, choisit un template pour chacune (Equation/Code pour les formules, Poster pour les grands principes, Quote pour les règles à retenir). Elle valide. Le deck est prêt.
 
-**Climax.** Deux jours plus tard, dans le métro, Markdeck lui propose 8 cartes dues. Elle swipe — gauche pour passer, droite pour lire le dos quand elle hésite, haut pour écarter ce qu'elle sait vraiment. En 6 minutes, c'est fait. La formule qu'elle aurait oubliée, elle l'a revue au moment exact où son cerveau allait la lâcher.
+**Climax.** Deux jours plus tard, dans le métro, ilovecards lui propose 8 cartes dues. Elle swipe — gauche pour passer, droite pour lire le dos quand elle hésite, haut pour écarter ce qu'elle sait vraiment. En 6 minutes, c'est fait. La formule qu'elle aurait oubliée, elle l'a revue au moment exact où son cerveau allait la lâcher.
 
 **Résolution.** Le soir du contrôle, 9 de ses 12 notions lui reviennent sans effort.
 
@@ -129,7 +129,7 @@ On peut juger sans ouvrir (haut au recto) ou ouvrir puis juger. Aucun SRS exista
 
 **Scène d'ouverture.** Thomas lit des articles sur les LLMs deux fois par semaine. Il a l'impression de comprendre sur le moment et d'oublier en 48h. Son Notion est rempli de notes qu'il ne relit jamais.
 
-**Action montante.** Il crée un deck "IA & archi" dans Markdeck. Après chaque article qui l'a marqué, il crée 2-3 cartes à la main — pas plus. Il choisit des templates Minimaliste ou Magazine. Le geste est court, délibéré. Il ne veut pas 200 cartes, il veut 40 cartes qu'il connaît vraiment.
+**Action montante.** Il crée un deck "IA & archi" dans ilovecards. Après chaque article qui l'a marqué, il crée 2-3 cartes à la main — pas plus. Il choisit des templates Minimaliste ou Magazine. Le geste est court, délibéré. Il ne veut pas 200 cartes, il veut 40 cartes qu'il connaît vraiment.
 
 **Climax.** Trois semaines plus tard, son deck compte 38 cartes. Il fait ses révisions le matin pendant 5 minutes. Quand un sujet revient dans une conversation, les notions sont là — pas lues il y a 3 semaines, *sues*.
 
@@ -169,7 +169,7 @@ Un utilisateur signale que ses cartes ne se chargent plus offline. Hubert consul
 
 ### Flip optionnel — interaction inédite en SRS
 
-Les outils SRS actuels imposent le retournement de carte comme étape obligatoire. Markdeck dissocie le flip (acte de lecture volontaire) de la notation (gestes haut/bas/gauche). On peut juger sans lire le verso. Cette séparation n'existe dans aucun outil SRS courant.
+Les outils SRS actuels imposent le retournement de carte comme étape obligatoire. ilovecards dissocie le flip (acte de lecture volontaire) de la notation (gestes haut/bas/gauche). On peut juger sans lire le verso. Cette séparation n'existe dans aucun outil SRS courant.
 
 ### Esthétique comme variable pédagogique
 

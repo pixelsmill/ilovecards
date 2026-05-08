@@ -5,7 +5,7 @@ completedAt: '2026-05-07'
 lastStep: 8
 inputDocuments: ['_bmad-output/planning-artifacts/prd.md']
 workflowType: 'architecture'
-project_name: 'markdeck'
+project_name: 'ilovecards'
 user_name: 'Hubert'
 date: '2026-05-07'
 ---
@@ -82,7 +82,7 @@ Full-stack Next.js 15 (App Router, MPA, PWA) — starter officiel `create-next-a
 ### Commande d'initialisation
 
 ```bash
-npx create-next-app@latest markdeck \
+npx create-next-app@latest ilovecards \
   --typescript \
   --tailwind \
   --eslint \
@@ -461,7 +461,7 @@ if (!session?.user?.id) {
 ### Arborescence complète
 
 ```
-markdeck/
+ilovecards/
 ├── package.json
 ├── next.config.ts
 ├── tailwind.config.ts
@@ -709,7 +709,7 @@ Tous les gaps identifiés ont été résolus. Aucune décision bloquante ouverte
 
 **Première story :**
 ```bash
-npx create-next-app@latest markdeck \
+npx create-next-app@latest ilovecards \
   --typescript --tailwind --eslint --app --src-dir --import-alias "@/*"
 ```
 
