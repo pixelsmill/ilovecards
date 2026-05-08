@@ -3,6 +3,7 @@ import Link from "next/link"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import DeleteDeckButton from "./DeleteDeckButton"
+import ShareButton from "@/features/decks/ShareButton"
 
 export default async function DeckDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth()
@@ -50,6 +51,7 @@ export default async function DeckDetailPage({ params }: { params: Promise<{ id:
           >
             Modifier
           </Link>
+          <ShareButton deckId={id} initialToken={deck.shareToken} />
           <DeleteDeckButton id={id} />
         </div>
 

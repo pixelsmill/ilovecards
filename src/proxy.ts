@@ -10,7 +10,9 @@ export default auth((req) => {
     req.nextUrl.pathname.startsWith("/verify") ||
     req.nextUrl.pathname.startsWith("/api/auth")
 
-  const isPublicRoute = req.nextUrl.pathname === "/"
+  const isPublicRoute =
+    req.nextUrl.pathname === "/" ||
+    req.nextUrl.pathname.startsWith("/s/")
 
   if (!isAuthenticated && !isAuthRoute && !isPublicRoute) {
     return Response.redirect(new URL("/login", req.url))

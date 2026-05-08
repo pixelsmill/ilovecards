@@ -1,6 +1,9 @@
 import { signIn } from "@/lib/auth"
 
-export default function LoginPage() {
+export default async function LoginPage({ searchParams }: { searchParams: Promise<{ callbackUrl?: string }> }) {
+  const { callbackUrl } = await searchParams
+  const redirectTo = callbackUrl ?? "/dashboard"
+
   return (
     <main className="flex min-h-screen items-center justify-center bg-zinc-50">
       <div className="w-full max-w-sm space-y-6 p-8">
@@ -13,7 +16,7 @@ export default function LoginPage() {
             "use server"
             await signIn("resend", {
               email: formData.get("email") as string,
-              redirectTo: "/dashboard",
+              redirectTo,
             })
           }}
           className="space-y-4"
