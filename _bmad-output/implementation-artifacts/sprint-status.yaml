@@ -83,10 +83,10 @@ development_status:
   # Un utilisateur peut importer un document et extraire des cartes via Claude Haiku.
   # FRs: FR14, FR15, FR16, FR17, FR18, FR19
   # ─────────────────────────────────────────────
-  epic-4: backlog
-  4-1-interface-dimport-et-validation-de-taille: backlog
-  4-2-pipeline-dextraction-ia-en-streaming: backlog
-  4-3-validation-carte-par-carte-et-enregistrement: backlog
+  epic-4: done
+  4-1-interface-dimport-et-validation-de-taille: done
+  4-2-pipeline-dextraction-ia-en-streaming: done
+  4-3-validation-carte-par-carte-et-enregistrement: done
   epic-4-retrospective: optional
 
   # ─────────────────────────────────────────────
