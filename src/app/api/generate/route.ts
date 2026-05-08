@@ -21,7 +21,7 @@ function stripHtml(html: string): string {
 export async function POST(req: Request) {
   const session = await auth()
   if (!session?.user?.id) return apiError("Non authentifié", "UNAUTHORIZED", 401)
-  const userId = userId
+  const userId = session.user.id
 
   const formData = await req.formData().catch(() => null)
   if (!formData) return apiError("Données invalides", "INVALID_INPUT", 400)
