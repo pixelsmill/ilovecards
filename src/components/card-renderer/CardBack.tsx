@@ -5,10 +5,11 @@ interface Props {
   developpement?: string | null
   source?: string | null
   accentColor: string
+  deckName?: string
   size: CardSize
 }
 
-export default function CardBack({ notion, developpement, source, accentColor, size }: Props) {
+export default function CardBack({ notion, developpement, source, accentColor, deckName, size }: Props) {
   const isThumb = size === 'thumb'
   const isFull = size === 'full'
 
@@ -29,7 +30,7 @@ export default function CardBack({ notion, developpement, source, accentColor, s
             className={`uppercase tracking-widest truncate ${isThumb ? 'text-[3px]' : isFull ? 'text-[10px]' : 'text-[5px]'}`}
             style={{ color: '#6B6356', fontWeight: 500 }}
           >
-            {notion}
+            {deckName ?? 'Deck'}
           </p>
         </div>
 

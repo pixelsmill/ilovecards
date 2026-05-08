@@ -14,7 +14,7 @@ interface ReviewCard {
   easeFactor: number
   interval: number
   repetitions: number
-  deck: { accentColor: string }
+  deck: { accentColor: string; name: string }
 }
 
 interface SessionState {
@@ -136,6 +136,7 @@ export default function ReviewSession({ initialCards }: Props) {
             size="full"
             flipped={state.side === "verso"}
             accentColor={current.deck.accentColor}
+            deckName={current.deck.name}
           />
         </SwipeCard>
       </div>

@@ -40,17 +40,44 @@ interface Props {
   size: CardSize
   flipped?: boolean
   accentColor?: string
+  deckName?: string
   className?: string
 }
 
-export default function CardRenderer({ card, size, flipped = false, accentColor = '#6366f1', className }: Props) {
+export default function CardRenderer({ card, size, flipped = false, accentColor = '#6366f1', deckName, className }: Props) {
   const TemplateComponent = TEMPLATES[card.template] ?? CardMinimaliste
+  const showLabel = deckName && size !== 'thumb'
 
   return (
     <div className={`card-renderer card-renderer--${size}${className ? ' ' + className : ''}`}>
       <div className={`card-inner${flipped ? ' flipped' : ''}`}>
         <div className="card-face">
           <TemplateComponent notion={card.notion} accentColor={accentColor} size={size} />
+          {showLabel && (
+            <div
+              className="absolute bottom-3 left-3 flex items-center gap-1.5 rounded-full pointer-events-none select-none"
+              style={{
+                background: 'rgba(0,0,0,0.28)',
+                backdropFilter: 'blur(6px)',
+                padding: size === 'full' ? '4px 10px' : '2px 7px',
+              }}
+            >
+              <div
+                className="rounded-full flex-shrink-0"
+                style={{
+                  backgroundColor: accentColor,
+                  width: size === 'full' ? '6px' : '4px',
+                  height: size === 'full' ? '6px' : '4px',
+                }}
+              />
+              <span
+                className="text-white font-medium tracking-wide truncate max-w-[120px]"
+                style={{ fontSize: size === 'full' ? '10px' : '7px' }}
+              >
+                {deckName}
+              </span>
+            </div>
+          )}
         </div>
         <div className="card-back">
           <CardBack
@@ -58,6 +85,7 @@ export default function CardRenderer({ card, size, flipped = false, accentColor 
             developpement={card.developpement}
             source={card.source}
             accentColor={accentColor}
+            deckName={deckName}
             size={size}
           />
         </div>
