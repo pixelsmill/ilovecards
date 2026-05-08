@@ -33,7 +33,7 @@ export default async function DeckDetailPage({ params }: { params: Promise<{ id:
 
         <div className="flex gap-2 flex-wrap">
           <Link
-            href="/review"
+            href={`/review?deckId=${id}`}
             className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-700 transition-colors"
           >
             Réviser
