@@ -52,7 +52,7 @@ development_status:
   1-1-initialisation-du-projet-et-deploiement-continu: done
   1-2-base-de-donnees-et-schema-auth: done
   1-3-authentification-magic-link: done
-  1-4-gestion-du-compte-suppression-et-export: backlog
+  1-4-gestion-du-compte-suppression-et-export: review
   epic-1-retrospective: optional
 
   # ─────────────────────────────────────────────
