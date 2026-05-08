@@ -7,15 +7,13 @@ type Direction = "left" | "right" | "up"
 interface Props {
   onSwipe: (dir: Direction) => void
   onTap: () => void
-  canGoLeft?: boolean
-  canGoRight?: boolean
   children: React.ReactNode
 }
 
 const SWIPE_THRESHOLD = 70
 const TAP_THRESHOLD = 12
 
-export default function SwipeCard({ onSwipe, onTap, canGoLeft = true, canGoRight = true, children }: Props) {
+export default function SwipeCard({ onSwipe, onTap, children }: Props) {
   const [drag, setDrag] = useState({ x: 0, y: 0 })
   const [exiting, setExiting] = useState<Direction | null>(null)
   const [springing, setSpringing] = useState(false)
@@ -94,15 +92,8 @@ export default function SwipeCard({ onSwipe, onTap, canGoLeft = true, canGoRight
 
     // Horizontal swipe
     if (isHoriz && Math.abs(dx) >= SWIPE_THRESHOLD) {
-      const dir = dx < 0 ? "left" : "right"
-      // At boundary: spring back
-      if ((dir === "left" && !canGoLeft) || (dir === "right" && !canGoRight)) {
-        reset()
-        setSpringing(true)
-        return
-      }
       reset()
-      setExiting(dir)
+      setExiting(dx < 0 ? "left" : "right")
       return
     }
 
@@ -117,8 +108,8 @@ export default function SwipeCard({ onSwipe, onTap, canGoLeft = true, canGoRight
   let labelColor = "#a1a1aa"
   if (!exiting && (ax > 20 || ay > 20)) {
     if (ax >= ay) {
-      if (drag.x < -20 && canGoLeft)  { label = "← Précédent" }
-      if (drag.x >  20 && canGoRight) { label = "→ Suivant" }
+      if (drag.x < -20) { label = "← Précédent" }
+      if (drag.x >  20) { label = "→ Suivant" }
     } else if (drag.y < -20) {
       label = "↑ Maîtrisé"; labelColor = "#22c55e"
     }

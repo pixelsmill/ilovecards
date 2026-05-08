@@ -38,12 +38,10 @@ function sessionReducer(state: SessionState, action: SessionAction): SessionStat
       return { ...state, side: state.side === "recto" ? "verso" : "recto" }
 
     case "NEXT":
-      if (index >= cards.length - 1) return state
-      return { ...state, index: index + 1, side: "recto" }
+      return { ...state, index: (index + 1) % cards.length, side: "recto" }
 
     case "PREV":
-      if (index <= 0) return state
-      return { ...state, index: index - 1, side: "recto" }
+      return { ...state, index: (index - 1 + cards.length) % cards.length, side: "recto" }
 
     case "DISMISS": {
       const newCards = cards.filter((_, i) => i !== index)
@@ -109,9 +107,6 @@ export default function ReviewSession({ initialCards }: Props) {
     )
   }
 
-  const canGoLeft  = state.index > 0
-  const canGoRight = state.index < state.cards.length - 1
-
   return (
     <main className="h-dvh bg-zinc-700 flex flex-col select-none">
       {/* Progress bar */}
@@ -138,8 +133,6 @@ export default function ReviewSession({ initialCards }: Props) {
           key={current.id}
           onSwipe={handleSwipe}
           onTap={() => dispatch({ type: "FLIP" })}
-          canGoLeft={canGoLeft}
-          canGoRight={canGoRight}
         >
           <CardRenderer
             card={current}
