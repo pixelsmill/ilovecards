@@ -1,35 +1,41 @@
 import type { TemplateProps } from '../CardRenderer'
 
-export default function CardQuote({ notion, accentColor, size }: TemplateProps) {
+export default function CardQuote({ notion, size }: TemplateProps) {
   const isThumb = size === 'thumb'
   const isFull = size === 'full'
 
   return (
-    <div className="h-full w-full bg-zinc-50 relative flex flex-col justify-center overflow-hidden">
-      <span
-        className={`absolute font-serif font-bold leading-none select-none pointer-events-none ${
-          isThumb ? 'text-[28px] top-[-4px] left-1' : isFull ? 'text-[180px] top-[-20px] left-4' : 'text-[72px] top-[-8px] left-2'
-        }`}
-        style={{ color: accentColor, opacity: 0.35 }}
-        aria-hidden
-      >
-        &ldquo;
-      </span>
-
-      <div className={`relative z-10 ${isThumb ? 'px-2 pb-2 pt-5' : isFull ? 'px-10 pb-8 pt-16' : 'px-4 pb-4 pt-8'}`}>
-        <p
-          className={`text-zinc-800 italic leading-snug font-medium ${
-            isThumb ? 'text-[6px]' : isFull ? 'text-2xl' : 'text-[10px]'
+    <div
+      className="h-full w-full flex flex-col justify-between overflow-hidden"
+      style={{ backgroundColor: '#F5EFE2', color: '#1A1814' }}
+    >
+      <div className={isThumb ? 'p-1.5' : isFull ? 'p-8' : 'p-3'}>
+        <div
+          className={`font-bold leading-none select-none pointer-events-none ${
+            isThumb ? 'text-[28px] -mt-1 -ml-0.5' : isFull ? 'text-[140px] -mt-4 -ml-2' : 'text-[60px] -mt-2 -ml-1'
           }`}
+          style={{ fontFamily: "var(--font-spectral), serif", color: '#7A2E3A', opacity: 0.85 }}
+          aria-hidden
+        >
+          &ldquo;
+        </div>
+        <p
+          className={`italic leading-snug ${
+            isThumb ? 'text-[5px]' : isFull ? 'text-[22px]' : 'text-[9px]'
+          }`}
+          style={{ fontFamily: "var(--font-spectral), serif" }}
         >
           {notion}
         </p>
       </div>
 
-      <div
-        className={`absolute bottom-0 left-0 right-0 ${isThumb ? 'h-[2px]' : 'h-[3px]'}`}
-        style={{ backgroundColor: accentColor }}
-      />
+      <div className={`${isThumb ? 'px-1.5 pb-1.5' : isFull ? 'px-8 pb-6' : 'px-3 pb-3'}`}>
+        <div className="h-px bg-current opacity-10 mb-2" />
+        <p className={`uppercase tracking-widest ${isThumb ? 'text-[4px]' : isFull ? 'text-[10px]' : 'text-[6px]'}`}
+           style={{ color: '#6B6356' }}>
+          Citation
+        </p>
+      </div>
     </div>
   )
 }

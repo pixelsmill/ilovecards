@@ -13,34 +13,70 @@ export default function CardBack({ notion, developpement, source, accentColor, s
   const isFull = size === 'full'
 
   return (
-    <div className="h-full w-full bg-white flex flex-col">
-      <div className="flex-shrink-0" style={{ backgroundColor: accentColor, height: isThumb ? '2px' : '3px' }} />
+    <div
+      className="h-full w-full flex flex-col justify-between overflow-hidden"
+      style={{ backgroundColor: '#FBF9F4', color: '#1A1814' }}
+    >
+      {/* Top: deck bar + developpement */}
+      <div className={`flex flex-col overflow-hidden ${isThumb ? 'p-1.5' : isFull ? 'p-7' : 'p-3'}`}>
+        {/* Deck bar */}
+        <div className={`flex items-center gap-1.5 flex-shrink-0 ${isThumb ? 'mb-1' : isFull ? 'mb-5' : 'mb-2'}`}>
+          <div
+            className={`rounded-full flex-shrink-0 ${isThumb ? 'w-1 h-1' : isFull ? 'w-2.5 h-2.5' : 'w-1.5 h-1.5'}`}
+            style={{ backgroundColor: accentColor }}
+          />
+          <p
+            className={`uppercase tracking-widest truncate ${isThumb ? 'text-[3px]' : isFull ? 'text-[10px]' : 'text-[5px]'}`}
+            style={{ color: '#6B6356', fontWeight: 500 }}
+          >
+            {notion}
+          </p>
+        </div>
 
-      <div className={`flex flex-col flex-1 overflow-hidden ${isThumb ? 'p-1.5' : isFull ? 'p-8' : 'p-3'}`}>
-        <p className={`text-zinc-400 font-medium truncate ${isThumb ? 'text-[4px]' : isFull ? 'text-xs' : 'text-[7px]'}`}>
-          {notion}
-        </p>
+        {/* Divider */}
+        <div className={`flex-shrink-0 ${isThumb ? 'mb-1' : isFull ? 'mb-4' : 'mb-2'}`}
+             style={{ borderTop: '1px solid rgba(26,24,20,0.1)' }} />
 
-        <div className={`flex-shrink-0 border-t border-zinc-200 ${isThumb ? 'my-1' : isFull ? 'my-4' : 'my-1.5'}`} />
-
+        {/* Developpement */}
         <div className="flex-1 overflow-hidden">
           {developpement ? (
-            <p className={`text-zinc-900 leading-relaxed ${isThumb ? 'text-[5px] leading-tight' : isFull ? 'text-xl' : 'text-[9px]'}`}>
+            <p
+              className={`leading-relaxed ${isThumb ? 'text-[4px]' : isFull ? 'text-[17px]' : 'text-[8px]'}`}
+              style={{ fontFamily: "var(--font-spectral), serif", color: '#1A1814' }}
+            >
               {developpement}
             </p>
           ) : (
-            <p className={`text-zinc-400 italic ${isThumb ? 'text-[4px]' : isFull ? 'text-sm' : 'text-[7px]'}`}>
+            <p
+              className={`italic ${isThumb ? 'text-[4px]' : isFull ? 'text-sm' : 'text-[7px]'}`}
+              style={{ fontFamily: "var(--font-spectral), serif", color: '#6B6356' }}
+            >
               Aucune explication
             </p>
           )}
         </div>
-
-        {source && !isThumb && (
-          <p className={`text-zinc-400 truncate flex-shrink-0 ${isFull ? 'text-xs mt-4' : 'text-[6px] mt-1.5'}`}>
-            — {source}
-          </p>
-        )}
       </div>
+
+      {/* Bottom: source */}
+      {source && !isThumb && (
+        <div
+          className={`flex-shrink-0 ${isFull ? 'px-7 pb-6' : 'px-3 pb-3'}`}
+          style={{ borderTop: '1px solid rgba(26,24,20,0.08)' }}
+        >
+          <p
+            className={`font-semibold uppercase tracking-widest ${isFull ? 'text-[9px] mt-3 mb-1' : 'text-[5px] mt-1.5 mb-0.5'}`}
+            style={{ color: '#C68A3A' }}
+          >
+            Provenance
+          </p>
+          <p
+            className={`leading-relaxed ${isFull ? 'text-xs' : 'text-[6px]'}`}
+            style={{ color: '#6B6356' }}
+          >
+            {source}
+          </p>
+        </div>
+      )}
     </div>
   )
 }

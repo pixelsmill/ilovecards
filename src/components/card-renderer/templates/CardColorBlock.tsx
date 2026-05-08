@@ -7,22 +7,26 @@ export default function CardColorBlock({ notion, accentColor, size }: TemplatePr
   return (
     <div className="h-full w-full flex flex-col overflow-hidden">
       <div
-        className={`flex items-center justify-center ${isThumb ? 'px-2' : isFull ? 'px-8' : 'px-4'}`}
-        style={{ backgroundColor: accentColor, height: '45%' }}
+        className={`flex items-end ${isThumb ? 'px-1.5 pb-1.5 pt-2' : isFull ? 'px-7 pb-6 pt-8' : 'px-3 pb-3 pt-4'}`}
+        style={{ backgroundColor: accentColor, flex: '1.2' }}
       >
         <p
-          className={`text-white font-semibold text-center leading-tight ${
-            isThumb ? 'text-[6px]' : isFull ? 'text-2xl' : 'text-[10px]'
+          className={`text-white font-extrabold leading-none ${
+            isThumb ? 'text-[7px]' : isFull ? 'text-[32px]' : 'text-[13px]'
           }`}
+          style={{ fontFamily: "var(--font-spectral), serif", letterSpacing: '-1px' }}
         >
           {notion}
         </p>
       </div>
 
-      <div className="flex-1 bg-white flex items-center justify-center">
+      <div
+        className={`flex items-center ${isThumb ? 'px-1.5 py-1' : isFull ? 'px-7 py-5' : 'px-3 py-2.5'}`}
+        style={{ backgroundColor: '#F5EFE2', flex: '1' }}
+      >
         <div
-          className={`rounded-full ${isThumb ? 'w-3 h-3' : isFull ? 'w-10 h-10' : 'w-5 h-5'}`}
-          style={{ backgroundColor: accentColor, opacity: 0.18 }}
+          className={`rounded-full flex-shrink-0 ${isThumb ? 'w-1 h-1' : isFull ? 'w-3 h-3' : 'w-1.5 h-1.5'}`}
+          style={{ backgroundColor: accentColor, opacity: 0.5 }}
         />
       </div>
     </div>

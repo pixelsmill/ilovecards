@@ -5,34 +5,37 @@ export default function CardMagazine({ notion, accentColor, size }: TemplateProp
   const isFull = size === 'full'
 
   return (
-    <div className="h-full w-full bg-white flex flex-col overflow-hidden">
-      <div
-        className={`flex-shrink-0 flex items-center ${isThumb ? 'px-1.5 py-1' : isFull ? 'px-6 py-3' : 'px-3 py-1.5'}`}
-        style={{ backgroundColor: accentColor }}
-      >
-        <span
-          className={`text-white font-bold uppercase tracking-widest ${
-            isThumb ? 'text-[4px]' : isFull ? 'text-xs' : 'text-[6px]'
-          }`}
+    <div
+      className="h-full w-full flex flex-col justify-between overflow-hidden"
+      style={{ backgroundColor: '#FBF9F4', border: '1px solid rgba(26,24,20,0.08)' }}
+    >
+      <div className={isThumb ? 'p-1.5' : isFull ? 'p-7' : 'p-3'}>
+        <p
+          className={`font-semibold uppercase tracking-widest ${isThumb ? 'text-[4px]' : isFull ? 'text-[10px]' : 'text-[5px]'}`}
+          style={{ color: '#C68A3A' }}
         >
-          NOTE
-        </span>
-      </div>
-
-      <div className={`flex flex-1 overflow-hidden ${isThumb ? 'p-1.5' : isFull ? 'p-6' : 'p-3'}`}>
-        <div
-          className={`flex-shrink-0 self-stretch rounded-full ${isThumb ? 'w-[2px] mr-1.5' : isFull ? 'w-1 mr-5' : 'w-[2px] mr-2.5'}`}
-          style={{ backgroundColor: accentColor }}
-        />
-        <div className="flex flex-1 items-center overflow-hidden">
+          Concept
+        </p>
+        <div className={`${isThumb ? 'mt-1 pt-1' : isFull ? 'mt-3 pt-4' : 'mt-1.5 pt-1.5'}`}
+             style={{ borderTop: `1px solid #C68A3A` }}>
           <p
-            className={`text-zinc-900 font-bold leading-tight ${
-              isThumb ? 'text-[6px]' : isFull ? 'text-3xl' : 'text-[11px]'
+            className={`font-semibold leading-tight ${
+              isThumb ? 'text-[6px]' : isFull ? 'text-[24px]' : 'text-[10px]'
             }`}
+            style={{ fontFamily: "var(--font-spectral), serif", color: '#1A1814', letterSpacing: '-0.4px' }}
           >
             {notion}
           </p>
         </div>
+      </div>
+
+      <div className={`${isThumb ? 'px-1.5 pb-1.5' : isFull ? 'px-7 pb-6' : 'px-3 pb-3'}`}>
+        <p
+          className={`italic ${isThumb ? 'text-[4px]' : isFull ? 'text-[13px]' : 'text-[7px]'}`}
+          style={{ fontFamily: "var(--font-spectral), serif", color: '#6B6356' }}
+        >
+          — à retenir
+        </p>
       </div>
     </div>
   )
