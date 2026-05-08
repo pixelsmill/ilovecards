@@ -29,7 +29,7 @@ export default async function HomePage() {
       {/* NAV */}
       <nav
         className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 h-14"
-        style={{ background: "rgba(26,24,20,0.92)", backdropFilter: "blur(12px)" }}
+        style={{ background: "rgba(63,63,70,0.92)", backdropFilter: "blur(12px)" }}
       >
         <span className="text-lg font-bold tracking-tight" style={{ color: "#FBF9F4" }}>ilovecards</span>
         <Link
@@ -44,7 +44,7 @@ export default async function HomePage() {
       {/* HERO */}
       <section
         className="min-h-screen flex flex-col items-center justify-center px-6 pt-14 pb-20 text-center"
-        style={{ background: "#1A1814" }}
+        style={{ background: "#3f3f46" }}
       >
         <p
           className="text-xs font-medium uppercase tracking-widest mb-6"
@@ -125,7 +125,7 @@ export default async function HomePage() {
       </section>
 
       {/* CARDS SHOWCASE */}
-      <section className="px-6 py-20 overflow-hidden" style={{ background: "#1A1814" }}>
+      <section className="px-6 py-20 overflow-hidden" style={{ background: "#3f3f46" }}>
         <div className="max-w-4xl mx-auto">
           <h2 className="text-2xl sm:text-3xl font-bold text-center mb-4" style={{ color: "#FBF9F4" }}>
             8 formats pour mémoriser autrement
@@ -185,7 +185,7 @@ export default async function HomePage() {
               <Link
                 href="/login"
                 className="block text-center rounded-xl py-2.5 text-sm font-semibold transition-opacity hover:opacity-90 mt-4"
-                style={{ background: "#1A1814", color: "#FBF9F4" }}
+                style={{ background: "#3f3f46", color: "#FBF9F4" }}
               >
                 Commencer gratuitement
               </Link>
@@ -194,7 +194,7 @@ export default async function HomePage() {
             {/* Pro */}
             <div
               className="flex-1 max-w-xs rounded-2xl p-8 text-left space-y-4 border"
-              style={{ background: "#1A1814", borderColor: "transparent" }}
+              style={{ background: "#3f3f46", borderColor: "transparent" }}
             >
               <div>
                 <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: "#C68A3A", fontFamily: "var(--font-jetbrains-mono), monospace" }}>Pro</p>
@@ -228,7 +228,7 @@ export default async function HomePage() {
       </section>
 
       {/* FOOTER */}
-      <footer className="px-6 py-8 flex items-center justify-between text-xs" style={{ background: "#1A1814", color: "#6B6356" }}>
+      <footer className="px-6 py-8 flex items-center justify-between text-xs" style={{ background: "#3f3f46", color: "#6B6356" }}>
         <span className="font-bold" style={{ color: "#FBF9F4" }}>ilovecards</span>
         <span>© 2025 — Fait avec ♥</span>
       </footer>
