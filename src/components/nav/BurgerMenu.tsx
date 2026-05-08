@@ -80,6 +80,7 @@ export default function BurgerMenu({ userEmail }: Props) {
           backgroundColor: '#1A1814',
           width: 'min(340px, 90vw)',
           transform: open ? 'translateX(0)' : 'translateX(100%)',
+          pointerEvents: open ? 'auto' : 'none',
         }}
       >
         {/* Top spacer for burger button */}

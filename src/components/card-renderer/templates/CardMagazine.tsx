@@ -1,13 +1,13 @@
 import type { TemplateProps } from '../CardRenderer'
 
-export default function CardMagazine({ notion, accentColor, size }: TemplateProps) {
+export default function CardMagazine({ notion, size }: TemplateProps) {
   const isThumb = size === 'thumb'
   const isFull = size === 'full'
 
   return (
     <div
       className="h-full w-full flex flex-col justify-between overflow-hidden"
-      style={{ backgroundColor: '#FBF9F4', border: '1px solid rgba(26,24,20,0.08)' }}
+      style={{ backgroundColor: '#1A1814' }}
     >
       <div className={isThumb ? 'p-1.5' : isFull ? 'p-7' : 'p-3'}>
         <p
@@ -16,13 +16,15 @@ export default function CardMagazine({ notion, accentColor, size }: TemplateProp
         >
           Concept
         </p>
-        <div className={`${isThumb ? 'mt-1 pt-1' : isFull ? 'mt-3 pt-4' : 'mt-1.5 pt-1.5'}`}
-             style={{ borderTop: `1px solid #C68A3A` }}>
+        <div
+          className={`${isThumb ? 'mt-1 pt-1' : isFull ? 'mt-3 pt-4' : 'mt-1.5 pt-1.5'}`}
+          style={{ borderTop: '1px solid #C68A3A' }}
+        >
           <p
             className={`font-semibold leading-tight ${
               isThumb ? 'text-[6px]' : isFull ? 'text-[24px]' : 'text-[10px]'
             }`}
-            style={{ fontFamily: "var(--font-spectral), serif", color: '#1A1814', letterSpacing: '-0.4px' }}
+            style={{ fontFamily: "var(--font-spectral), serif", color: '#FBF9F4', letterSpacing: '-0.4px' }}
           >
             {notion}
           </p>

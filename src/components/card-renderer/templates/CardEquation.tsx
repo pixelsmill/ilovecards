@@ -1,13 +1,13 @@
 import type { TemplateProps } from '../CardRenderer'
 
-export default function CardEquation({ notion, size }: TemplateProps) {
+export default function CardEquation({ notion, accentColor, size }: TemplateProps) {
   const isThumb = size === 'thumb'
   const isFull = size === 'full'
 
   return (
     <div
       className="h-full w-full flex flex-col justify-center overflow-hidden"
-      style={{ backgroundColor: '#F8F5EE', color: '#1A1814' }}
+      style={{ backgroundColor: '#1E1B17' }}
     >
       <div className={isThumb ? 'p-1.5' : isFull ? 'p-8' : 'p-4'}>
         <div
@@ -16,8 +16,9 @@ export default function CardEquation({ notion, size }: TemplateProps) {
           }`}
           style={{
             fontFamily: "var(--font-jetbrains-mono), 'Courier New', monospace",
-            border: `${isThumb ? '1px' : '1.5px'} solid #1A1814`,
-            backgroundColor: '#FBF9F4',
+            border: `${isThumb ? '1px' : '1.5px'} solid rgba(251,249,244,0.15)`,
+            backgroundColor: '#2A2520',
+            color: accentColor,
           }}
         >
           {notion}
