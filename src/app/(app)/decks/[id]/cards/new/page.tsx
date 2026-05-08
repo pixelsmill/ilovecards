@@ -3,6 +3,7 @@ import Link from "next/link"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { CreateCardSchema } from "@/lib/schemas/card"
+import { fetchUnsplashImage } from "@/lib/unsplash"
 import CardForm from "@/features/cards/CardForm"
 
 export default async function NewCardPage({ params }: { params: Promise<{ id: string }> }) {
@@ -18,12 +19,17 @@ export default async function NewCardPage({ params }: { params: Promise<{ id: st
     const s = await auth()
     if (!s?.user?.id) redirect("/login")
 
+    const template = (formData.get("template") as string) || "minimaliste"
+    const notion = (formData.get("notion") as string) || ""
+    const imageUrl = template === "photo-overlay" ? await fetchUnsplashImage(notion) : undefined
+
     const parsed = CreateCardSchema.safeParse({
       deckId: formData.get("deckId"),
-      notion: formData.get("notion"),
+      notion,
       developpement: formData.get("developpement") || undefined,
       source: formData.get("source") || undefined,
-      template: formData.get("template") || "minimaliste",
+      template,
+      imageUrl,
     })
     if (!parsed.success) return
 

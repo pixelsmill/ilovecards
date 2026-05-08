@@ -20,8 +20,9 @@
 }
 
 .card-renderer--full {
-  height: 85svh;
-  width: min(calc(85svh * 9 / 14), calc(100vw - 2rem));
+  --card-h: min(85svh, calc(100dvh - 10rem));
+  height: var(--card-h);
+  width: min(calc(var(--card-h) * 9 / 14), calc(100vw - 2rem));
   border-radius: 20px;
   box-shadow:
     0 1px 2px rgba(0, 0, 0, 0.04),

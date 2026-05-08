@@ -17,6 +17,7 @@ interface CardCandidate {
   developpement: string
   source: string
   template: string
+  imageUrl?: string
   accepted: boolean
 }
 
@@ -115,6 +116,7 @@ export default function ImportFlow({ decks, defaultDeckId, credits }: Props) {
                 developpement: card.developpement ?? "",
                 source: card.source ?? "",
                 template: TEMPLATES.includes(card.template) ? card.template : "minimaliste",
+                imageUrl: typeof card.imageUrl === "string" ? card.imageUrl : undefined,
                 accepted: true,
               }])
             }
@@ -166,6 +168,7 @@ export default function ImportFlow({ decks, defaultDeckId, credits }: Props) {
             developpement: card.developpement || undefined,
             source: card.source || undefined,
             template: card.template,
+            imageUrl: card.imageUrl || undefined,
           }),
         })
         if (res.ok) count++

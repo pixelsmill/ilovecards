@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth"
 import { apiError } from "@/lib/api-error"
 import { prisma } from "@/lib/prisma"
 import { SYSTEM_PROMPT_EXTRACT, SYSTEM_PROMPT_GENERATE, buildUserMessage } from "@/lib/prompts/generate-cards"
+import { fetchUnsplashImage } from "@/lib/unsplash"
 
 const MAX_TEXT = 50000
 const MAX_CREDITS = 30
@@ -124,6 +125,9 @@ export async function POST(req: Request) {
               try {
                 const card = JSON.parse(trimmed)
                 if (card.notion && typeof card.notion === "string") {
+                  if (card.template === "photo-overlay") {
+                    card.imageUrl = await fetchUnsplashImage(card.notion)
+                  }
                   cardCount++
                   controller.enqueue(encoder.encode(JSON.stringify(card) + "\n"))
                 }
@@ -134,7 +138,13 @@ export async function POST(req: Request) {
         if (buffer.trim().startsWith("{")) {
           try {
             const card = JSON.parse(buffer.trim())
-            if (card.notion) { cardCount++; controller.enqueue(encoder.encode(JSON.stringify(card) + "\n")) }
+            if (card.notion) {
+              if (card.template === "photo-overlay") {
+                card.imageUrl = await fetchUnsplashImage(card.notion)
+              }
+              cardCount++
+              controller.enqueue(encoder.encode(JSON.stringify(card) + "\n"))
+            }
           } catch {}
         }
 

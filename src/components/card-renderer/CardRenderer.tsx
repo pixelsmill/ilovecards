@@ -16,12 +16,14 @@ export interface CardData {
   developpement?: string | null
   source?: string | null
   template: string
+  imageUrl?: string | null
 }
 
 export interface TemplateProps {
   notion: string
   accentColor: string
   size: CardSize
+  imageUrl?: string
 }
 
 const TEMPLATES: Record<string, React.ComponentType<TemplateProps>> = {
@@ -52,7 +54,7 @@ export default function CardRenderer({ card, size, flipped = false, accentColor 
     <div className={`card-renderer card-renderer--${size}${className ? ' ' + className : ''}`}>
       <div className={`card-inner${flipped ? ' flipped' : ''}`}>
         <div className="card-face">
-          <TemplateComponent notion={card.notion} accentColor={accentColor} size={size} />
+          <TemplateComponent notion={card.notion} accentColor={accentColor} size={size} imageUrl={card.imageUrl ?? undefined} />
           {showLabel && (
             <div className="absolute top-3 left-3 flex items-center gap-1.5 pointer-events-none select-none">
               <div

@@ -3,6 +3,7 @@ import Link from "next/link"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { UpdateCardSchema } from "@/lib/schemas/card"
+import { fetchUnsplashImage } from "@/lib/unsplash"
 import CardForm from "@/features/cards/CardForm"
 import DeleteCardButton from "@/features/cards/DeleteCardButton"
 
@@ -19,18 +20,31 @@ export default async function EditCardPage({ params }: { params: Promise<{ id: s
     const s = await auth()
     if (!s?.user?.id) redirect("/login")
 
+    const template = (formData.get("template") as string) || undefined
+    const notion = (formData.get("notion") as string) || undefined
+    let imageUrl: string | null | undefined = undefined
+    if (template === "photo-overlay" && notion) {
+      imageUrl = (await fetchUnsplashImage(notion)) ?? null
+    } else if (template && template !== "photo-overlay") {
+      imageUrl = null
+    }
+
     const parsed = UpdateCardSchema.safeParse({
-      notion: formData.get("notion") || undefined,
+      notion,
       developpement: formData.get("developpement") || undefined,
       source: formData.get("source") || undefined,
-      template: formData.get("template") || undefined,
+      template,
+      ...(imageUrl !== undefined && { imageUrl: imageUrl ?? undefined }),
     })
     if (!parsed.success) return
 
     const c = await prisma.card.findUnique({ where: { id: cardId }, include: { deck: true } })
     if (!c || c.deck.userId !== s.user.id) return
 
-    await prisma.card.update({ where: { id: cardId }, data: parsed.data })
+    await prisma.card.update({
+      where: { id: cardId },
+      data: imageUrl !== undefined ? { ...parsed.data, imageUrl } : parsed.data,
+    })
     redirect(`/decks/${deckId}`)
   }
 
