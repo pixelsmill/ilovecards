@@ -55,7 +55,7 @@ export default function CardRenderer({ card, size, flipped = false, accentColor 
           <TemplateComponent notion={card.notion} accentColor={accentColor} size={size} />
           {showLabel && (
             <div
-              className="absolute bottom-3 left-3 flex items-center gap-1.5 rounded-full pointer-events-none select-none"
+              className="absolute top-3 left-3 flex items-center gap-1.5 rounded-full pointer-events-none select-none"
               style={{
                 background: 'rgba(0,0,0,0.28)',
                 backdropFilter: 'blur(6px)',
