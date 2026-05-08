@@ -54,15 +54,13 @@ export default function CardRenderer({ card, size, flipped = false, accentColor 
         <div className="card-face">
           <TemplateComponent notion={card.notion} accentColor={accentColor} size={size} />
           {showLabel && (
-            <div
-              className={`absolute top-3 left-3 flex items-center gap-1.5 pointer-events-none select-none ${size === 'thumb' ? 'top-1.5 left-1.5' : ''}`}
-            >
+            <div className="absolute top-3 left-3 flex items-center gap-1.5 pointer-events-none select-none">
               <div
-                className={`rounded-full flex-shrink-0 ${size === 'thumb' ? 'w-1 h-1' : size === 'full' ? 'w-2.5 h-2.5' : 'w-1.5 h-1.5'}`}
+                className={`rounded-full flex-shrink-0 ${size === 'full' ? 'w-2.5 h-2.5' : 'w-1.5 h-1.5'}`}
                 style={{ backgroundColor: '#ffffff' }}
               />
               <span
-                className={`text-white uppercase tracking-widest truncate max-w-[120px] ${size === 'thumb' ? 'text-[3px]' : size === 'full' ? 'text-[10px]' : 'text-[5px]'}`}
+                className={`text-white uppercase tracking-widest truncate max-w-[120px] ${size === 'full' ? 'text-[10px]' : 'text-[5px]'}`}
                 style={{ fontWeight: 500 }}
               >
                 {deckName}
