@@ -2,42 +2,47 @@
 
 import { useState, useRef, useEffect } from "react"
 
-type Direction = "left" | "right" | "up" | "down"
+type Direction = "left" | "right" | "up"
 
 interface Props {
   onSwipe: (dir: Direction) => void
-  side: "recto" | "verso"
+  onTap: () => void
+  canGoLeft?: boolean
+  canGoRight?: boolean
   children: React.ReactNode
 }
 
-const THRESHOLD = 75
+const SWIPE_THRESHOLD = 70
+const TAP_THRESHOLD = 12
 
-export default function SwipeCard({ onSwipe, side, children }: Props) {
+export default function SwipeCard({ onSwipe, onTap, canGoLeft = true, canGoRight = true, children }: Props) {
   const [drag, setDrag] = useState({ x: 0, y: 0 })
   const [exiting, setExiting] = useState<Direction | null>(null)
   const [springing, setSpringing] = useState(false)
   const dragging = useRef(false)
-  const start = useRef({ x: 0, y: 0 })
+  const startPos = useRef({ x: 0, y: 0 })
+  const latestDrag = useRef({ x: 0, y: 0 }) // ref avoids stale closure in release()
   const onSwipeRef = useRef(onSwipe)
-  useEffect(() => { onSwipeRef.current = onSwipe })
+  const onTapRef = useRef(onTap)
+  useEffect(() => { onSwipeRef.current = onSwipe; onTapRef.current = onTap })
 
-  // Fire parent action after exit animation completes
+  // Fire parent action after exit animation
   useEffect(() => {
     if (!exiting) return
-    const timer = setTimeout(() => onSwipeRef.current(exiting), 230)
-    return () => clearTimeout(timer)
+    const t = setTimeout(() => onSwipeRef.current(exiting), 230)
+    return () => clearTimeout(t)
   }, [exiting])
 
-  // Keyboard — registered once, always reads latest onSwipe via ref
+  // Keyboard
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      const map: Record<string, Direction> = {
-        ArrowLeft: "left", ArrowRight: "right", ArrowUp: "up", ArrowDown: "down",
+      switch (e.key) {
+        case "ArrowLeft":  onSwipeRef.current("left"); break
+        case "ArrowRight": onSwipeRef.current("right"); break
+        case "ArrowUp":    e.preventDefault(); onSwipeRef.current("up"); break
+        case " ":
+        case "Enter":      e.preventDefault(); onTapRef.current(); break
       }
-      const dir = map[e.key]
-      if (!dir) return
-      if (dir === "up" || dir === "down") e.preventDefault()
-      onSwipeRef.current(dir)
     }
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)
@@ -46,85 +51,83 @@ export default function SwipeCard({ onSwipe, side, children }: Props) {
   function onTouchStart(e: React.TouchEvent) {
     dragging.current = true
     setSpringing(false)
-    start.current = { x: e.touches[0].clientX, y: e.touches[0].clientY }
+    latestDrag.current = { x: 0, y: 0 }
+    startPos.current = { x: e.touches[0].clientX, y: e.touches[0].clientY }
   }
 
   function onTouchMove(e: React.TouchEvent) {
     if (!dragging.current || exiting) return
-    setDrag({
-      x: e.touches[0].clientX - start.current.x,
-      y: e.touches[0].clientY - start.current.y,
-    })
+    const dx = e.touches[0].clientX - startPos.current.x
+    const dy = e.touches[0].clientY - startPos.current.y
+    // Downward gesture → browser handles (pull-to-refresh), don't animate
+    if (dy > 0 && Math.abs(dy) > Math.abs(dx)) return
+    const next = { x: dx, y: Math.min(dy, 0) }
+    latestDrag.current = next
+    setDrag(next)
   }
 
   function release() {
     if (!dragging.current) return
     dragging.current = false
-    const { x: dx, y: dy } = drag
+    const { x: dx, y: dy } = latestDrag.current
 
-    if (Math.abs(dx) < THRESHOLD && Math.abs(dy) < THRESHOLD) {
-      setSpringing(true)
+    const reset = () => {
+      latestDrag.current = { x: 0, y: 0 }
       setDrag({ x: 0, y: 0 })
+    }
+
+    // Tap: minimal movement
+    if (Math.abs(dx) < TAP_THRESHOLD && Math.abs(dy) < TAP_THRESHOLD) {
+      reset()
+      onTapRef.current()
       return
     }
 
-    const dir: Direction = Math.abs(dx) >= Math.abs(dy)
-      ? (dx < 0 ? "left" : "right")
-      : (dy < 0 ? "up" : "down")
+    const isHoriz = Math.abs(dx) >= Math.abs(dy)
 
-    // Flip / unflip: reset in place, call immediately (the card flips via CSS)
-    const isInPlace =
-      (dir === "right" && side === "recto") ||
-      (dir === "left" && side === "verso")
-
-    if (isInPlace) {
-      setDrag({ x: 0, y: 0 })
-      onSwipeRef.current(dir)
+    // Up swipe
+    if (!isHoriz && dy < -SWIPE_THRESHOLD) {
+      reset()
+      setExiting("up")
       return
     }
 
-    // Invalid gesture (e.g. right from verso): spring back silently
-    if (
-      (dir === "right" && side === "verso") ||
-      (dir === "down" && side === "recto")
-    ) {
-      setSpringing(true)
-      setDrag({ x: 0, y: 0 })
+    // Horizontal swipe
+    if (isHoriz && Math.abs(dx) >= SWIPE_THRESHOLD) {
+      const dir = dx < 0 ? "left" : "right"
+      // At boundary: spring back
+      if ((dir === "left" && !canGoLeft) || (dir === "right" && !canGoRight)) {
+        reset()
+        setSpringing(true)
+        return
+      }
+      reset()
+      setExiting(dir)
       return
     }
 
-    // Exit animation
-    setDrag({ x: 0, y: 0 })
-    setExiting(dir)
+    // Below threshold: spring back
+    reset()
+    setSpringing(true)
   }
 
-  // Dynamic indicator label during drag
-  const ax = Math.abs(drag.x)
-  const ay = Math.abs(drag.y)
+  // Indicator label during drag
+  const ax = Math.abs(drag.x), ay = Math.abs(drag.y)
   let label: string | null = null
-  let labelColor = "#71717a"
-
+  let labelColor = "#a1a1aa"
   if (!exiting && (ax > 20 || ay > 20)) {
     if (ax >= ay) {
-      if (drag.x < 0) {
-        label = side === "verso" ? "← Retour" : "← Passer"
-      } else if (side === "recto") {
-        label = "→ Retourner"; labelColor = "#6366f1"
-      }
-    } else {
-      if (drag.y < 0) {
-        label = "↑ Maîtrisé"; labelColor = "#22c55e"
-      } else if (side === "verso") {
-        label = "↓ À revoir"; labelColor = "#ef4444"
-      }
+      if (drag.x < -20 && canGoLeft)  { label = "← Précédent" }
+      if (drag.x >  20 && canGoRight) { label = "→ Suivant" }
+    } else if (drag.y < -20) {
+      label = "↑ Maîtrisé"; labelColor = "#22c55e"
     }
   }
 
   const exitTransforms: Record<Direction, string> = {
     left:  "translateX(-130%) rotate(-12deg)",
-    right: "translateX(130%)  rotate( 12deg)",
+    right: "translateX( 130%) rotate( 12deg)",
     up:    "translateY(-130%)",
-    down:  "translateY( 130%)",
   }
 
   const transform = exiting
@@ -138,13 +141,12 @@ export default function SwipeCard({ onSwipe, side, children }: Props) {
   return (
     <div
       className="relative h-full w-full flex items-center justify-center overflow-hidden"
-      style={{ touchAction: "none" }}
+      style={{ touchAction: "pan-down" }}
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={release}
       onTouchCancel={release}
     >
-      {/* Directional hint badge */}
       {label && (
         <div
           className="absolute top-4 left-1/2 -translate-x-1/2 z-20 text-sm font-semibold px-3 py-1 rounded-full pointer-events-none whitespace-nowrap"
@@ -158,7 +160,6 @@ export default function SwipeCard({ onSwipe, side, children }: Props) {
           {label}
         </div>
       )}
-
       <div
         style={{ transform, transition, willChange: "transform" }}
         onTransitionEnd={() => { if (springing) setSpringing(false) }}

@@ -19,48 +19,45 @@ interface ReviewCard {
 
 interface SessionState {
   cards: ReviewCard[]
+  index: number
   side: "recto" | "verso"
-  stats: { dismissed: number; failed: number; passed: number }
+  dismissed: number
 }
 
 type SessionAction =
-  | { type: "PASS" }
+  | { type: "NEXT" }
+  | { type: "PREV" }
   | { type: "FLIP" }
-  | { type: "UNFLIP" }
   | { type: "DISMISS" }
-  | { type: "FAILED" }
 
 function sessionReducer(state: SessionState, action: SessionAction): SessionState {
-  const [current, ...rest] = state.cards
+  const { cards, index } = state
 
   switch (action.type) {
     case "FLIP":
-      return { ...state, side: "verso" }
+      return { ...state, side: state.side === "recto" ? "verso" : "recto" }
 
-    case "UNFLIP":
-      return { ...state, side: "recto" }
+    case "NEXT":
+      if (index >= cards.length - 1) return state
+      return { ...state, index: index + 1, side: "recto" }
 
-    case "PASS": {
-      const next = [...rest, current]
-      return { ...state, cards: next, side: "recto", stats: { ...state.stats, passed: state.stats.passed + 1 } }
-    }
+    case "PREV":
+      if (index <= 0) return state
+      return { ...state, index: index - 1, side: "recto" }
 
-    case "DISMISS":
-      return { cards: rest, side: "recto", stats: { ...state.stats, dismissed: state.stats.dismissed + 1 } }
-
-    case "FAILED": {
-      const pos = Math.min(2, rest.length)
-      const requeued = [...rest.slice(0, pos), current, ...rest.slice(pos)]
-      return { cards: requeued, side: "recto", stats: { ...state.stats, failed: state.stats.failed + 1 } }
+    case "DISMISS": {
+      const newCards = cards.filter((_, i) => i !== index)
+      const newIndex = Math.max(0, Math.min(index, newCards.length - 1))
+      return { cards: newCards, index: newIndex, side: "recto", dismissed: state.dismissed + 1 }
     }
   }
 }
 
-async function postReview(cardId: string, action: "dismiss" | "fail") {
+async function postReview(cardId: string) {
   await fetch("/api/review", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ cardId, action }),
+    body: JSON.stringify({ cardId, action: "dismiss" }),
   }).catch(() => null)
 }
 
@@ -72,32 +69,22 @@ export default function ReviewSession({ initialCards }: Props) {
   const total = initialCards.length
   const [state, dispatch] = useReducer(sessionReducer, {
     cards: initialCards,
+    index: 0,
     side: "recto",
-    stats: { dismissed: 0, failed: 0, passed: 0 },
+    dismissed: 0,
   })
 
-  const current = state.cards[0] ?? null
-  const progress = total > 0 ? (state.stats.dismissed / total) * 100 : 100
+  const current = state.cards[state.index] ?? null
+  const progress = total > 0 ? (state.dismissed / total) * 100 : 100
 
-  function handleGesture(direction: "left" | "right" | "up" | "down") {
+  function handleSwipe(dir: "left" | "right" | "up") {
     if (!current) return
-    switch (direction) {
-      case "left":
-        if (state.side === "recto") dispatch({ type: "PASS" })
-        else dispatch({ type: "UNFLIP" })
-        break
-      case "right":
-        if (state.side === "recto") dispatch({ type: "FLIP" })
-        break
+    switch (dir) {
+      case "left":  dispatch({ type: "PREV" }); break
+      case "right": dispatch({ type: "NEXT" }); break
       case "up":
-        postReview(current.id, "dismiss")
+        postReview(current.id)
         dispatch({ type: "DISMISS" })
-        break
-      case "down":
-        if (state.side === "verso") {
-          postReview(current.id, "fail")
-          dispatch({ type: "FAILED" })
-        }
         break
     }
   }
@@ -108,14 +95,13 @@ export default function ReviewSession({ initialCards }: Props) {
         <div className="text-center space-y-2">
           <p className="text-4xl">✓</p>
           <p className="text-white text-xl font-semibold">Session terminée</p>
-          <p className="text-zinc-400 text-sm">
-            {state.stats.dismissed} maîtrisée{state.stats.dismissed !== 1 ? "s" : ""}
-            {state.stats.failed > 0 && ` · ${state.stats.failed} à revoir`}
+          <p className="text-zinc-300 text-sm">
+            {state.dismissed} maîtrisée{state.dismissed !== 1 ? "s" : ""}
           </p>
         </div>
         <Link
           href="/dashboard"
-          className="rounded-lg bg-zinc-800 px-6 py-3 text-sm font-medium text-white hover:bg-zinc-700 transition-colors"
+          className="rounded-lg bg-zinc-600 px-6 py-3 text-sm font-medium text-white hover:bg-zinc-500 transition-colors"
         >
           Retour au dashboard
         </Link>
@@ -123,10 +109,13 @@ export default function ReviewSession({ initialCards }: Props) {
     )
   }
 
+  const canGoLeft  = state.index > 0
+  const canGoRight = state.index < state.cards.length - 1
+
   return (
     <main className="h-dvh bg-zinc-700 flex flex-col select-none">
       {/* Progress bar */}
-      <div className="flex-shrink-0 h-0.5 bg-zinc-800">
+      <div className="flex-shrink-0 h-0.5 bg-zinc-600">
         <div
           className="h-full transition-all duration-500"
           style={{ width: `${progress}%`, backgroundColor: current.deck.accentColor }}
@@ -135,17 +124,23 @@ export default function ReviewSession({ initialCards }: Props) {
 
       {/* Top bar */}
       <div className="flex-shrink-0 flex items-center justify-between px-4 py-3">
-        <span className="text-zinc-500 text-xs">
-          {state.cards.length} restante{state.cards.length !== 1 ? "s" : ""}
+        <span className="text-zinc-400 text-xs">
+          {state.index + 1} / {state.cards.length}
         </span>
-        <Link href="/dashboard" className="text-zinc-600 text-xs hover:text-zinc-400 transition-colors">
+        <Link href="/dashboard" className="text-zinc-500 text-xs hover:text-zinc-300 transition-colors">
           Terminer
         </Link>
       </div>
 
-      {/* Card area — SwipeCard fills this zone */}
+      {/* Card area */}
       <div className="flex-1 flex items-center justify-center px-4 overflow-hidden">
-        <SwipeCard key={current.id} onSwipe={handleGesture} side={state.side}>
+        <SwipeCard
+          key={current.id}
+          onSwipe={handleSwipe}
+          onTap={() => dispatch({ type: "FLIP" })}
+          canGoLeft={canGoLeft}
+          canGoRight={canGoRight}
+        >
           <CardRenderer
             card={current}
             size="full"
@@ -156,20 +151,11 @@ export default function ReviewSession({ initialCards }: Props) {
       </div>
 
       {/* Gesture hints */}
-      <div className="flex-shrink-0 flex justify-center gap-6 py-4 text-zinc-700 text-xs">
-        {state.side === "recto" ? (
-          <>
-            <span>← passer</span>
-            <span>→ retourner</span>
-            <span>↑ maîtrisé</span>
-          </>
-        ) : (
-          <>
-            <span>← retour</span>
-            <span>↑ maîtrisé</span>
-            <span>↓ à revoir</span>
-          </>
-        )}
+      <div className="flex-shrink-0 flex justify-center gap-5 py-4 text-zinc-500 text-xs">
+        <span>← préc</span>
+        <span>· clic: retourner ·</span>
+        <span>↑ maîtrisé</span>
+        <span>→ suiv</span>
       </div>
     </main>
   )
