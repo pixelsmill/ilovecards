@@ -8,9 +8,18 @@ export default async function DecksPage() {
   const session = await auth()
   if (!session?.user?.id) redirect("/login")
 
+  const endOfToday = new Date()
+  endOfToday.setHours(23, 59, 59, 999)
+
   const decks = await prisma.deck.findMany({
     where: { userId: session.user.id },
-    include: { _count: { select: { cards: true } } },
+    include: {
+      _count: { select: { cards: true } },
+      cards: {
+        where: { nextReviewAt: { lte: endOfToday } },
+        select: { id: true },
+      },
+    },
     orderBy: { createdAt: "desc" },
   })
 
@@ -44,6 +53,7 @@ export default async function DecksPage() {
                 description={deck.description}
                 accentColor={deck.accentColor}
                 cardCount={deck._count.cards}
+                dueCount={deck.cards.length}
               />
             ))}
           </div>

@@ -94,9 +94,9 @@ development_status:
   # Un utilisateur peut voir ses cartes dues, son streak et sa rétention.
   # FRs: FR28, FR29, FR30
   # ─────────────────────────────────────────────
-  epic-5: backlog
-  5-1-cartes-dues-et-streak-de-revision: backlog
-  5-2-courbe-de-retention: backlog
+  epic-5: done
+  5-1-cartes-dues-et-streak-de-revision: done
+  5-2-courbe-de-retention: done
   epic-5-retrospective: optional
 
   # ─────────────────────────────────────────────
@@ -104,7 +104,7 @@ development_status:
   # Un utilisateur peut installer l'app et réviser sans connexion.
   # FRs: FR31, FR32
   # ─────────────────────────────────────────────
-  epic-6: backlog
-  6-1-installation-pwa-sur-ios-et-android: backlog
-  6-2-mode-offline-pour-les-sessions-chargees: backlog
+  epic-6: done
+  6-1-installation-pwa-sur-ios-et-android: done
+  6-2-mode-offline-pour-les-sessions-chargees: done
   epic-6-retrospective: optional

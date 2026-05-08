@@ -31,16 +31,26 @@ export async function POST(req: Request) {
     action,
   )
 
-  const updated = await prisma.card.update({
-    where: { id: cardId },
-    data: {
-      easeFactor: result.easeFactor,
-      interval: result.interval,
-      repetitions: result.repetitions,
-      nextReviewAt: result.nextReviewAt,
-      lastReviewAt: new Date(),
-    },
-  })
+  const [updated] = await prisma.$transaction([
+    prisma.card.update({
+      where: { id: cardId },
+      data: {
+        easeFactor: result.easeFactor,
+        interval: result.interval,
+        repetitions: result.repetitions,
+        nextReviewAt: result.nextReviewAt,
+        lastReviewAt: new Date(),
+      },
+    }),
+    prisma.review.create({
+      data: {
+        cardId,
+        deckId: card.deckId,
+        userId: session.user.id,
+        action,
+      },
+    }),
+  ])
 
   return Response.json(updated)
 }
