@@ -323,29 +323,52 @@ La règle pratique : tout ce qui est statique ou nécessite des données → Ser
 
 ### Structure des dossiers
 
+**Légende :** `[S]` Server Component (rendu serveur, peut accéder à la DB) · `[C]` Client Component (`"use client"`, état, événements)
+
+> [!TIP]
+> Règle rapide : si le fichier commence par `"use client"` → `[C]`, sinon → `[S]` par défaut. Les `page.tsx` et `layout.tsx` sont presque toujours `[S]`. Les composants avec `useState`, `useEffect`, ou des handlers d'événements sont forcément `[C]`.
+
 ```
 src/
-├── app/
-│   ├── (app)/          — pages authentifiées (layout avec sidebar/nav)
-│   │   ├── dashboard/
-│   │   ├── decks/
-│   │   ├── import/
-│   │   ├── review/
-│   │   └── account/
-│   ├── (auth)/         — pages publiques d'auth
-│   │   ├── login/
-│   │   └── verify/
-│   ├── s/[token]/      — pages de partage public
-│   ├── api/            — API Routes
-│   └── page.tsx        — landing page (/)
+├── app/                        — routing Next.js (App Router)
+│   ├── (app)/                  — pages authentifiées (layout avec nav)
+│   │   ├── dashboard/          — page d'accueil                      [S]
+│   │   ├── decks/              — liste et détail des decks            [S]
+│   │   │   └── [id]/
+│   │   │       └── DeleteDeckButton.tsx                              [C]
+│   │   ├── import/             — génération IA                        [S]
+│   │   ├── review/             — charge les cartes, passe au client   [S]
+│   │   └── account/            — paramètres du compte                 [S]
+│   ├── (auth)/                 — pages publiques d'auth               [S]
+│   ├── s/[token]/              — page de partage public               [S]
+│   ├── api/                    — API Routes (REST)
+│   └── page.tsx                — landing page (/)                     [S]
 ├── components/
-│   └── card-renderer/  — composant de rendu de carte + 8 templates
-├── features/           — composants métier par domaine
+│   ├── card-renderer/          — CardRenderer + 8 templates           [S]
+│   ├── nav/
+│   │   ├── TopBar.tsx                                                 [S]
+│   │   └── BurgerMenu.tsx      — menu interactif                      [C]
+│   └── ui/                     — primitives shadcn (Dialog, Select…)  [C]
+├── features/                   — composants métier par domaine
 │   ├── cards/
+│   │   ├── CardForm.tsx                                               [C]
+│   │   ├── TemplatePicker.tsx                                         [C]
+│   │   └── DeleteCardButton.tsx                                       [C]
 │   ├── decks/
-│   └── extraction/
-└── lib/                — utilitaires partagés (auth, prisma, schémas, sm2)
+│   │   ├── DeckForm.tsx                                               [C]
+│   │   ├── ShareButton.tsx                                            [C]
+│   │   └── CopyDeckButton.tsx                                         [C]
+│   ├── dashboard/
+│   │   └── RetentionChart.tsx                                         [C]
+│   ├── extraction/
+│   │   └── ImportFlow.tsx      — flux de génération IA streaming      [C]
+│   └── review/
+│       ├── ReviewSession.tsx   — orchestrateur de la session          [C]
+│       └── SwipeCard.tsx       — gestion des gestes tactiles          [C]
+└── lib/                        — utilitaires partagés (auth, prisma, schémas, sm2)
 ```
+
+Le pattern général : les `page.tsx` sont `[S]` et font la requête DB, puis passent les données en props à un composant `[C]` (ex: `ReviewSession`, `ImportFlow`). Cela évite de descendre le contexte serveur dans les composants interactifs.
 
 ### CardRenderer et templates
 
