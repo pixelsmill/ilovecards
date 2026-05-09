@@ -153,6 +153,13 @@ Quelques pages utilisent des **Server Actions** Next.js (fonctions `"use server"
 
 Les Server Actions évitent de passer par une API Route pour des opérations simples liées à une page. Elles s'exécutent côté serveur et peuvent déclencher un `redirect()`.
 
+> [!TIP]
+> **Server Actions vs REST : une entorse assumée.** Une Server Action passe par un `POST` générique vers une URL opaque générée par Next.js — pas de verbe sémantique, pas d'URL lisible, pas de contrat explicite. Ce n'est pas du REST.
+>
+> C'est acceptable ici parce que le front et le back sont la même app et que ces actions ne sont pas destinées à être consommées par un client externe. Dès qu'une opération doit être accessible depuis une app mobile, un service tiers ou un autre frontend, elle mérite une vraie route REST dans `/api/` avec ses verbes et ses URLs propres.
+>
+> Dans ce projet la ligne est tenue : les Server Actions ne gèrent que la création/modification de carte et la connexion. Tout ce qui est métier partageable passe par des routes REST normales.
+
 ### Validation des entrées
 
 Toutes les données entrantes passent par des schémas [Zod](https://zod.dev) définis dans `src/lib/schemas/`. Zod garantit le typage à l'exécution et génère les messages d'erreur.
