@@ -84,9 +84,8 @@ Les relations sont en cascade : supprimer un `User` supprime ses `Deck`, qui sup
 
 Les migrations sont des fichiers SQL dans `prisma/migrations/`. Chaque migration correspond à une évolution du schéma.
 
-- **En développement** : `npx prisma migrate dev` (interactif, crée + applique).  
-  Problème dans cet environnement : le terminal n'est pas interactif. On crée donc le fichier SQL manuellement dans `prisma/migrations/[timestamp]_nom/migration.sql`, puis on applique avec `npx prisma migrate deploy`.
-- **En production (Vercel)** : `prisma migrate deploy` s'exécute automatiquement au build (`"build": "prisma generate && next build"`).
+- **En développement** : `npx prisma migrate dev` dans ton terminal — demande confirmation, crée le fichier SQL dans `prisma/migrations/` et l'applique.
+- **En production (Vercel)** : `prisma migrate deploy` s'exécute automatiquement au build (`"build": "prisma generate && next build"`). Cette commande applique les migrations en attente sans demander de confirmation.
 
 ---
 
