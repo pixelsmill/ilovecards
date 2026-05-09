@@ -47,10 +47,13 @@ interface Props {
   className?: string
 }
 
+const LIGHT_TEMPLATES = new Set(['quote', 'minimaliste'])
+
 export default function CardRenderer({ card, size, flipped = false, accentColor = '#6366f1', deckName, className }: Props) {
   const TemplateComponent = TEMPLATES[card.template] ?? CardMinimaliste
   const showLabel = deckName && size !== 'thumb'
   const isVerified = card.verified !== false
+  const labelColor = LIGHT_TEMPLATES.has(card.template) ? '#1A1814' : '#ffffff'
 
   return (
     <div className={`card-renderer card-renderer--${size}${className ? ' ' + className : ''}`}>
@@ -62,13 +65,13 @@ export default function CardRenderer({ card, size, flipped = false, accentColor 
               <div
                 className={`rounded-full flex-shrink-0 ${size === 'full' ? 'w-2.5 h-2.5' : 'w-1.5 h-1.5'}`}
                 style={isVerified
-                  ? { backgroundColor: '#ffffff', filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.5))' }
-                  : { border: '2px solid #ffffff', backgroundColor: 'transparent', filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.5))' }
+                  ? { backgroundColor: labelColor }
+                  : { border: `2px solid ${labelColor}`, backgroundColor: 'transparent' }
                 }
               />
               <span
-                className={`text-white uppercase tracking-widest truncate ${size === 'full' ? 'text-[10px]' : 'text-[5px]'}`}
-                style={{ fontWeight: 500, textShadow: '0 1px 3px rgba(0,0,0,0.6)' }}
+                className={`uppercase tracking-widest truncate ${size === 'full' ? 'text-[10px]' : 'text-[5px]'}`}
+                style={{ fontWeight: 500, color: labelColor }}
               >
                 {deckName}
               </span>

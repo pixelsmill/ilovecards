@@ -17,7 +17,7 @@ export default function CardMagazine({ notion, size }: TemplateProps) {
           Concept
         </p>
         <div
-          className={`${isThumb ? 'mt-1 pt-1' : isFull ? 'mt-3 pt-4' : 'mt-1.5 pt-1.5'}`}
+          className={`${isThumb ? 'mt-1 pt-1' : isFull ? 'mt-[22px] pt-4' : 'mt-1.5 pt-1.5'}`}
           style={{ borderTop: '1px solid #C68A3A' }}
         >
           <p
