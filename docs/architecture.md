@@ -391,6 +391,22 @@ Le template `photo-overlay` est le seul à utiliser une image externe (`imageUrl
 
 Tailwind CSS v4 avec PostCSS. Pas de `tailwind.config.js` — la configuration est inline dans le CSS (`@theme`, `@layer`). Les couleurs de l'app sont définies en custom properties CSS (`--color-*`).
 
+> [!TIP]
+> **PostCSS et Tailwind — comment ça s'articule ?**
+>
+> PostCSS est un **transformateur de CSS** : il lit un fichier `.css`, le fait passer par une chaîne de plugins, et sort du CSS standard compris par tous les navigateurs. C'est le même principe que Babel pour le JavaScript — tu écris dans une syntaxe étendue, l'outil produit quelque chose de compatible.
+>
+> Tailwind v4 est justement un **plugin PostCSS**. Quand Next.js compile le projet, il déclenche PostCSS qui exécute le plugin Tailwind. Tailwind scanne tous les fichiers `src/` pour trouver les classes utilisées (`rounded-lg`, `text-sm`…), puis génère le CSS correspondant à la volée — uniquement les classes effectivement utilisées, rien d'autre.
+>
+> La chaîne complète :
+> ```
+> ton fichier CSS (avec @theme, @layer, classes Tailwind)
+>   → PostCSS
+>     → plugin Tailwind v4  →  CSS final minifié livré au navigateur
+> ```
+>
+> En v4, Tailwind n'a plus besoin de `tailwind.config.js` : la config (couleurs, breakpoints…) se fait directement dans le CSS via la directive `@theme`. C'est ce fichier que tu trouveras dans `src/app/globals.css`.
+
 ---
 
 ## Services tiers
