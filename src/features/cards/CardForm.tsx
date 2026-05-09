@@ -45,7 +45,17 @@ export default function CardForm({ deckId, action, accentColor, cardId, defaultV
   const [imageUrl, setImageUrl] = useState(defaultValues?.imageUrl ?? null)
   const [changingPhoto, setChangingPhoto] = useState(false)
   const [uploading, setUploading] = useState(false)
+  const [urlInput, setUrlInput] = useState("")
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  function applyUrl() {
+    const trimmed = urlInput.trim()
+    if (!trimmed) return
+    try { new URL(trimmed) } catch { return }
+    setImageUrl(trimmed)
+    setTemplate("photo-overlay")
+    setUrlInput("")
+  }
 
   async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
@@ -140,6 +150,27 @@ export default function CardForm({ deckId, action, accentColor, cardId, defaultV
       {template === "photo-overlay" && (
         <div className="space-y-2">
           <p className="text-sm font-medium text-zinc-700">Photo</p>
+
+          {!imageUrl && (
+            <div className="flex gap-2">
+              <input
+                type="url"
+                value={urlInput}
+                onChange={e => setUrlInput(e.target.value)}
+                onKeyDown={e => e.key === "Enter" && (e.preventDefault(), applyUrl())}
+                placeholder="Coller une URL d'image…"
+                className="flex-1 rounded-lg border border-zinc-200 px-3 py-2 text-sm outline-none focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900"
+              />
+              <button
+                type="button"
+                onClick={applyUrl}
+                disabled={!urlInput.trim()}
+                className="rounded-lg border border-zinc-200 px-3 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 transition-colors disabled:opacity-40"
+              >
+                OK
+              </button>
+            </div>
+          )}
 
           {imageUrl ? (
             <>
