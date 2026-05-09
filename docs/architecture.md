@@ -294,7 +294,7 @@ La dernière ligne `_usage` indique le bilan : cartes créées + crédits restan
 
 ## Répétition espacée — Algorithme SM-2
 
-L'algorithme [SM-2](https://www.supermemo.com/en/blog/application-of-a-computer-to-improve-the-results-obtained-in-working-with-the-super-memo-method) (SuperMemo 2) calcule quand revoir chaque carte.
+L'algorithme [SM-2](https://en.wikipedia.org/wiki/SuperMemo#Description_of_SM-2_algorithm) (SuperMemo 2) calcule quand revoir chaque carte.
 
 Implémenté dans `src/lib/sm2.ts`. Chaque carte stocke trois valeurs :
 
