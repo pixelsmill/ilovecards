@@ -44,7 +44,7 @@ export default async function AccountPage() {
           href="/dashboard"
           className="block text-center text-sm text-zinc-400 hover:text-zinc-600 transition-colors"
         >
-          ← Retour au dashboard
+          ← Accueil
         </Link>
       </div>
     </main>

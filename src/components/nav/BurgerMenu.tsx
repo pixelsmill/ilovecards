@@ -6,7 +6,7 @@ import Link from "next/link"
 import { signOut } from "next-auth/react"
 
 const NAV = [
-  { href: "/dashboard", label: "Dashboard",  num: "01" },
+  { href: "/dashboard", label: "Accueil",     num: "01" },
   { href: "/review",    label: "Réviser",    num: "02" },
   { href: "/decks",     label: "Mes decks",  num: "03" },
   { href: "/import",    label: "Import IA",  num: "04" },

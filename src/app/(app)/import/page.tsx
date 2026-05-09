@@ -34,7 +34,7 @@ export default async function ImportPage({ searchParams }: { searchParams: Promi
         <div className="space-y-1">
           <h1 className="text-xl font-bold tracking-tight">Générer des cartes</h1>
           <Link href="/dashboard" className="text-sm text-zinc-400 hover:text-zinc-600 transition-colors">
-            ← Dashboard
+            ← Accueil
           </Link>
         </div>
         <ImportFlow decks={decks} defaultDeckId={deckId} credits={credits} />
