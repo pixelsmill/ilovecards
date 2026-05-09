@@ -70,5 +70,5 @@ export default async function ReviewPage({
     )
   }
 
-  return <ReviewSession initialCards={cards} mode={mode} />
+  return <ReviewSession initialCards={cards} mode={mode} backHref={backHref} />
 }

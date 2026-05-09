@@ -74,12 +74,19 @@ async function postReview(cardId: string, action: "dismiss" | "fail") {
   }).catch(() => null)
 }
 
+function buildNavBackground(colors: string[]): string {
+  const unique = [...new Set(colors)]
+  if (unique.length === 1) return unique[0]
+  return `linear-gradient(135deg, ${unique.join(", ")})`
+}
+
 interface Props {
   initialCards: ReviewCard[]
   mode: "browse" | "learn"
+  backHref: string
 }
 
-export default function ReviewSession({ initialCards, mode }: Props) {
+export default function ReviewSession({ initialCards, mode, backHref }: Props) {
   const total = initialCards.length
   const [state, dispatch] = useReducer(sessionReducer, {
     cards: initialCards,
@@ -89,6 +96,9 @@ export default function ReviewSession({ initialCards, mode }: Props) {
   })
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
+
+  // Computed once from the full initial session — doesn't change as cards are dismissed
+  const navBackground = buildNavBackground(initialCards.map(c => c.deck.accentColor))
 
   useEffect(() => {
     if (!menuOpen) return
@@ -139,98 +149,120 @@ export default function ReviewSession({ initialCards, mode }: Props) {
           </p>
         </div>
         <Link
-          href="/dashboard"
+          href={backHref}
           className="rounded-lg bg-zinc-600 px-6 py-3 text-sm font-medium text-white hover:bg-zinc-500 transition-colors"
         >
-          Retour au dashboard
+          Retour
         </Link>
       </main>
     )
   }
 
   return (
-    <main className="h-[calc(100dvh-3.5rem)] bg-zinc-700 flex flex-col select-none">
-      {/* Progress bar — only in learn mode */}
+    <>
+      {/* Learn mode — colored navbar overlay */}
       {mode === "learn" && (
-        <div className="flex-shrink-0 h-0.5 bg-zinc-600">
-          <div
-            className="h-full transition-all duration-500"
-            style={{ width: `${progress}%`, backgroundColor: current.deck.accentColor }}
-          />
+        <div
+          className="fixed top-0 inset-x-0 z-50 flex items-center justify-between px-4"
+          style={{ height: "3.5rem", background: navBackground }}
+        >
+          <div className="w-8" />
+          <span className="text-white/90 text-sm font-medium tracking-wide">
+            Mémorisation en cours
+          </span>
+          <Link
+            href={backHref}
+            className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/20 transition-colors"
+            aria-label="Quitter la session"
+          >
+            <span className="text-white text-xl leading-none">×</span>
+          </Link>
         </div>
       )}
 
-      {/* Top bar */}
-      <div className="flex-shrink-0 flex items-center justify-between px-4 py-3">
-        <span className="text-zinc-400 text-xs">
-          {state.index + 1} / {state.cards.length}
-        </span>
+      <main className="h-[calc(100dvh-3.5rem)] bg-zinc-700 flex flex-col select-none">
+        {/* Progress bar — only in learn mode */}
+        {mode === "learn" && (
+          <div className="flex-shrink-0 h-0.5 bg-zinc-600">
+            <div
+              className="h-full transition-all duration-500"
+              style={{ width: `${progress}%`, background: navBackground }}
+            />
+          </div>
+        )}
 
-        <div className="relative" ref={menuRef}>
-          <button
-            onClick={() => setMenuOpen(o => !o)}
-            className="flex flex-col gap-[3px] items-center justify-center w-8 h-8 rounded-lg hover:bg-zinc-600 transition-colors"
-            aria-label="Actions sur la carte"
+        {/* Top bar */}
+        <div className="flex-shrink-0 flex items-center justify-between px-4 py-3">
+          <span className="text-zinc-400 text-xs">
+            {state.index + 1} / {state.cards.length}
+          </span>
+
+          <div className="relative" ref={menuRef}>
+            <button
+              onClick={() => setMenuOpen(o => !o)}
+              className="flex flex-col gap-[3px] items-center justify-center w-8 h-8 rounded-lg hover:bg-zinc-600 transition-colors"
+              aria-label="Actions sur la carte"
+            >
+              <span className="w-1 h-1 rounded-full bg-zinc-400" />
+              <span className="w-1 h-1 rounded-full bg-zinc-400" />
+              <span className="w-1 h-1 rounded-full bg-zinc-400" />
+            </button>
+
+            {menuOpen && (
+              <div className="absolute right-0 top-full mt-1 w-40 rounded-xl bg-white shadow-lg overflow-hidden z-30">
+                <Link
+                  href={`/decks/${current.deck.id}/cards/${current.id}/edit`}
+                  className="block px-4 py-3 text-sm text-zinc-700 hover:bg-zinc-50 transition-colors"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Modifier
+                </Link>
+                <button
+                  onClick={handleDelete}
+                  className="w-full text-left px-4 py-3 text-sm text-red-500 hover:bg-red-50 transition-colors"
+                >
+                  Supprimer
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Card area */}
+        <div className="flex-1 flex items-center justify-center px-4 overflow-hidden">
+          <SwipeCard
+            key={current.id}
+            mode={mode}
+            onSwipe={handleSwipe}
+            onTap={() => dispatch({ type: "FLIP" })}
           >
-            <span className="w-1 h-1 rounded-full bg-zinc-400" />
-            <span className="w-1 h-1 rounded-full bg-zinc-400" />
-            <span className="w-1 h-1 rounded-full bg-zinc-400" />
-          </button>
+            <CardRenderer
+              card={current}
+              size="full"
+              flipped={state.side === "verso"}
+              accentColor={current.deck.accentColor}
+              deckName={current.deck.name}
+            />
+          </SwipeCard>
+        </div>
 
-          {menuOpen && (
-            <div className="absolute right-0 top-full mt-1 w-40 rounded-xl bg-white shadow-lg overflow-hidden z-30">
-              <Link
-                href={`/decks/${current.deck.id}/cards/${current.id}/edit`}
-                className="block px-4 py-3 text-sm text-zinc-700 hover:bg-zinc-50 transition-colors"
-                onClick={() => setMenuOpen(false)}
-              >
-                Modifier
-              </Link>
-              <button
-                onClick={handleDelete}
-                className="w-full text-left px-4 py-3 text-sm text-red-500 hover:bg-red-50 transition-colors"
-              >
-                Supprimer
-              </button>
-            </div>
+        {/* Gesture hints */}
+        <div className="flex-shrink-0 flex justify-center gap-5 py-4 text-zinc-500 text-xs">
+          {mode === "browse" ? (
+            <>
+              <span>← préc</span>
+              <span>· clic : retourner ·</span>
+              <span>suiv →</span>
+            </>
+          ) : (
+            <>
+              <span style={{ color: "#ef4444" }}>↓ à revoir</span>
+              <span>· clic : retourner ·</span>
+              <span style={{ color: "#22c55e" }}>↑ maîtrisé</span>
+            </>
           )}
         </div>
-      </div>
-
-      {/* Card area */}
-      <div className="flex-1 flex items-center justify-center px-4 overflow-hidden">
-        <SwipeCard
-          key={current.id}
-          mode={mode}
-          onSwipe={handleSwipe}
-          onTap={() => dispatch({ type: "FLIP" })}
-        >
-          <CardRenderer
-            card={current}
-            size="full"
-            flipped={state.side === "verso"}
-            accentColor={current.deck.accentColor}
-            deckName={current.deck.name}
-          />
-        </SwipeCard>
-      </div>
-
-      {/* Gesture hints */}
-      <div className="flex-shrink-0 flex justify-center gap-5 py-4 text-zinc-500 text-xs">
-        {mode === "browse" ? (
-          <>
-            <span>← préc</span>
-            <span>· clic : retourner ·</span>
-            <span>suiv →</span>
-          </>
-        ) : (
-          <>
-            <span style={{ color: "#ef4444" }}>↓ à revoir</span>
-            <span>· clic : retourner ·</span>
-            <span style={{ color: "#22c55e" }}>↑ maîtrisé</span>
-          </>
-        )}
-      </div>
-    </main>
+      </main>
+    </>
   )
 }
