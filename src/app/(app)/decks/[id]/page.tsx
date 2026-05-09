@@ -32,13 +32,26 @@ export default async function DeckDetailPage({ params }: { params: Promise<{ id:
 
         {deck.description && <p className="text-sm text-zinc-500">{deck.description}</p>}
 
-        <div className="flex gap-2 flex-wrap">
+        {/* Primary actions */}
+        <div className="flex gap-3">
           <Link
             href={`/review?deckId=${id}`}
-            className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-700 transition-colors"
+            className="flex-1 rounded-xl py-3 text-center text-sm font-semibold text-white transition-colors"
+            style={{ backgroundColor: deck.accentColor }}
           >
-            Réviser
+            Mémoriser
           </Link>
+          <Link
+            href={`/review?deckId=${id}&mode=browse`}
+            className="flex-1 rounded-xl border-2 py-3 text-center text-sm font-semibold transition-colors hover:bg-zinc-50"
+            style={{ borderColor: deck.accentColor, color: deck.accentColor }}
+          >
+            Voir les cartes
+          </Link>
+        </div>
+
+        {/* Secondary actions */}
+        <div className="flex gap-2 flex-wrap">
           <Link
             href={`/decks/${id}/cards/new`}
             className="rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 transition-colors"

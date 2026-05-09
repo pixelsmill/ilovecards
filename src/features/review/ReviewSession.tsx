@@ -11,6 +11,7 @@ interface ReviewCard {
   developpement: string | null
   source: string | null
   template: string
+  imageUrl?: string | null
   easeFactor: number
   interval: number
   repetitions: number
@@ -29,6 +30,7 @@ type SessionAction =
   | { type: "PREV" }
   | { type: "FLIP" }
   | { type: "DISMISS" }
+  | { type: "FAIL" }
 
 function sessionReducer(state: SessionState, action: SessionAction): SessionState {
   const { cards, index } = state
@@ -48,22 +50,30 @@ function sessionReducer(state: SessionState, action: SessionAction): SessionStat
       const newIndex = Math.max(0, Math.min(index, newCards.length - 1))
       return { cards: newCards, index: newIndex, side: "recto", dismissed: state.dismissed + 1 }
     }
+
+    case "FAIL": {
+      // Move card to end of queue so it comes back
+      const card = cards[index]
+      const remaining = cards.filter((_, i) => i !== index)
+      return { cards: [...remaining, card], index: Math.min(index, remaining.length - 1), side: "recto", dismissed: state.dismissed }
+    }
   }
 }
 
-async function postReview(cardId: string) {
+async function postReview(cardId: string, action: "dismiss" | "fail") {
   await fetch("/api/review", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ cardId, action: "dismiss" }),
+    body: JSON.stringify({ cardId, action }),
   }).catch(() => null)
 }
 
 interface Props {
   initialCards: ReviewCard[]
+  mode: "browse" | "learn"
 }
 
-export default function ReviewSession({ initialCards }: Props) {
+export default function ReviewSession({ initialCards, mode }: Props) {
   const total = initialCards.length
   const [state, dispatch] = useReducer(sessionReducer, {
     cards: initialCards,
@@ -75,15 +85,20 @@ export default function ReviewSession({ initialCards }: Props) {
   const current = state.cards[state.index] ?? null
   const progress = total > 0 ? (state.dismissed / total) * 100 : 100
 
-  function handleSwipe(dir: "left" | "right" | "up") {
+  function handleSwipe(dir: "left" | "right" | "up" | "down") {
     if (!current) return
-    switch (dir) {
-      case "left":  dispatch({ type: "PREV" }); break
-      case "right": dispatch({ type: "NEXT" }); break
-      case "up":
-        postReview(current.id)
+    if (mode === "browse") {
+      if (dir === "left")  dispatch({ type: "PREV" })
+      if (dir === "right") dispatch({ type: "NEXT" })
+    } else {
+      if (dir === "up") {
+        postReview(current.id, "dismiss")
         dispatch({ type: "DISMISS" })
-        break
+      }
+      if (dir === "down") {
+        postReview(current.id, "fail")
+        dispatch({ type: "FAIL" })
+      }
     }
   }
 
@@ -109,18 +124,22 @@ export default function ReviewSession({ initialCards }: Props) {
 
   return (
     <main className="h-[calc(100dvh-3.5rem)] bg-zinc-700 flex flex-col select-none">
-      {/* Progress bar */}
-      <div className="flex-shrink-0 h-0.5 bg-zinc-600">
-        <div
-          className="h-full transition-all duration-500"
-          style={{ width: `${progress}%`, backgroundColor: current.deck.accentColor }}
-        />
-      </div>
+      {/* Progress bar — only in learn mode */}
+      {mode === "learn" && (
+        <div className="flex-shrink-0 h-0.5 bg-zinc-600">
+          <div
+            className="h-full transition-all duration-500"
+            style={{ width: `${progress}%`, backgroundColor: current.deck.accentColor }}
+          />
+        </div>
+      )}
 
       {/* Top bar */}
       <div className="flex-shrink-0 flex items-center px-4 py-3 pr-16">
         <span className="text-zinc-400 text-xs">
-          {state.index + 1} / {state.cards.length}
+          {mode === "browse"
+            ? `${state.index + 1} / ${state.cards.length}`
+            : `${state.index + 1} / ${state.cards.length}`}
         </span>
       </div>
 
@@ -128,6 +147,7 @@ export default function ReviewSession({ initialCards }: Props) {
       <div className="flex-1 flex items-center justify-center px-4 overflow-hidden">
         <SwipeCard
           key={current.id}
+          mode={mode}
           onSwipe={handleSwipe}
           onTap={() => dispatch({ type: "FLIP" })}
         >
@@ -143,10 +163,19 @@ export default function ReviewSession({ initialCards }: Props) {
 
       {/* Gesture hints */}
       <div className="flex-shrink-0 flex justify-center gap-5 py-4 text-zinc-500 text-xs">
-        <span>← préc</span>
-        <span>· clic: retourner ·</span>
-        <span>↑ maîtrisé</span>
-        <span>→ suiv</span>
+        {mode === "browse" ? (
+          <>
+            <span>← préc</span>
+            <span>· clic : retourner ·</span>
+            <span>suiv →</span>
+          </>
+        ) : (
+          <>
+            <span style={{ color: "#ef4444" }}>↓ à revoir</span>
+            <span>· clic : retourner ·</span>
+            <span style={{ color: "#22c55e" }}>↑ maîtrisé</span>
+          </>
+        )}
       </div>
     </main>
   )

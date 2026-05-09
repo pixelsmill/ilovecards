@@ -2,49 +2,54 @@
 
 import { useState, useRef, useEffect } from "react"
 
-type Direction = "left" | "right" | "up"
+type Direction = "left" | "right" | "up" | "down"
 
 interface Props {
   onSwipe: (dir: Direction) => void
   onTap: () => void
+  mode: "browse" | "learn"
   children: React.ReactNode
 }
 
 const SWIPE_THRESHOLD = 70
 const TAP_THRESHOLD = 12
 
-export default function SwipeCard({ onSwipe, onTap, children }: Props) {
+export default function SwipeCard({ onSwipe, onTap, mode, children }: Props) {
   const [drag, setDrag] = useState({ x: 0, y: 0 })
   const [exiting, setExiting] = useState<Direction | null>(null)
   const [springing, setSpringing] = useState(false)
   const dragging = useRef(false)
   const startPos = useRef({ x: 0, y: 0 })
-  const latestDrag = useRef({ x: 0, y: 0 }) // ref avoids stale closure in release()
+  const latestDrag = useRef({ x: 0, y: 0 })
   const onSwipeRef = useRef(onSwipe)
   const onTapRef = useRef(onTap)
   useEffect(() => { onSwipeRef.current = onSwipe; onTapRef.current = onTap })
 
-  // Fire parent action after exit animation
   useEffect(() => {
     if (!exiting) return
     const t = setTimeout(() => onSwipeRef.current(exiting), 230)
     return () => clearTimeout(t)
   }, [exiting])
 
-  // Keyboard
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      switch (e.key) {
-        case "ArrowLeft":  onSwipeRef.current("left"); break
-        case "ArrowRight": onSwipeRef.current("right"); break
-        case "ArrowUp":    e.preventDefault(); onSwipeRef.current("up"); break
-        case " ":
-        case "Enter":      e.preventDefault(); onTapRef.current(); break
+      if (mode === "browse") {
+        switch (e.key) {
+          case "ArrowLeft":  onSwipeRef.current("left"); break
+          case "ArrowRight": onSwipeRef.current("right"); break
+          case " ": case "Enter": e.preventDefault(); onTapRef.current(); break
+        }
+      } else {
+        switch (e.key) {
+          case "ArrowUp":   e.preventDefault(); onSwipeRef.current("up"); break
+          case "ArrowDown": e.preventDefault(); onSwipeRef.current("down"); break
+          case " ": case "Enter": e.preventDefault(); onTapRef.current(); break
+        }
       }
     }
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)
-  }, [])
+  }, [mode])
 
   function onTouchStart(e: React.TouchEvent) {
     dragging.current = true
@@ -57,11 +62,20 @@ export default function SwipeCard({ onSwipe, onTap, children }: Props) {
     if (!dragging.current || exiting) return
     const dx = e.touches[0].clientX - startPos.current.x
     const dy = e.touches[0].clientY - startPos.current.y
-    // Downward gesture → browser handles (pull-to-refresh), don't animate
-    if (dy > 0 && Math.abs(dy) > Math.abs(dx)) return
-    const next = { x: dx, y: Math.min(dy, 0) }
-    latestDrag.current = next
-    setDrag(next)
+
+    if (mode === "browse") {
+      // Only track horizontal — let browser handle vertical
+      if (Math.abs(dy) > Math.abs(dx)) return
+      const next = { x: dx, y: 0 }
+      latestDrag.current = next
+      setDrag(next)
+    } else {
+      // Only track vertical
+      if (Math.abs(dx) > Math.abs(dy)) return
+      const next = { x: 0, y: dy }
+      latestDrag.current = next
+      setDrag(next)
+    }
   }
 
   function release() {
@@ -74,44 +88,41 @@ export default function SwipeCard({ onSwipe, onTap, children }: Props) {
       setDrag({ x: 0, y: 0 })
     }
 
-    // Tap: minimal movement
     if (Math.abs(dx) < TAP_THRESHOLD && Math.abs(dy) < TAP_THRESHOLD) {
       reset()
       onTapRef.current()
       return
     }
 
-    const isHoriz = Math.abs(dx) >= Math.abs(dy)
-
-    // Up swipe
-    if (!isHoriz && dy < -SWIPE_THRESHOLD) {
-      reset()
-      setExiting("up")
-      return
+    if (mode === "browse") {
+      if (Math.abs(dx) >= SWIPE_THRESHOLD) {
+        reset()
+        setExiting(dx < 0 ? "left" : "right")
+        return
+      }
+    } else {
+      if (Math.abs(dy) >= SWIPE_THRESHOLD) {
+        reset()
+        setExiting(dy < 0 ? "up" : "down")
+        return
+      }
     }
 
-    // Horizontal swipe
-    if (isHoriz && Math.abs(dx) >= SWIPE_THRESHOLD) {
-      reset()
-      setExiting(dx < 0 ? "left" : "right")
-      return
-    }
-
-    // Below threshold: spring back
     reset()
     setSpringing(true)
   }
 
-  // Indicator label during drag
+  // Drag indicator label
   const ax = Math.abs(drag.x), ay = Math.abs(drag.y)
   let label: string | null = null
   let labelColor = "#a1a1aa"
   if (!exiting && (ax > 20 || ay > 20)) {
-    if (ax >= ay) {
+    if (mode === "browse") {
       if (drag.x < -20) { label = "← Précédent" }
       if (drag.x >  20) { label = "→ Suivant" }
-    } else if (drag.y < -20) {
-      label = "↑ Maîtrisé"; labelColor = "#22c55e"
+    } else {
+      if (drag.y < -20) { label = "↑ Maîtrisé";  labelColor = "#22c55e" }
+      if (drag.y >  20) { label = "↓ À revoir";   labelColor = "#ef4444" }
     }
   }
 
@@ -119,6 +130,7 @@ export default function SwipeCard({ onSwipe, onTap, children }: Props) {
     left:  "translateX(-130%) rotate(-12deg)",
     right: "translateX( 130%) rotate( 12deg)",
     up:    "translateY(-130%)",
+    down:  "translateY( 130%)",
   }
 
   const transform = exiting
@@ -132,7 +144,7 @@ export default function SwipeCard({ onSwipe, onTap, children }: Props) {
   return (
     <div
       className="relative h-full w-full flex items-center justify-center overflow-hidden"
-      style={{ touchAction: "pan-down" }}
+      style={{ touchAction: mode === "learn" ? "none" : "pan-y" }}
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={release}
