@@ -53,7 +53,9 @@ export default function CardRenderer({ card, size, flipped = false, accentColor 
   const TemplateComponent = TEMPLATES[card.template] ?? CardMinimaliste
   const showLabel = deckName && size !== 'thumb'
   const isVerified = card.verified !== false
-  const labelColor = LIGHT_TEMPLATES.has(card.template) ? '#1A1814' : '#ffffff'
+  const isLight = LIGHT_TEMPLATES.has(card.template)
+  const labelColor = isLight ? '#6B6356' : '#ffffff'
+  const dotColor = isLight ? accentColor : '#ffffff'
 
   return (
     <div className={`card-renderer card-renderer--${size}${className ? ' ' + className : ''}`}>
@@ -65,8 +67,8 @@ export default function CardRenderer({ card, size, flipped = false, accentColor 
               <div
                 className={`rounded-full flex-shrink-0 ${size === 'full' ? 'w-2.5 h-2.5' : 'w-1.5 h-1.5'}`}
                 style={isVerified
-                  ? { backgroundColor: labelColor }
-                  : { border: `2px solid ${labelColor}`, backgroundColor: 'transparent' }
+                  ? { backgroundColor: dotColor }
+                  : { border: `2px solid ${dotColor}`, backgroundColor: 'transparent' }
                 }
               />
               <span
