@@ -21,6 +21,7 @@ export default function SwipeCard({ onSwipe, onTap, mode, children }: Props) {
   const dragging = useRef(false)
   const startPos = useRef({ x: 0, y: 0 })
   const latestDrag = useRef({ x: 0, y: 0 })
+  const lastTouchTime = useRef(0)
   const onSwipeRef = useRef(onSwipe)
   const onTapRef = useRef(onTap)
   useEffect(() => { onSwipeRef.current = onSwipe; onTapRef.current = onTap })
@@ -52,6 +53,7 @@ export default function SwipeCard({ onSwipe, onTap, mode, children }: Props) {
   }, [mode])
 
   function onTouchStart(e: React.TouchEvent) {
+    lastTouchTime.current = Date.now()
     dragging.current = true
     setSpringing(false)
     latestDrag.current = { x: 0, y: 0 }
@@ -79,6 +81,7 @@ export default function SwipeCard({ onSwipe, onTap, mode, children }: Props) {
   }
 
   function onMouseDown(e: React.MouseEvent) {
+    if (Date.now() - lastTouchTime.current < 500) return
     dragging.current = true
     setSpringing(false)
     latestDrag.current = { x: 0, y: 0 }
