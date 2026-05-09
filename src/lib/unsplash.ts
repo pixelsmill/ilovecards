@@ -3,12 +3,15 @@ export async function fetchUnsplashImage(query: string): Promise<string | undefi
   if (!accessKey) return undefined
   try {
     const res = await fetch(
-      `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&per_page=1&orientation=portrait`,
+      `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query + " background")}&per_page=5&orientation=portrait`,
       { headers: { Authorization: `Client-ID ${accessKey}` }, signal: AbortSignal.timeout(5000) }
     )
     if (!res.ok) return undefined
     const data = await res.json()
-    return (data.results?.[0]?.urls?.regular as string | undefined) ?? undefined
+    const results = data.results as Array<{ urls: { regular: string } }> | undefined
+    if (!results?.length) return undefined
+    const pick = results[Math.floor(Math.random() * results.length)]
+    return pick.urls.regular
   } catch {
     return undefined
   }
