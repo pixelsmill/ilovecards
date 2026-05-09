@@ -486,4 +486,28 @@ Hébergé sur **Vercel**, connecté au repo GitHub. Le pipeline est automatique 
 5. `next build` compile et optimise l'app
 6. Le déploiement remplace la version précédente (zéro downtime)
 
-Les fonctions API sont déployées en **Serverless Functions** (Node.js) et le proxy (`src/proxy.ts`) en **Edge Function** — il tourne dans un runtime V8 léger, sans Node.js, ce qui le rend très rapide mais incompatible avec Prisma (d'où le split-config auth).
+### Deux types de fonctions sur Vercel
+
+Vercel déploie le code en deux environnements d'exécution très différents :
+
+**Serverless Functions (Node.js)** — les API routes (`/api/*`) et les Server Components tournent ici. C'est un vrai environnement Node.js : accès au système de fichiers, aux modules natifs, à Prisma. Inconvénient : un "cold start" de quelques centaines de millisecondes si la fonction n'a pas été appelée récemment (Vercel doit instancier le container).
+
+**Edge Functions (V8 isolate)** — le proxy (`src/proxy.ts`) tourne ici. V8 est le moteur JavaScript de Chrome, utilisé sans la couche Node.js autour. Avantages : démarrage quasi-instantané (pas de cold start), exécution au plus proche de l'utilisateur géographiquement. Inconvénient : pas d'accès aux APIs Node.js — donc pas de Prisma, pas de connexion DB, pas de modules natifs.
+
+Le **problème concret** : le proxy intercepte *toutes* les requêtes de l'app pour vérifier si l'utilisateur est connecté. S'il tournait en Serverless, chaque visite de page subirait un cold start potentiel. Sur Edge, il répond en quelques millisecondes.
+
+Mais vérifier l'authentification nécessite Auth.js — qui, dans sa config complète, utilise Prisma. Impossible sur Edge. C'est exactement pour ça qu'existe le **pattern split-config** décrit plus haut : `auth.config.ts` ne contient que ce qui est Edge-compatible (lecture du JWT depuis le cookie), et `auth.ts` contient le reste (Prisma, email) réservé aux contextes Node.js.
+
+```
+Requête entrante
+    │
+    ▼
+proxy (Edge — V8)      ← vérifie le JWT dans le cookie, sans DB
+    │
+    ├── non authentifié → redirect /login
+    │
+    └── authentifié → laisse passer
+            │
+            ▼
+     page / API route (Node.js) ← ici Prisma est disponible
+```
