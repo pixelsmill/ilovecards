@@ -100,6 +100,11 @@ Prisma joue deux rôles :
 
 Le schéma source est `prisma/schema.prisma`. Après chaque modification, `prisma generate` regénère le client TypeScript (c'est pourquoi il faut relancer le serveur de dev après une migration).
 
+> [!TIP]
+> **Où vivent ces types ?** Dans `node_modules/.prisma/client/index.d.ts` — un fichier généré de plusieurs milliers de lignes contenant les types de toutes tes tables (`User`, `Card`, `Deck`…) ainsi que les méthodes typées de `prisma.card.findUnique()`, etc. Il est ignoré par git, d'où le `prisma generate` au début du build Vercel.
+>
+> Le bénéfice concret : si tu ajoutes `isPro` dans le schéma et oublies de relancer `generate`, TypeScript signale `Property 'isPro' does not exist` à la compilation — pas en production. C'est la différence avec du SQL brut où une faute de frappe ne se voit qu'à l'exécution.
+
 ---
 
 ## Back-end
