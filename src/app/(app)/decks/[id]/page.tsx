@@ -65,7 +65,6 @@ export default async function DeckDetailPage({ params }: { params: Promise<{ id:
             Modifier
           </Link>
           <ShareButton deckId={id} initialToken={deck.shareToken} />
-          <DeleteDeckButton id={id} />
         </div>
 
         <div className="space-y-2">
@@ -86,6 +85,9 @@ export default async function DeckDetailPage({ params }: { params: Promise<{ id:
               ))}
             </div>
           )}
+        </div>
+        <div className="pt-8 border-t border-zinc-200">
+          <DeleteDeckButton id={id} />
         </div>
       </div>
     </main>
