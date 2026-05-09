@@ -302,9 +302,11 @@ Implémenté dans `src/lib/sm2.ts`. Chaque carte stocke trois valeurs :
 - `interval` (défaut 0) — nombre de jours jusqu'à la prochaine révision.
 - `repetitions` — nombre de fois consécutives où la carte a été correctement retenue.
 
-Deux actions possibles :
-- **`dismiss`** (↑ swipe haut — carte sue) → `quality 4` dans SM-2 → l'intervalle croît.
-- **`fail`** (↓ swipe bas — carte ratée) → `quality 1` → l'intervalle reset à 1 jour, `repetitions` = 0.
+Deux actions définies dans l'algorithme :
+- **`dismiss`** (↑ swipe haut — carte maîtrisée) → `quality 4` dans SM-2 → l'intervalle croît.
+- **`fail`** (carte ratée) → `quality 1` → l'intervalle reset à 1 jour, `repetitions` = 0.
+
+Actuellement, seul `dismiss` est exposé dans l'UI (swipe haut). `fail` est implémenté dans `sm2.ts` et l'API `/api/review` l'accepte, mais aucun geste ne le déclenche encore.
 
 ---
 
