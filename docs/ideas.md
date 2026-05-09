@@ -1,34 +1,90 @@
-# Idées & retours utilisateurs
+# User Stories — idées en attente
 
-Idées en attente d'arbitrage, issues de retours d'utilisateurs réels.
-
----
-
-## Images utilisateur — le cas botanique (herbier numérique)
-
-**Contexte :** Un utilisateur veut créer des decks de botanique centrés sur la reconnaissance visuelle des plantes. Il a besoin d'attacher des photos à ses cartes — soit trouvées sur le web, soit prises directement avec l'appareil photo.
-
-**Trois besoins distincts, de complexité croissante :**
-
-1. **URL libre** — permettre à l'utilisateur de coller l'URL d'une image trouvée sur le web dans le formulaire de carte. Aucun stockage supplémentaire, fonctionne avec `imageUrl` déjà en base. Trivial à implémenter.
-
-2. **Upload depuis l'appareil** (caméra ou pellicule) — `<input type="file" accept="image/*" capture="environment">` fonctionne dans tous les navigateurs mobiles sans rien installer. Nécessite un service de stockage de fichiers pour les images uploadées. **Vercel Blob** est le choix naturel (~$0.02/Go stocké/mois, ~$0.08/Go transféré). Les cas 1 et 2 ensemble couvrent entièrement le besoin botanique.
-
-3. **Share target PWA** — apparaître dans la liste de partage iOS/Android quand l'utilisateur est dans l'app Photos. Nécessite que l'app soit installée sur l'écran d'accueil (PWA avec `manifest.json` + `share_target`). Si l'utilisateur n'a pas installé l'app, ilovecards n'apparaît pas dans la liste de partage du système. Chantier indépendant, à traiter dans une phase PWA.
-
-**Recommandation :** Implémenter 1 + 2 en premier. Le cas botanique est entièrement couvert. Le share target peut attendre.
+Issues de retours d'utilisateurs réels. Pas encore planifiées.
 
 ---
 
-## Statut de validation des cartes générées par IA
+## Images sur les cartes
 
-**Contexte :** Une utilisatrice craint d'apprendre des notions erronées à cause des hallucinations de l'IA. Elle souhaite pouvoir distinguer les cartes qu'elle a vérifiées de celles qu'elle n'a pas encore contrôlées.
+### US-1 — Coller une URL d'image sur une carte
 
-**Proposition :** Ajouter un champ `validated: Boolean` sur le modèle `Card` (défaut `false`). Les cartes générées par IA sont `non validées` par défaut. L'utilisateur les valide manuellement après avoir comparé le contenu avec son cours ou sa source de référence.
+**En tant qu'** utilisateur qui trouve une photo sur le web,
+**je veux** coller son URL dans le formulaire de création ou d'édition d'une carte,
+**afin de** l'afficher comme visuel principal sans avoir à uploader quoi que ce soit.
 
-**UX :** La puce colorée qui identifie le deck sur la carte devient un **cadenas** tant que la carte n'est pas validée. Une fois validée, elle redevient la puce normale. Le statut est une propriété de la **carte**, pas du deck — on peut avoir un deck mixte avec des cartes validées et d'autres non.
+**Critères d'acceptation :**
+- Un champ "Image (URL)" est disponible dans le formulaire de carte
+- Si une URL est renseignée, elle est utilisée comme `imageUrl` et affichée dans le template `photo-overlay`
+- Le champ est optionnel — une carte sans image fonctionne comme aujourd'hui
 
-**Points ouverts :**
-- Où déclencher la validation ? Depuis la session de mémorisation (bouton dans le menu `⋮`) ? Depuis la liste des cartes du deck ? Les deux ?
-- Faut-il un mode "révision de validation" qui ne montre que les cartes non validées ?
-- Faut-il afficher un compteur de cartes non validées sur la page du deck ?
+---
+
+### US-2 — Prendre ou importer une photo depuis l'appareil
+
+**En tant qu'** utilisateur sur mobile qui veut photographier une plante, un schéma ou une page de cours,
+**je veux** uploader une photo depuis ma pellicule ou en prendre une nouvelle directement,
+**afin de** l'attacher à une carte sans passer par une URL externe.
+
+**Critères d'acceptation :**
+- Un bouton "Ajouter une photo" est disponible dans le formulaire de carte
+- Il ouvre le sélecteur natif de l'appareil (pellicule ou caméra selon le choix de l'utilisateur)
+- La photo est uploadée et stockée (Vercel Blob), son URL est enregistrée comme `imageUrl`
+- Sur desktop, le même bouton ouvre un sélecteur de fichiers classique
+
+---
+
+### US-3 — Partager une photo vers ilovecards depuis l'app Photos
+
+**En tant qu'** utilisateur qui a installé ilovecards sur son écran d'accueil,
+**je veux** partager une photo directement depuis l'app Photos de mon téléphone vers ilovecards,
+**afin de** créer ou compléter une carte sans ouvrir le navigateur.
+
+**Critères d'acceptation :**
+- ilovecards apparaît dans la liste de partage système iOS/Android
+- Après le partage, l'utilisateur peut choisir d'attacher la photo à une carte existante ou d'en créer une nouvelle
+- La photo est uploadée et stockée comme dans US-2
+
+> **Note :** Nécessite que l'app soit installée comme PWA (via "Ajouter à l'écran d'accueil"). Non disponible pour les utilisateurs qui naviguent uniquement dans le navigateur. À traiter dans une phase PWA dédiée.
+
+---
+
+## Fiabilité des cartes générées par IA
+
+### US-4 — Savoir d'un coup d'œil qu'une carte n'a pas encore été vérifiée
+
+**En tant qu'** utilisateur qui craint d'apprendre des notions erronées générées par l'IA,
+**je veux** voir un indicateur visuel sur les cartes non encore vérifiées,
+**afin de** savoir lesquelles méritent d'être confrontées à ma source de référence avant de les mémoriser.
+
+**Critères d'acceptation :**
+- Toute carte créée par génération IA est marquée `non validée` par défaut
+- Les cartes créées manuellement sont marquées `validées` par défaut
+- Sur la carte, la puce colorée du deck est remplacée par une icône cadenas tant que la carte n'est pas validée
+- Une fois validée, la puce colorée normale réapparaît
+- Le statut est porté par la **carte**, pas le deck — un même deck peut contenir des cartes validées et non validées
+
+---
+
+### US-5 — Valider une carte après l'avoir vérifiée
+
+**En tant qu'** utilisateur qui vient de confronter le contenu d'une carte avec son cours,
+**je veux** marquer la carte comme validée,
+**afin de** ne plus la distinguer des cartes fiables et de suivre ma progression de relecture.
+
+**Critères d'acceptation :**
+- L'action "Valider" est accessible depuis le menu `⋮` en session de mémorisation
+- Elle est également accessible depuis la liste des cartes sur la page du deck
+- Une carte validée peut être re-marquée non validée (ex : si le cours a été corrigé)
+
+---
+
+### US-6 — Voir en un coup d'œil combien de cartes d'un deck restent à vérifier
+
+**En tant qu'** utilisateur qui a généré un deck entier par IA,
+**je veux** voir le nombre de cartes non validées sur la page du deck,
+**afin de** savoir l'effort de relecture qu'il me reste à faire avant de commencer à mémoriser.
+
+**Critères d'acceptation :**
+- La page du deck affiche un compteur "X cartes à vérifier" si des cartes non validées existent
+- Le compteur disparaît quand toutes les cartes sont validées
+- Un lien rapide depuis ce compteur filtre la liste sur les cartes non validées uniquement
