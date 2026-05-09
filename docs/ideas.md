@@ -56,25 +56,27 @@ Issues de retours d'utilisateurs réels. Pas encore planifiées.
 **je veux** voir un indicateur visuel sur les cartes non encore vérifiées,
 **afin de** savoir lesquelles méritent d'être confrontées à ma source de référence avant de les mémoriser.
 
+**Propriété :** `verified: Boolean` sur le modèle `Card`.
+
 **Critères d'acceptation :**
-- Toute carte créée par génération IA est marquée `non validée` par défaut
-- Les cartes créées manuellement sont marquées `validées` par défaut
-- Sur la carte, la puce colorée du deck est remplacée par une icône cadenas tant que la carte n'est pas validée
-- Une fois validée, la puce colorée normale réapparaît
-- Le statut est porté par la **carte**, pas le deck — un même deck peut contenir des cartes validées et non validées
+- Toute carte créée ou modifiée par l'IA est marquée `verified: false` par défaut
+- Les cartes créées manuellement sont marquées `verified: true` par défaut
+- Sur la carte, la puce colorée du deck devient un **cercle vide** (outline, pas de remplissage, épaisseur 2px, même rayon extérieur) tant que `verified` est `false`
+- Une fois vérifiée (`verified: true`), la puce redevient un disque plein de la couleur du deck
+- Le statut est porté par la **carte**, pas le deck — un même deck peut contenir des cartes vérifiées et non vérifiées
 
 ---
 
-### US-5 — Valider une carte après l'avoir vérifiée
+### US-5 — Marquer une carte comme vérifiée après l'avoir confrontée à sa source
 
-**En tant qu'** utilisateur qui vient de confronter le contenu d'une carte avec son cours,
-**je veux** marquer la carte comme validée,
+**En tant qu'** utilisateur qui vient de contrôler le contenu d'une carte avec son cours,
+**je veux** marquer la carte comme vérifiée,
 **afin de** ne plus la distinguer des cartes fiables et de suivre ma progression de relecture.
 
 **Critères d'acceptation :**
-- L'action "Valider" est accessible depuis le menu `⋮` en session de mémorisation
+- L'action "Marquer comme vérifiée" est accessible depuis le menu `⋮` en session de mémorisation
 - Elle est également accessible depuis la liste des cartes sur la page du deck
-- Une carte validée peut être re-marquée non validée (ex : si le cours a été corrigé)
+- Une carte vérifiée peut être re-marquée non vérifiée (ex : si le contenu du cours a changé)
 
 ---
 
