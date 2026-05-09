@@ -55,7 +55,7 @@ export default function CardRenderer({ card, size, flipped = false, accentColor 
   const isVerified = card.verified !== false
   const isLight = LIGHT_TEMPLATES.has(card.template)
   const labelColor = isLight ? '#6B6356' : '#ffffff'
-  const dotColor = labelColor
+  const dotColor = isLight ? '#1A1814' : '#ffffff'
 
   return (
     <div className={`card-renderer card-renderer--${size}${className ? ' ' + className : ''}`}>
