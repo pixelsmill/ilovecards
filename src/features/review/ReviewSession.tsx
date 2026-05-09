@@ -1,6 +1,6 @@
 "use client"
 
-import { useReducer } from "react"
+import { useReducer, useState, useRef, useEffect } from "react"
 import Link from "next/link"
 import CardRenderer from "@/components/card-renderer/CardRenderer"
 import SwipeCard from "./SwipeCard"
@@ -15,7 +15,7 @@ interface ReviewCard {
   easeFactor: number
   interval: number
   repetitions: number
-  deck: { accentColor: string; name: string }
+  deck: { accentColor: string; name: string; id: string }
 }
 
 interface SessionState {
@@ -31,6 +31,7 @@ type SessionAction =
   | { type: "FLIP" }
   | { type: "DISMISS" }
   | { type: "FAIL" }
+  | { type: "REMOVE" }
 
 function sessionReducer(state: SessionState, action: SessionAction): SessionState {
   const { cards, index } = state
@@ -52,10 +53,15 @@ function sessionReducer(state: SessionState, action: SessionAction): SessionStat
     }
 
     case "FAIL": {
-      // Move card to end of queue so it comes back
       const card = cards[index]
       const remaining = cards.filter((_, i) => i !== index)
       return { cards: [...remaining, card], index: Math.min(index, remaining.length - 1), side: "recto", dismissed: state.dismissed }
+    }
+
+    case "REMOVE": {
+      const newCards = cards.filter((_, i) => i !== index)
+      const newIndex = Math.max(0, Math.min(index, newCards.length - 1))
+      return { cards: newCards, index: newIndex, side: "recto", dismissed: state.dismissed }
     }
   }
 }
@@ -81,6 +87,19 @@ export default function ReviewSession({ initialCards, mode }: Props) {
     side: "recto",
     dismissed: 0,
   })
+  const [menuOpen, setMenuOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!menuOpen) return
+    function onClickOutside(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false)
+      }
+    }
+    document.addEventListener("mousedown", onClickOutside)
+    return () => document.removeEventListener("mousedown", onClickOutside)
+  }, [menuOpen])
 
   const current = state.cards[state.index] ?? null
   const progress = total > 0 ? (state.dismissed / total) * 100 : 100
@@ -100,6 +119,13 @@ export default function ReviewSession({ initialCards, mode }: Props) {
         dispatch({ type: "FAIL" })
       }
     }
+  }
+
+  async function handleDelete() {
+    if (!current) return
+    setMenuOpen(false)
+    await fetch(`/api/cards/${current.id}`, { method: "DELETE" }).catch(() => null)
+    dispatch({ type: "REMOVE" })
   }
 
   if (!current) {
@@ -135,12 +161,40 @@ export default function ReviewSession({ initialCards, mode }: Props) {
       )}
 
       {/* Top bar */}
-      <div className="flex-shrink-0 flex items-center px-4 py-3 pr-16">
+      <div className="flex-shrink-0 flex items-center justify-between px-4 py-3">
         <span className="text-zinc-400 text-xs">
-          {mode === "browse"
-            ? `${state.index + 1} / ${state.cards.length}`
-            : `${state.index + 1} / ${state.cards.length}`}
+          {state.index + 1} / {state.cards.length}
         </span>
+
+        <div className="relative" ref={menuRef}>
+          <button
+            onClick={() => setMenuOpen(o => !o)}
+            className="flex flex-col gap-[3px] items-center justify-center w-8 h-8 rounded-lg hover:bg-zinc-600 transition-colors"
+            aria-label="Actions sur la carte"
+          >
+            <span className="w-1 h-1 rounded-full bg-zinc-400" />
+            <span className="w-1 h-1 rounded-full bg-zinc-400" />
+            <span className="w-1 h-1 rounded-full bg-zinc-400" />
+          </button>
+
+          {menuOpen && (
+            <div className="absolute right-0 top-full mt-1 w-40 rounded-xl bg-white shadow-lg overflow-hidden z-30">
+              <Link
+                href={`/decks/${current.deck.id}/cards/${current.id}/edit`}
+                className="block px-4 py-3 text-sm text-zinc-700 hover:bg-zinc-50 transition-colors"
+                onClick={() => setMenuOpen(false)}
+              >
+                Modifier
+              </Link>
+              <button
+                onClick={handleDelete}
+                className="w-full text-left px-4 py-3 text-sm text-red-500 hover:bg-red-50 transition-colors"
+              >
+                Supprimer
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Card area */}

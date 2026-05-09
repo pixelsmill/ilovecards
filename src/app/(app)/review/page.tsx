@@ -27,7 +27,7 @@ export default async function ReviewPage({
       },
       ...(forceAll ? {} : { nextReviewAt: { lte: endOfToday } }),
     },
-    include: { deck: { select: { accentColor: true, name: true } } },
+    include: { deck: { select: { accentColor: true, name: true, id: true } } },
     orderBy: { createdAt: mode === "browse" ? "asc" : undefined, nextReviewAt: mode === "learn" ? "asc" : undefined },
   })
 
