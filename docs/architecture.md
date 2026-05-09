@@ -222,6 +222,25 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 La session utilise un **JWT stocké en cookie**, pas en base de données. Avantage : le proxy peut vérifier l'authentification sans toucher à Prisma (Edge-compatible). L'`id` de l'utilisateur est stocké dans le token (`token.sub`) et exposé via le callback `session`.
 
+> [!TIP]
+> **Anatomie d'un JWT.** C'est une chaîne en trois parties séparées par des points :
+> ```
+> eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjbHVzZXIxMjMiLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20ifQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+> ```
+>
+> Chaque partie est encodée en base64url (encodage texte réversible, **pas du chiffrement**) :
+>
+> - **Header** — algorithme de signature : `{ "alg": "HS256" }`
+> - **Payload** — les données de session :
+>   ```json
+>   { "sub": "cluserid123", "email": "user@example.com", "iat": 1700000000, "exp": 1700003600 }
+>   ```
+> - **Signature** — `HMAC-SHA256(header + "." + payload, NEXTAUTH_SECRET)`
+>
+> Le serveur recalcule la signature à chaque requête. Si elle correspond → token valide. Si quelqu'un modifie le payload (ex : change l'id), la signature ne correspond plus → rejeté.
+>
+> Deux points importants : le payload est **lisible par n'importe qui** (ne jamais y mettre de données sensibles) mais **infalsifiable** sans connaître le secret. Et comme tout est dans le cookie côté client, le serveur ne stocke rien — c'est pour ça que le proxy peut vérifier l'auth sans toucher à la base.
+
 ### Magic link (Resend)
 
 Pas de mot de passe. L'utilisateur entre son email → Resend envoie un lien à usage unique → Auth.js valide le token et crée la session. En développement, le lien est affiché dans la console au lieu d'être envoyé par email.
