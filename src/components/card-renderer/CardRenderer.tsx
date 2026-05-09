@@ -62,13 +62,13 @@ export default function CardRenderer({ card, size, flipped = false, accentColor 
               <div
                 className={`rounded-full flex-shrink-0 ${size === 'full' ? 'w-2.5 h-2.5' : 'w-1.5 h-1.5'}`}
                 style={isVerified
-                  ? { backgroundColor: '#ffffff' }
-                  : { border: '2px solid #ffffff', backgroundColor: 'transparent' }
+                  ? { backgroundColor: '#ffffff', filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.5))' }
+                  : { border: '2px solid #ffffff', backgroundColor: 'transparent', filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.5))' }
                 }
               />
               <span
                 className={`text-white uppercase tracking-widest truncate ${size === 'full' ? 'text-[10px]' : 'text-[5px]'}`}
-                style={{ fontWeight: 500 }}
+                style={{ fontWeight: 500, textShadow: '0 1px 3px rgba(0,0,0,0.6)' }}
               >
                 {deckName}
               </span>
