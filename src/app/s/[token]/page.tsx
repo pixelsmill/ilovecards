@@ -75,7 +75,7 @@ export default async function SharePage({ params }: { params: Promise<{ token: s
             callbackUrl={callbackUrl}
           />
           <p className="text-xs" style={{ color: "#6B6356" }}>
-            Copie ce deck pour le réviser avec la répétition espacée
+            Copie ce deck pour le mémoriser avec la répétition espacée
           </p>
         </div>
       </div>

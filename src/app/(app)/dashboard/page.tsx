@@ -129,7 +129,7 @@ export default async function DashboardPage() {
               href="/review"
               className="flex items-center justify-between rounded-lg bg-zinc-900 px-4 py-3 text-sm font-medium text-white hover:bg-zinc-700 transition-colors"
             >
-              <span>Réviser</span>
+              <span>Mémoriser</span>
               <span className="text-xs bg-white/20 rounded-full px-2 py-0.5">{dueCount} due{dueCount !== 1 ? "s" : ""}</span>
             </Link>
             {dueByDeck.length > 1 && (
@@ -145,7 +145,7 @@ export default async function DashboardPage() {
           </div>
         ) : (
           <div className="flex items-center justify-between rounded-lg bg-zinc-100 px-4 py-3 text-sm text-zinc-400">
-            <span>Réviser</span>
+            <span>Mémoriser</span>
             <span className="text-xs">À jour ✓</span>
           </div>
         )}
