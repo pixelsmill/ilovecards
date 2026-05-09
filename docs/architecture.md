@@ -370,63 +370,79 @@ Tailwind CSS v4 avec PostCSS. Pas de `tailwind.config.js` — la configuration e
 
 ## Services tiers
 
-### Anthropic (Claude)
+### Neon (base de données)
 
-- **Clé** : `ANTHROPIC_API_KEY`
-- **Usage** : génération et extraction de flashcards via `claude-haiku-4-5-20251001`
-- **SDK** : `@anthropic-ai/sdk` — utilisé en mode streaming (`messages.create({ stream: true })`)
-- Facturation à l'usage (tokens in/out). Le modèle Haiku est ~10× moins cher que Sonnet.
+- **Où créer un compte** : [neon.tech](https://neon.tech) — plan gratuit disponible
+- **Ce qu'il faut récupérer** : dans le dashboard Neon → ton projet → *Connection string*. Deux URLs à copier : la poolée (`DATABASE_URL`) et la directe (`DATABASE_URL_UNPOOLED`). Neon les affiche côte à côte avec un toggle "Pooled / Direct".
+- **Limite du plan gratuit** : 1 projet, 0.5 GB de stockage, compute mis en veille après inactivité (se réveille automatiquement à la prochaine requête, avec une légère latence).
 
-### Resend
+### Resend (emails)
 
-- **Clé** : `AUTH_RESEND_KEY`
-- **Usage** : envoi des magic links d'authentification
-- **SDK** : intégré via le provider Auth.js `next-auth/providers/resend`
-- En développement, les emails ne sont pas envoyés — le lien s'affiche dans la console.
+- **Où créer un compte** : [resend.com](https://resend.com) — plan gratuit disponible
+- **Ce qu'il faut récupérer** : *API Keys* dans le dashboard → créer une clé → copier la valeur (`re_...`) dans `AUTH_RESEND_KEY`
+- **Configuration domaine** : en production, Resend exige de vérifier un domaine pour envoyer depuis une adresse personnalisée (ex: `noreply@ilovecards.fr`). Sans ça, les emails partent depuis `onboarding@resend.dev` (domaine Resend partagé, limité à 100 emails/jour).
+- **En développement** : le provider est remplacé par un simple `console.log` — le magic link s'affiche dans le terminal, aucun email n'est envoyé.
+- **Limite du plan gratuit** : 3 000 emails/mois, 100/jour.
 
-### Unsplash
+### Anthropic (IA)
 
-- **Clé** : `UNSPLASH_ACCESS_KEY`
-- **Usage** : récupération d'une photo portrait pour le template `photo-overlay`
-- **API** : `https://api.unsplash.com/search/photos?query=...&per_page=1&orientation=portrait`
-- Optionnel : si la clé est absente, le template utilise un dégradé de couleur.
-- Limite : 50 req/heure en mode "demo". Les conditions Unsplash exigent une attribution en production.
+- **Où créer un compte** : [console.anthropic.com](https://console.anthropic.com)
+- **Ce qu'il faut récupérer** : *API Keys* → créer une clé → copier la valeur (`sk-ant-...`) dans `ANTHROPIC_API_KEY`
+- **Facturation** : à l'usage (tokens consommés). Pas de plan gratuit — il faut créditer son compte. Le modèle utilisé ici (`claude-haiku-4-5`) est le moins cher de la gamme (~0.25$/million de tokens en entrée).
+- **SDK** : `@anthropic-ai/sdk` — utilisé en mode streaming (`messages.create({ stream: true })`).
+
+### Unsplash (photos)
+
+- **Où créer un compte** : [unsplash.com/developers](https://unsplash.com/developers)
+- **Ce qu'il faut récupérer** : créer une application → copier l'*Access Key* dans `UNSPLASH_ACCESS_KEY`
+- **Optionnel** : si la clé est absente, le template `photo-overlay` utilise un dégradé de couleur à la place.
+- **Limite** : 50 requêtes/heure en mode "demo". Pour passer en production (limite à 5 000 req/heure), il faut soumettre l'application à la validation Unsplash.
+- **Attribution** : les conditions Unsplash exigent d'afficher "Photo by [auteur] on Unsplash" quelque part dans l'interface en production.
+
+### Vercel (hébergement)
+
+- **Où créer un compte** : [vercel.com](https://vercel.com) — plan gratuit disponible
+- **Connexion au repo** : Vercel se connecte à GitHub, détecte automatiquement Next.js et configure le build.
+- **Variables d'environnement** : à renseigner dans *Project Settings → Environment Variables*. Chaque variable peut être activée pour Production, Preview et/ou Development. Toutes les variables listées ci-dessous sont à y ajouter.
+- **Déploiement automatique** : chaque `git push` sur `main` déclenche un build. Les branches créent des URLs de preview.
+- **Limite du plan gratuit** : largement suffisant pour un projet en phase de lancement (100 GB de bande passante/mois, fonctions serverless illimitées).
 
 ---
 
 ## Variables d'environnement
 
 ```bash
-# Base de données
-DATABASE_URL=               # URL poolée Neon (utilisée par l'app)
-DATABASE_URL_UNPOOLED=      # URL directe Neon (utilisée par les migrations)
+# Base de données (Neon → Connection string)
+DATABASE_URL=               # URL poolée  — pour l'app
+DATABASE_URL_UNPOOLED=      # URL directe — pour les migrations Prisma
 
 # Auth.js
-NEXTAUTH_SECRET=            # Secret JWT (générer avec: openssl rand -base64 32)
+NEXTAUTH_SECRET=            # Générer avec : openssl rand -base64 32
 
-# Resend (magic links)
+# Resend (resend.com → API Keys)
 AUTH_RESEND_KEY=            # re_...
 
-# Anthropic
+# Anthropic (console.anthropic.com → API Keys)
 ANTHROPIC_API_KEY=          # sk-ant-...
 
-# Unsplash (optionnel)
-UNSPLASH_ACCESS_KEY=        # clé d'accès API Unsplash
+# Unsplash (unsplash.com/developers → Access Key) — optionnel
+UNSPLASH_ACCESS_KEY=
 ```
 
-En développement : `.env.local` (lu par Next.js) et `.env` (lu par Prisma CLI — les deux doivent exister).  
-En production : variables définies dans le dashboard Vercel.
+En développement : ces variables sont à mettre dans `.env.local` (lu par Next.js) **et** dans `.env` (lu par Prisma CLI). Les deux fichiers doivent exister et contenir les mêmes valeurs DB.  
+En production : à renseigner dans le dashboard Vercel (*Project Settings → Environment Variables*).
 
 ---
 
 ## Déploiement
 
-Hébergé sur **Vercel**. Le pipeline est simple :
+Hébergé sur **Vercel**, connecté au repo GitHub. Le pipeline est automatique :
 
 1. `git push origin main`
-2. Vercel détecte le push, lance le build : `prisma generate && next build`
+2. Vercel détecte le push et lance le build : `prisma generate && next build`
 3. `prisma generate` regénère le client TypeScript depuis le schéma
-4. `next build` compile et optimise l'app
-5. Les migrations sont appliquées en production par `prisma migrate deploy` (ajouté au build si besoin)
+4. `prisma migrate deploy` applique les éventuelles migrations en attente
+5. `next build` compile et optimise l'app
+6. Le déploiement remplace la version précédente (zéro downtime)
 
-Les fonctions API sont déployées en **Edge Functions** ou **Serverless Functions** selon leur runtime. Le proxy (`src/proxy.ts`) tourne en Edge ; les API routes tournent en Node.js serverless.
+Les fonctions API sont déployées en **Serverless Functions** (Node.js) et le proxy (`src/proxy.ts`) en **Edge Function** — il tourne dans un runtime V8 léger, sans Node.js, ce qui le rend très rapide mais incompatible avec Prisma (d'où le split-config auth).
