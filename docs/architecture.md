@@ -164,6 +164,24 @@ Les Server Actions évitent de passer par une API Route pour des opérations sim
 
 Toutes les données entrantes passent par des schémas [Zod](https://zod.dev) définis dans `src/lib/schemas/`. Zod garantit le typage à l'exécution et génère les messages d'erreur.
 
+> [!TIP]
+> **Pourquoi Zod ?** TypeScript vérifie les types à la compilation — mais à l'exécution, une API reçoit du JSON brut que TypeScript ne peut pas contrôler. Si quelqu'un envoie `{ "aiCredits": "beaucoup" }` à la place d'un nombre, TypeScript ne dit rien : il ne tourne plus.
+>
+> Zod valide les données au moment où elles arrivent, à l'exécution :
+> ```ts
+> const CreateCardSchema = z.object({
+>   notion: z.string().min(1).max(500),
+>   template: z.enum(['poster', 'quote', 'minimaliste', ...]),
+>   imageUrl: z.string().url().optional(),
+> })
+>
+> const parsed = CreateCardSchema.safeParse(body)
+> if (!parsed.success) return apiError("Données invalides", 400)
+> // ici parsed.data est garanti correct — TypeScript ET l'exécution sont d'accord
+> ```
+>
+> C'est la validation à la frontière du système (entrée utilisateur, corps de requête HTTP). Le reste du code fait confiance aux types sans re-valider.
+
 ---
 
 ## Authentification
