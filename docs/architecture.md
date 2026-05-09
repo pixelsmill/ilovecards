@@ -26,8 +26,30 @@ Application de flashcards avec génération IA, répétition espacée et partage
 
 PostgreSQL hébergé sur [Neon](https://neon.tech), un service serverless. Neon expose **deux URLs** :
 
-- `DATABASE_URL` — URL avec connection pooler (PgBouncer). Utilisée par l'application en prod car les fonctions serverless Vercel ouvrent de nouvelles connexions à chaque requête. Sans pooler, on épuiserait les connexions disponibles.
-- `DATABASE_URL_UNPOOLED` — URL directe, sans pooler. Utilisée par Prisma Migrate pour les migrations (les opérations DDL comme `ALTER TABLE` ne fonctionnent pas à travers PgBouncer).
+- `DATABASE_URL` — URL avec connection pooler (PgBouncer). Utilisée par l'application en prod.
+- `DATABASE_URL_UNPOOLED` — URL directe, sans pooler. Utilisée par Prisma Migrate pour les migrations.
+
+#### Pourquoi deux URLs ? Le problème des connexions
+
+Ouvrir une connexion à PostgreSQL coûte cher : handshake TCP, authentification, allocation mémoire côté serveur. PostgreSQL a une limite de connexions simultanées (environ 100 par défaut). Or les fonctions serverless Vercel ouvrent une nouvelle connexion à chaque requête HTTP — avec du trafic, on épuise la limite très vite.
+
+**Le pooler** (groupeur de connexions) est un intermédiaire qui maintient un petit nombre de connexions ouvertes en permanence vers la base, et les prête tour à tour aux requêtes entrantes. 100 requêtes HTTP peuvent ainsi se partager 10 connexions sans que Postgres le sache.
+
+```
+Sans pooler :
+Requête 1 ──ouvre──▶ Postgres
+Requête 2 ──ouvre──▶ Postgres   ← Postgres gère N connexions simultanées
+Requête 3 ──ouvre──▶ Postgres
+
+Avec pooler (PgBouncer) :
+Requête 1 ──▶ PgBouncer ──réutilise──▶ Postgres
+Requête 2 ──▶ PgBouncer ──réutilise──▶ Postgres   ← Postgres gère 2-3 connexions
+Requête 3 ──▶ PgBouncer ──attend────▶ Postgres
+```
+
+**PgBouncer** est le nom du logiciel de pooling utilisé par Neon (terme anglais universellement utilisé, même en français).
+
+**Pourquoi l'URL directe pour les migrations ?** PgBouncer ne supporte pas les transactions DDL (`ALTER TABLE`, `CREATE INDEX`…) en mode poolé. Prisma Migrate a donc besoin de l'URL directe pour appliquer les migrations.
 
 ### Schéma des tables
 
