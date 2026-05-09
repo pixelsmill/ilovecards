@@ -169,6 +169,7 @@ export default function ImportFlow({ decks, defaultDeckId, credits }: Props) {
             source: card.source || undefined,
             template: card.template,
             imageUrl: card.imageUrl || undefined,
+            verified: false,
           }),
         })
         if (res.ok) count++

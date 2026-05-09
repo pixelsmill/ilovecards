@@ -7,11 +7,13 @@ interface Props {
   accentColor: string
   deckName?: string
   size: CardSize
+  verified?: boolean | null
 }
 
-export default function CardBack({ notion, developpement, source, accentColor, deckName, size }: Props) {
+export default function CardBack({ notion, developpement, source, accentColor, deckName, size, verified }: Props) {
   const isThumb = size === 'thumb'
   const isFull = size === 'full'
+  const isVerified = verified !== false
 
   return (
     <div
@@ -24,7 +26,10 @@ export default function CardBack({ notion, developpement, source, accentColor, d
         <div className={`flex items-center gap-1.5 flex-shrink-0 ${isThumb ? 'mb-1' : isFull ? 'mb-5' : 'mb-2'}`}>
           <div
             className={`rounded-full flex-shrink-0 ${isThumb ? 'w-1 h-1' : isFull ? 'w-2.5 h-2.5' : 'w-1.5 h-1.5'}`}
-            style={{ backgroundColor: accentColor }}
+            style={isVerified
+              ? { backgroundColor: accentColor }
+              : { border: `2px solid ${accentColor}`, backgroundColor: 'transparent' }
+            }
           />
           <p
             className={`uppercase tracking-widest truncate ${isThumb ? 'text-[3px]' : isFull ? 'text-[10px]' : 'text-[5px]'}`}

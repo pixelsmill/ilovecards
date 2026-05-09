@@ -10,6 +10,7 @@ export const CreateCardSchema = z.object({
   source: z.string().max(200).optional(),
   template: z.enum(['poster', 'quote', 'magazine', 'color-block', 'photo-overlay', 'minimaliste', 'equation', 'sature']).default('minimaliste'),
   imageUrl: z.string().url().optional(),
+  verified: z.boolean().default(true),
 })
 
 export const UpdateCardSchema = z.object({
@@ -18,6 +19,7 @@ export const UpdateCardSchema = z.object({
   source: z.string().max(200).optional(),
   template: z.enum(['poster', 'quote', 'magazine', 'color-block', 'photo-overlay', 'minimaliste', 'equation', 'sature']).optional(),
   imageUrl: z.string().url().optional(),
+  verified: z.boolean().optional(),
 })
 
 export type CreateCardInput = z.infer<typeof CreateCardSchema>

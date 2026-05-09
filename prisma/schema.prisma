@@ -83,6 +83,7 @@ model Card {
   source        String?
   template      String    @default("minimaliste")
   imageUrl      String?
+  verified      Boolean   @default(true)
   easeFactor    Float     @default(2.5)
   interval      Int       @default(0)
   repetitions   Int       @default(0)

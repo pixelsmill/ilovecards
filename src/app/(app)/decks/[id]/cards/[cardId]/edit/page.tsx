@@ -22,9 +22,14 @@ export default async function EditCardPage({ params }: { params: Promise<{ id: s
 
     const template = (formData.get("template") as string) || undefined
     const notion = (formData.get("notion") as string) || undefined
+    const existingImageUrl = (formData.get("imageUrl") as string) || undefined
     let imageUrl: string | null | undefined = undefined
-    if (template === "photo-overlay" && notion) {
-      imageUrl = (await fetchUnsplashImage(notion)) ?? null
+    if (template === "photo-overlay") {
+      if (existingImageUrl) {
+        imageUrl = existingImageUrl
+      } else if (notion) {
+        imageUrl = (await fetchUnsplashImage(notion)) ?? null
+      }
     } else if (template && template !== "photo-overlay") {
       imageUrl = null
     }
@@ -60,6 +65,7 @@ export default async function EditCardPage({ params }: { params: Promise<{ id: s
 
         <CardForm
           deckId={deckId}
+          cardId={cardId}
           action={updateCard}
           accentColor={card.deck.accentColor}
           defaultValues={{
@@ -67,6 +73,7 @@ export default async function EditCardPage({ params }: { params: Promise<{ id: s
             developpement: card.developpement ?? undefined,
             source: card.source ?? undefined,
             template: card.template,
+            imageUrl: card.imageUrl,
           }}
           submitLabel="Enregistrer"
         />

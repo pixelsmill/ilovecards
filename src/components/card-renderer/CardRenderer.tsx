@@ -17,6 +17,7 @@ export interface CardData {
   source?: string | null
   template: string
   imageUrl?: string | null
+  verified?: boolean | null
 }
 
 export interface TemplateProps {
@@ -49,6 +50,7 @@ interface Props {
 export default function CardRenderer({ card, size, flipped = false, accentColor = '#6366f1', deckName, className }: Props) {
   const TemplateComponent = TEMPLATES[card.template] ?? CardMinimaliste
   const showLabel = deckName && size !== 'thumb'
+  const isVerified = card.verified !== false
 
   return (
     <div className={`card-renderer card-renderer--${size}${className ? ' ' + className : ''}`}>
@@ -59,10 +61,13 @@ export default function CardRenderer({ card, size, flipped = false, accentColor 
             <div className="absolute top-3 left-3 flex items-center gap-1.5 pointer-events-none select-none">
               <div
                 className={`rounded-full flex-shrink-0 ${size === 'full' ? 'w-2.5 h-2.5' : 'w-1.5 h-1.5'}`}
-                style={{ backgroundColor: '#ffffff' }}
+                style={isVerified
+                  ? { backgroundColor: '#ffffff' }
+                  : { border: '2px solid #ffffff', backgroundColor: 'transparent' }
+                }
               />
               <span
-                className={`text-white uppercase tracking-widest truncate max-w-[120px] ${size === 'full' ? 'text-[10px]' : 'text-[5px]'}`}
+                className={`text-white uppercase tracking-widest truncate ${size === 'full' ? 'text-[10px]' : 'text-[5px]'}`}
                 style={{ fontWeight: 500 }}
               >
                 {deckName}
@@ -78,6 +83,7 @@ export default function CardRenderer({ card, size, flipped = false, accentColor 
             accentColor={accentColor}
             deckName={deckName}
             size={size}
+            verified={card.verified}
           />
         </div>
       </div>

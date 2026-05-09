@@ -12,6 +12,7 @@ interface ReviewCard {
   source: string | null
   template: string
   imageUrl?: string | null
+  verified: boolean
   easeFactor: number
   interval: number
   repetitions: number
@@ -32,6 +33,8 @@ type SessionAction =
   | { type: "DISMISS" }
   | { type: "FAIL" }
   | { type: "REMOVE" }
+  | { type: "UPDATE_IMAGE"; cardId: string; imageUrl: string }
+  | { type: "TOGGLE_VERIFIED"; cardId: string; verified: boolean }
 
 function sessionReducer(state: SessionState, action: SessionAction): SessionState {
   const { cards, index } = state
@@ -62,6 +65,20 @@ function sessionReducer(state: SessionState, action: SessionAction): SessionStat
       const newCards = cards.filter((_, i) => i !== index)
       const newIndex = Math.max(0, Math.min(index, newCards.length - 1))
       return { cards: newCards, index: newIndex, side: "recto", dismissed: state.dismissed }
+    }
+
+    case "UPDATE_IMAGE": {
+      const newCards = cards.map(c =>
+        c.id === action.cardId ? { ...c, imageUrl: action.imageUrl } : c
+      )
+      return { ...state, cards: newCards }
+    }
+
+    case "TOGGLE_VERIFIED": {
+      const newCards = cards.map(c =>
+        c.id === action.cardId ? { ...c, verified: action.verified } : c
+      )
+      return { ...state, cards: newCards }
     }
   }
 }
@@ -95,6 +112,7 @@ export default function ReviewSession({ initialCards, mode, backHref }: Props) {
     dismissed: 0,
   })
   const [menuOpen, setMenuOpen] = useState(false)
+  const [changingPhoto, setChangingPhoto] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
 
   // Computed once from the full initial session — doesn't change as cards are dismissed
@@ -136,6 +154,30 @@ export default function ReviewSession({ initialCards, mode, backHref }: Props) {
     setMenuOpen(false)
     await fetch(`/api/cards/${current.id}`, { method: "DELETE" }).catch(() => null)
     dispatch({ type: "REMOVE" })
+  }
+
+  async function handleToggleVerified() {
+    if (!current) return
+    setMenuOpen(false)
+    const newVerified = !current.verified
+    await fetch(`/api/cards/${current.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ verified: newVerified }),
+    }).catch(() => null)
+    dispatch({ type: "TOGGLE_VERIFIED", cardId: current.id, verified: newVerified })
+  }
+
+  async function handleChangePhoto() {
+    if (!current) return
+    setMenuOpen(false)
+    setChangingPhoto(true)
+    const res = await fetch(`/api/cards/${current.id}`, { method: "PATCH" }).catch(() => null)
+    if (res?.ok) {
+      const data = await res.json()
+      dispatch({ type: "UPDATE_IMAGE", cardId: current.id, imageUrl: data.imageUrl })
+    }
+    setChangingPhoto(false)
   }
 
   if (!current) {
@@ -209,7 +251,7 @@ export default function ReviewSession({ initialCards, mode, backHref }: Props) {
             </button>
 
             {menuOpen && (
-              <div className="absolute right-0 top-full mt-1 w-40 rounded-xl bg-white shadow-lg overflow-hidden z-30">
+              <div className="absolute right-0 top-full mt-1 w-44 rounded-xl bg-white shadow-lg overflow-hidden z-30">
                 <Link
                   href={`/decks/${current.deck.id}/cards/${current.id}/edit`}
                   className="block px-4 py-3 text-sm text-zinc-700 hover:bg-zinc-50 transition-colors"
@@ -217,6 +259,21 @@ export default function ReviewSession({ initialCards, mode, backHref }: Props) {
                 >
                   Modifier
                 </Link>
+                <button
+                  onClick={handleToggleVerified}
+                  className="w-full text-left px-4 py-3 text-sm text-zinc-700 hover:bg-zinc-50 transition-colors"
+                >
+                  {current.verified ? "Marquer non vérifiée" : "Marquer comme vérifiée"}
+                </button>
+                {current.imageUrl && (
+                  <button
+                    onClick={handleChangePhoto}
+                    disabled={changingPhoto}
+                    className="w-full text-left px-4 py-3 text-sm text-zinc-700 hover:bg-zinc-50 transition-colors disabled:opacity-40"
+                  >
+                    {changingPhoto ? "Chargement…" : "Changer la photo"}
+                  </button>
+                )}
                 <button
                   onClick={handleDelete}
                   className="w-full text-left px-4 py-3 text-sm text-red-500 hover:bg-red-50 transition-colors"

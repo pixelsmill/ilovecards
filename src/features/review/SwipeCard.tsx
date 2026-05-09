@@ -78,6 +78,31 @@ export default function SwipeCard({ onSwipe, onTap, mode, children }: Props) {
     }
   }
 
+  function onMouseDown(e: React.MouseEvent) {
+    dragging.current = true
+    setSpringing(false)
+    latestDrag.current = { x: 0, y: 0 }
+    startPos.current = { x: e.clientX, y: e.clientY }
+  }
+
+  function onMouseMove(e: React.MouseEvent) {
+    if (!dragging.current || exiting) return
+    const dx = e.clientX - startPos.current.x
+    const dy = e.clientY - startPos.current.y
+
+    if (mode === "browse") {
+      if (Math.abs(dy) > Math.abs(dx)) return
+      const next = { x: dx, y: 0 }
+      latestDrag.current = next
+      setDrag(next)
+    } else {
+      if (Math.abs(dx) > Math.abs(dy)) return
+      const next = { x: 0, y: dy }
+      latestDrag.current = next
+      setDrag(next)
+    }
+  }
+
   function release() {
     if (!dragging.current) return
     dragging.current = false
@@ -144,11 +169,15 @@ export default function SwipeCard({ onSwipe, onTap, mode, children }: Props) {
   return (
     <div
       className="relative h-full w-full flex items-center justify-center overflow-hidden"
-      style={{ touchAction: mode === "learn" ? "none" : "pan-y" }}
+      style={{ touchAction: mode === "learn" ? "none" : "pan-y", cursor: "pointer", userSelect: "none" }}
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={release}
       onTouchCancel={release}
+      onMouseDown={onMouseDown}
+      onMouseMove={onMouseMove}
+      onMouseUp={release}
+      onMouseLeave={release}
     >
       {label && (
         <div

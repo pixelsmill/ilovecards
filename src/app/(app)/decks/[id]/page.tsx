@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import DeleteDeckButton from "./DeleteDeckButton"
 import ShareButton from "@/features/decks/ShareButton"
+import VerifyCardButton from "@/features/cards/VerifyCardButton"
 
 export default async function DeckDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth()
@@ -76,9 +77,10 @@ export default async function DeckDetailPage({ params }: { params: Promise<{ id:
           ) : (
             <div className="space-y-2">
               {deck.cards.map(card => (
-                <div key={card.id} className="rounded-lg border border-zinc-200 bg-white px-4 py-3 flex items-center justify-between">
-                  <p className="text-sm text-zinc-800 truncate">{card.notion}</p>
-                  <Link href={`/decks/${id}/cards/${card.id}/edit`} className="text-xs text-zinc-400 hover:text-zinc-600 ml-4 flex-shrink-0">
+                <div key={card.id} className="rounded-lg border border-zinc-200 bg-white px-4 py-3 flex items-center gap-3">
+                  <VerifyCardButton cardId={card.id} verified={card.verified} accentColor={deck.accentColor} />
+                  <p className="text-sm text-zinc-800 truncate flex-1">{card.notion}</p>
+                  <Link href={`/decks/${id}/cards/${card.id}/edit`} className="text-xs text-zinc-400 hover:text-zinc-600 flex-shrink-0">
                     Modifier
                   </Link>
                 </div>

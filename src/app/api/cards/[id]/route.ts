@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { apiError } from "@/lib/api-error"
 import { UpdateCardSchema } from "@/lib/schemas/card"
+import { fetchUnsplashImage } from "@/lib/unsplash"
 
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth()
@@ -18,6 +19,22 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
 
   const updated = await prisma.card.update({ where: { id }, data: parsed.data })
   return Response.json(updated)
+}
+
+export async function PATCH(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const session = await auth()
+  if (!session?.user?.id) return apiError("Non authentifié", "UNAUTHORIZED", 401)
+
+  const { id } = await params
+  const card = await prisma.card.findUnique({ where: { id }, include: { deck: true } })
+  if (!card) return apiError("Carte introuvable", "CARD_NOT_FOUND", 404)
+  if (card.deck.userId !== session.user.id) return apiError("Accès refusé", "FORBIDDEN", 403)
+
+  const newUrl = await fetchUnsplashImage(card.notion, card.imageUrl ?? undefined)
+  if (!newUrl) return apiError("Aucune photo trouvée", "NO_IMAGE", 404)
+
+  const updated = await prisma.card.update({ where: { id }, data: { imageUrl: newUrl } })
+  return Response.json({ imageUrl: updated.imageUrl })
 }
 
 export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
