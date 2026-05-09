@@ -247,7 +247,7 @@ Pas de mot de passe. L'utilisateur entre son email → Resend envoie un lien à 
 
 ### Proxy (`src/proxy.ts`)
 
-Le proxy (anciennement `middleware.ts`) intercepte toutes les requêtes pour vérifier l'authentification. Il laisse passer :
+Le proxy (`src/proxy.ts`) intercepte toutes les requêtes pour vérifier l'authentification. Il laisse passer :
 - `/` — landing page publique
 - `/s/*` — pages de partage publiques
 - `/login`, `/verify`, `/api/auth/*` — routes d'auth
