@@ -19,6 +19,7 @@ model User {
   decks         Deck[]
   aiCredits     Int       @default(30)
   lastCreditAt  DateTime  @default(now())
+  isPro         Boolean   @default(false)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }

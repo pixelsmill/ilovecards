@@ -34,25 +34,27 @@ export async function POST(req: Request) {
 
   if (!prompt && !textRaw && !urlRaw && !file) return apiError("Aucune entrée fournie", "INVALID_INPUT", 400)
 
-  // Credit check + daily refill
+  // Credit check + daily refill (skipped for pro users)
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { aiCredits: true, lastCreditAt: true },
+    select: { aiCredits: true, lastCreditAt: true, isPro: true },
   })
   if (!user) return apiError("Utilisateur introuvable", "UNAUTHORIZED", 401)
 
-  const daysSince = Math.floor((Date.now() - user.lastCreditAt.getTime()) / MS_PER_DAY)
-  const refilled = Math.min(MAX_CREDITS, user.aiCredits + daysSince)
-  if (daysSince > 0) {
-    await prisma.user.update({
-      where: { id: userId },
-      data: { aiCredits: refilled, lastCreditAt: new Date() },
-    })
-  }
-  const currentCredits = daysSince > 0 ? refilled : user.aiCredits
-
-  if (currentCredits <= 0) {
-    return apiError("Tu as utilisé tous tes crédits — reviens demain pour +1 carte !", "NO_CREDITS", 402)
+  let currentCredits = Infinity
+  if (!user.isPro) {
+    const daysSince = Math.floor((Date.now() - user.lastCreditAt.getTime()) / MS_PER_DAY)
+    const refilled = Math.min(MAX_CREDITS, user.aiCredits + daysSince)
+    if (daysSince > 0) {
+      await prisma.user.update({
+        where: { id: userId },
+        data: { aiCredits: refilled, lastCreditAt: new Date() },
+      })
+    }
+    currentCredits = daysSince > 0 ? refilled : user.aiCredits
+    if (currentCredits <= 0) {
+      return apiError("Tu as utilisé tous tes crédits — reviens demain pour +1 carte !", "NO_CREDITS", 402)
+    }
   }
 
   const apiKey = process.env.ANTHROPIC_API_KEY
@@ -148,12 +150,15 @@ export async function POST(req: Request) {
           } catch {}
         }
 
-        // Deduct credits and send usage info
-        const creditsLeft = Math.max(0, currentCredits - cardCount)
-        await prisma.user.update({
-          where: { id: userId },
-          data: { aiCredits: { decrement: cardCount } },
-        })
+        // Deduct credits (pro users are exempt)
+        let creditsLeft: number | null = null
+        if (!user.isPro) {
+          creditsLeft = Math.max(0, currentCredits - cardCount)
+          await prisma.user.update({
+            where: { id: userId },
+            data: { aiCredits: { decrement: cardCount } },
+          })
+        }
         controller.enqueue(encoder.encode(JSON.stringify({ _usage: { cardsGenerated: cardCount, creditsLeft } }) + "\n"))
       } catch {
         controller.enqueue(encoder.encode(JSON.stringify({ _error: true }) + "\n"))
