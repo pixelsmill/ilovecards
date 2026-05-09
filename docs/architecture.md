@@ -87,6 +87,22 @@ Les migrations sont des fichiers SQL dans `prisma/migrations/`. Chaque migration
 - **En développement** : `npx prisma migrate dev` dans ton terminal — demande confirmation, crée le fichier SQL dans `prisma/migrations/` et l'applique.
 - **En production (Vercel)** : `prisma migrate deploy` s'exécute automatiquement au build (`"build": "prisma generate && next build"`). Cette commande applique les migrations en attente sans demander de confirmation.
 
+> [!TIP]
+> **Comment Prisma sait quelles migrations ont déjà été appliquées ?** Il maintient une table `_prisma_migrations` directement dans ta base de données. Elle enregistre chaque migration appliquée avec son nom, sa date et un **checksum** (empreinte du fichier SQL).
+>
+> ```
+> migration_name                      | applied_steps_at
+> ------------------------------------|------------------
+> 20260508165832_add_ai_credits       | 2026-05-08 16:58
+> 20260508173733_add_card_image_url   | 2026-05-08 17:37
+> 20260508180000_add_deck_share_token | 2026-05-08 18:00
+> 20260509000000_add_user_is_pro      | 2026-05-09 00:00
+> ```
+>
+> Quand `migrate deploy` tourne, Prisma compare cette table avec les dossiers dans `prisma/migrations/` — tout ce qui est présent localement mais absent de la table est appliqué dans l'ordre chronologique (d'où l'importance du timestamp dans le nom du dossier).
+>
+> Le checksum est une protection : si tu modifies un fichier de migration déjà appliqué, Prisma le détecte et refuse d'avancer.
+
 ---
 
 ## ORM — Prisma
