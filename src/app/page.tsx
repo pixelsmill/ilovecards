@@ -129,7 +129,7 @@ export default async function HomePage() {
       {/* NAV */}
       <nav
         className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 h-14"
-        style={{ background: "rgba(63,63,70,0.92)", backdropFilter: "blur(12px)" }}
+        style={{ background: "rgba(26,24,20,0.92)", backdropFilter: "blur(12px)" }}
       >
         <span className="text-lg font-bold tracking-tight" style={{ color: "#FBF9F4" }}>ilovecards</span>
         <Link
