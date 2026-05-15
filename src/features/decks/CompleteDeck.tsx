@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 
 interface SuggestedCard {
   notion: string
@@ -14,6 +15,7 @@ interface Props {
 }
 
 export default function CompleteDeck({ deckId, accentColor }: Props) {
+  const router = useRouter()
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [cards, setCards] = useState<SuggestedCard[]>([])
@@ -71,7 +73,10 @@ export default function CompleteDeck({ deckId, accentColor }: Props) {
         verified: true,
       }),
     }).catch(() => null)
-    if (res?.ok) setSaved(prev => new Set([...prev, index]))
+    if (res?.ok) {
+      setSaved(prev => new Set([...prev, index]))
+      router.refresh()
+    }
   }
 
   return (

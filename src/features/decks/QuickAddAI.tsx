@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 
 interface Props {
   deckId: string
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export default function QuickAddAI({ deckId, deckName, accentColor }: Props) {
+  const router = useRouter()
   const [notion, setNotion] = useState("")
   const [developpement, setDeveloppement] = useState("")
   const [generating, setGenerating] = useState(false)
@@ -57,6 +59,7 @@ export default function QuickAddAI({ deckId, deckName, accentColor }: Props) {
         setSaved(true)
         setNotion("")
         setDeveloppement("")
+        router.refresh()
         setTimeout(() => setSaved(false), 2000)
       }
     } finally {
