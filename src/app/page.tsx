@@ -192,12 +192,11 @@ export default async function HomePage() {
           <Link
             href="/login"
             className="rounded-full px-8 py-3 text-sm font-semibold transition-opacity hover:opacity-90"
-            style={{ background: "#FBF9F4", color: "#1A1814" }}
+            style={{ background: "#C68A3A", color: "#1A1814" }}
           >
-            Commencer — c&apos;est gratuit
+            Version bêta · VIP only
           </Link>
         </div>
-        <p className="text-xs" style={{ color: "#6B6356" }}>30 cartes offertes · Sans carte bancaire</p>
       </section>
 
       {/* FEATURES */}
@@ -329,7 +328,7 @@ export default async function HomePage() {
       </section>
       */}
 
-      {/* PRICING */}
+      {/* PRICING — désactivé temporairement
       <section className="px-6 py-20" style={{ background: "#1A1814" }}>
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-2xl sm:text-3xl font-bold mb-4" style={{ color: "#FBF9F4" }}>
@@ -395,6 +394,7 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+      */}
 
       {/* FOOTER */}
       <footer className="px-6 py-8 flex items-center justify-between text-xs" style={{ background: "#1A1814", color: "#6B6356" }}>
