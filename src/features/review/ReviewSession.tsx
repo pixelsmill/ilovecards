@@ -143,6 +143,7 @@ export default function ReviewSession({ initialCards, mode, backHref, initialCar
 
   async function handleToggleVerified() {
     if (!current) return
+    setMenuOpen(false)
     const newVerified = !current.verified
     await fetch(`/api/cards/${current.id}`, {
       method: "PUT",
@@ -198,16 +199,7 @@ export default function ReviewSession({ initialCards, mode, backHref, initialCar
 
         {/* Top bar */}
         <div className="flex-shrink-0 flex items-center justify-between px-4 py-3">
-          <div className="flex items-center gap-2">
-            <span className="text-zinc-400 text-xs">{state.index + 1} / {state.cards.length}</span>
-            <button type="button" onClick={handleToggleVerified} className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-zinc-600 transition-colors">
-              {current.verified ? (
-                <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="6.5" fill="#4ade80"/><path d="M4.5 7.5l2 2 4-4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-              ) : (
-                <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="6.5" stroke="#6b7280" strokeWidth="1.5"/></svg>
-              )}
-            </button>
-          </div>
+          <span className="text-zinc-400 text-xs">{state.index + 1} / {state.cards.length}</span>
 
           <div className="relative" ref={menuRef}>
             <button onClick={() => setMenuOpen(o => !o)} className="flex flex-col gap-[3px] items-center justify-center w-8 h-8 rounded-lg hover:bg-zinc-600 transition-colors" aria-label="Actions sur la carte">
@@ -224,6 +216,9 @@ export default function ReviewSession({ initialCards, mode, backHref, initialCar
                 >
                   Modifier
                 </Link>
+                <button onClick={handleToggleVerified} className="w-full text-left px-4 py-3 text-sm text-zinc-700 hover:bg-zinc-50 transition-colors">
+                  {current.verified ? "Marquer non vérifiée" : "Marquer comme vérifiée"}
+                </button>
                 <button onClick={handleDelete} className="w-full text-left px-4 py-3 text-sm text-red-500 hover:bg-red-50 transition-colors">
                   Supprimer
                 </button>
