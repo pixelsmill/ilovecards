@@ -3,7 +3,6 @@ import { redirect } from "next/navigation"
 import { auth } from "@/lib/auth"
 import CardRenderer from "@/components/card-renderer/CardRenderer"
 import { fetchUnsplashImage, fetchUnsplashPhotoById } from "@/lib/unsplash"
-import VIPForm from "@/components/VIPForm"
 import { ACCENT_COLORS } from "@/lib/schemas/deck"
 
 const FEATURES = [
@@ -375,19 +374,23 @@ export default async function HomePage() {
               </Link>
             </div>
 
-            {/* VIP */}
+            {/* Bientôt */}
             <div
               className="flex-1 max-w-xs rounded-2xl p-8 text-left space-y-4 border"
-              style={{ background: "rgba(251,249,244,0.05)", borderColor: "rgba(198,138,58,0.3)" }}
+              style={{ background: "rgba(251,249,244,0.05)", borderColor: "rgba(251,249,244,0.08)" }}
             >
               <div>
-                <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: "#C68A3A", fontFamily: "var(--font-jetbrains-mono), monospace" }}>VIP</p>
-                <p className="text-4xl font-bold" style={{ color: "#FBF9F4" }}>Early<br />adopter</p>
-                <p className="text-xs mt-2 leading-relaxed" style={{ color: "#9B9289" }}>
-                  Un accès réservé à quelques personnes qui contribuent à faire évoluer le produit.
-                </p>
+                <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: "#C68A3A", fontFamily: "var(--font-jetbrains-mono), monospace" }}>Bientôt</p>
+                <p className="text-4xl font-bold" style={{ color: "#FBF9F4" }}>Pro</p>
+                <p className="text-xs mt-2 leading-relaxed" style={{ color: "#6B6356" }}>en préparation</p>
               </div>
-              <VIPForm />
+              <ul className="space-y-2 text-sm" style={{ color: "#6B6356" }}>
+                {["Génération IA illimitée", "Partage de collections", "Export Anki / CSV", "Statistiques avancées"].map(item => (
+                  <li key={item} className="flex items-start gap-2">
+                    <span>·</span>{item}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
