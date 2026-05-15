@@ -33,7 +33,6 @@ type SessionAction =
   | { type: "DISMISS" }
   | { type: "FAIL" }
   | { type: "REMOVE" }
-  | { type: "UPDATE_IMAGE"; cardId: string; imageUrl: string }
   | { type: "TOGGLE_VERIFIED"; cardId: string; verified: boolean }
 
 function sessionReducer(state: SessionState, action: SessionAction): SessionState {
@@ -67,18 +66,11 @@ function sessionReducer(state: SessionState, action: SessionAction): SessionStat
       return { cards: newCards, index: newIndex, side: "recto", dismissed: state.dismissed }
     }
 
-    case "UPDATE_IMAGE": {
-      const newCards = cards.map(c =>
-        c.id === action.cardId ? { ...c, imageUrl: action.imageUrl } : c
-      )
-      return { ...state, cards: newCards }
-    }
-
     case "TOGGLE_VERIFIED": {
-      const newCards = cards.map(c =>
-        c.id === action.cardId ? { ...c, verified: action.verified } : c
-      )
-      return { ...state, cards: newCards }
+      return {
+        ...state,
+        cards: state.cards.map(c => c.id === action.cardId ? { ...c, verified: action.verified } : c),
+      }
     }
   }
 }
@@ -115,7 +107,6 @@ export default function ReviewSession({ initialCards, mode, backHref, initialCar
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
 
-  // Computed once from the full initial session — doesn't change as cards are dismissed
   const navBackground = buildNavBackground(initialCards.map(c => c.deck.accentColor))
 
   useEffect(() => {
@@ -135,17 +126,11 @@ export default function ReviewSession({ initialCards, mode, backHref, initialCar
   function handleSwipe(dir: "left" | "right" | "up" | "down") {
     if (!current) return
     if (mode === "browse") {
-      if (dir === "left")  dispatch({ type: "PREV" })
+      if (dir === "left") dispatch({ type: "PREV" })
       if (dir === "right") dispatch({ type: "NEXT" })
     } else {
-      if (dir === "up") {
-        postReview(current.id, "dismiss")
-        dispatch({ type: "DISMISS" })
-      }
-      if (dir === "down") {
-        postReview(current.id, "fail")
-        dispatch({ type: "FAIL" })
-      }
+      if (dir === "up") { postReview(current.id, "dismiss"); dispatch({ type: "DISMISS" }) }
+      if (dir === "down") { postReview(current.id, "fail"); dispatch({ type: "FAIL" }) }
     }
   }
 
@@ -158,7 +143,6 @@ export default function ReviewSession({ initialCards, mode, backHref, initialCar
 
   async function handleToggleVerified() {
     if (!current) return
-    setMenuOpen(false)
     const newVerified = !current.verified
     await fetch(`/api/cards/${current.id}`, {
       method: "PUT",
@@ -188,75 +172,59 @@ export default function ReviewSession({ initialCards, mode, backHref, initialCar
     )
   }
 
+  const editHref = `/decks/${current.deck.id}/cards/${current.id}/edit?returnTo=${encodeURIComponent(`/review?deckId=${current.deck.id}&mode=${mode}&cardId=${current.id}`)}`
+
   return (
     <>
-      {/* Learn mode — colored navbar overlay */}
       {mode === "learn" && (
         <div
           className="fixed top-0 inset-x-0 z-50 flex items-center justify-between px-4"
           style={{ height: "3.5rem", background: navBackground }}
         >
           <div className="w-8" />
-          <span className="text-white/90 text-sm font-medium tracking-wide">
-            Mémorisation en cours
-          </span>
-          <Link
-            href={backHref}
-            className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/20 transition-colors"
-            aria-label="Quitter la session"
-          >
+          <span className="text-white/90 text-sm font-medium tracking-wide">Mémorisation en cours</span>
+          <Link href={backHref} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/20 transition-colors" aria-label="Quitter la session">
             <span className="text-white text-xl leading-none">×</span>
           </Link>
         </div>
       )}
 
       <main className="h-[calc(100dvh-3.5rem)] bg-zinc-700 flex flex-col select-none">
-        {/* Progress bar — only in learn mode */}
         {mode === "learn" && (
           <div className="flex-shrink-0 h-0.5 bg-zinc-600">
-            <div
-              className="h-full transition-all duration-500"
-              style={{ width: `${progress}%`, background: navBackground }}
-            />
+            <div className="h-full transition-all duration-500" style={{ width: `${progress}%`, background: navBackground }} />
           </div>
         )}
 
         {/* Top bar */}
         <div className="flex-shrink-0 flex items-center justify-between px-4 py-3">
-          <span className="text-zinc-400 text-xs">
-            {state.index + 1} / {state.cards.length}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-zinc-400 text-xs">{state.index + 1} / {state.cards.length}</span>
+            <button type="button" onClick={handleToggleVerified} className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-zinc-600 transition-colors">
+              {current.verified ? (
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="6.5" fill="#4ade80"/><path d="M4.5 7.5l2 2 4-4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              ) : (
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="6.5" stroke="#6b7280" strokeWidth="1.5"/></svg>
+              )}
+            </button>
+          </div>
 
           <div className="relative" ref={menuRef}>
-            <button
-              onClick={() => setMenuOpen(o => !o)}
-              className="flex flex-col gap-[3px] items-center justify-center w-8 h-8 rounded-lg hover:bg-zinc-600 transition-colors"
-              aria-label="Actions sur la carte"
-            >
+            <button onClick={() => setMenuOpen(o => !o)} className="flex flex-col gap-[3px] items-center justify-center w-8 h-8 rounded-lg hover:bg-zinc-600 transition-colors" aria-label="Actions sur la carte">
               <span className="w-1 h-1 rounded-full bg-zinc-400" />
               <span className="w-1 h-1 rounded-full bg-zinc-400" />
               <span className="w-1 h-1 rounded-full bg-zinc-400" />
             </button>
-
             {menuOpen && (
               <div className="absolute right-0 top-full mt-1 w-44 rounded-xl bg-white shadow-lg overflow-hidden z-30">
                 <Link
-                  href={`/decks/${current.deck.id}/cards/${current.id}/edit?returnTo=${encodeURIComponent(`/review?deckId=${current.deck.id}&mode=${mode}&cardId=${current.id}`)}`}
+                  href={editHref}
                   className="block px-4 py-3 text-sm text-zinc-700 hover:bg-zinc-50 transition-colors"
                   onClick={() => setMenuOpen(false)}
                 >
                   Modifier
                 </Link>
-                <button
-                  onClick={handleToggleVerified}
-                  className="w-full text-left px-4 py-3 text-sm text-zinc-700 hover:bg-zinc-50 transition-colors"
-                >
-                  {current.verified ? "Marquer non vérifiée" : "Marquer comme vérifiée"}
-                </button>
-                <button
-                  onClick={handleDelete}
-                  className="w-full text-left px-4 py-3 text-sm text-red-500 hover:bg-red-50 transition-colors"
-                >
+                <button onClick={handleDelete} className="w-full text-left px-4 py-3 text-sm text-red-500 hover:bg-red-50 transition-colors">
                   Supprimer
                 </button>
               </div>
@@ -266,12 +234,7 @@ export default function ReviewSession({ initialCards, mode, backHref, initialCar
 
         {/* Card area */}
         <div className="flex-1 flex items-center justify-center px-4 overflow-hidden">
-          <SwipeCard
-            key={current.id}
-            mode={mode}
-            onSwipe={handleSwipe}
-            onTap={() => dispatch({ type: "FLIP" })}
-          >
+          <SwipeCard key={current.id} mode={mode} onSwipe={handleSwipe} onTap={() => dispatch({ type: "FLIP" })}>
             <CardRenderer
               card={current}
               size="full"

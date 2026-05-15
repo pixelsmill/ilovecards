@@ -18,3 +18,27 @@ export async function fetchUnsplashImage(query: string, currentUrl?: string): Pr
     return undefined
   }
 }
+
+export interface UnsplashPhoto {
+  id: string
+  thumb: string
+  regular: string
+}
+
+export async function searchUnsplashImages(query: string): Promise<UnsplashPhoto[]> {
+  const accessKey = process.env.UNSPLASH_ACCESS_KEY
+  if (!accessKey) return []
+  try {
+    const res = await fetch(
+      `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query + " background")}&per_page=10&orientation=portrait`,
+      { headers: { Authorization: `Client-ID ${accessKey}` }, signal: AbortSignal.timeout(5000) }
+    )
+    if (!res.ok) return []
+    const data = await res.json()
+    const results = data.results as Array<{ id: string; urls: { regular: string; thumb: string } }> | undefined
+    if (!results?.length) return []
+    return results.map(r => ({ id: r.id, thumb: r.urls.thumb, regular: r.urls.regular }))
+  } catch {
+    return []
+  }
+}

@@ -1,10 +1,9 @@
 import { notFound, redirect } from "next/navigation"
-import Link from "next/link"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { CreateCardSchema } from "@/lib/schemas/card"
 import { fetchUnsplashImage } from "@/lib/unsplash"
-import CardForm from "@/features/cards/CardForm"
+import CardEditClient from "@/features/cards/CardEditClient"
 import Breadcrumb from "@/components/Breadcrumb"
 
 export default async function NewCardPage({ params }: { params: Promise<{ id: string }> }) {
@@ -22,7 +21,15 @@ export default async function NewCardPage({ params }: { params: Promise<{ id: st
 
     const template = (formData.get("template") as string) || "minimaliste"
     const notion = (formData.get("notion") as string) || ""
-    const imageUrl = template === "photo-overlay" ? await fetchUnsplashImage(notion) : undefined
+    const existingImageUrl = (formData.get("imageUrl") as string) || undefined
+    let imageUrl: string | undefined = undefined
+    if (template === "photo-overlay") {
+      if (existingImageUrl) {
+        imageUrl = existingImageUrl
+      } else if (notion) {
+        imageUrl = (await fetchUnsplashImage(notion)) ?? undefined
+      }
+    }
 
     const parsed = CreateCardSchema.safeParse({
       deckId: formData.get("deckId"),
@@ -30,7 +37,8 @@ export default async function NewCardPage({ params }: { params: Promise<{ id: st
       developpement: formData.get("developpement") || undefined,
       source: formData.get("source") || undefined,
       template,
-      imageUrl,
+      verified: formData.get("verified") === "true",
+      ...(imageUrl !== undefined && { imageUrl }),
     })
     if (!parsed.success) return
 
@@ -45,11 +53,17 @@ export default async function NewCardPage({ params }: { params: Promise<{ id: st
     <main className="min-h-screen bg-zinc-50 px-4 py-8">
       <div className="max-w-2xl mx-auto space-y-6">
         <Breadcrumb items={[{ label: "Accueil", href: "/dashboard" }, { label: "Mes decks", href: "/decks" }, { label: deck.name, href: `/decks/${deckId}` }, { label: "Nouvelle carte" }]} />
-        <h1 className="text-xl font-bold tracking-tight">Nouvelle carte</h1>
-        <CardForm
+        <CardEditClient
           deckId={deckId}
-          action={createCard}
+          deckName={deck.name}
           accentColor={deck.accentColor}
+          action={createCard}
+          submitLabel="Créer la carte"
+          defaultValues={{
+            notion: "",
+            template: "minimaliste",
+            verified: true,
+          }}
         />
       </div>
     </main>

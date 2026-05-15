@@ -1,11 +1,9 @@
 import { notFound, redirect } from "next/navigation"
-import Link from "next/link"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { UpdateCardSchema } from "@/lib/schemas/card"
 import { fetchUnsplashImage } from "@/lib/unsplash"
-import CardForm from "@/features/cards/CardForm"
-import DeleteCardButton from "@/features/cards/DeleteCardButton"
+import CardEditClient from "@/features/cards/CardEditClient"
 import Breadcrumb from "@/components/Breadcrumb"
 
 export default async function EditCardPage({ params, searchParams }: { params: Promise<{ id: string; cardId: string }>; searchParams: Promise<{ returnTo?: string }> }) {
@@ -62,14 +60,14 @@ export default async function EditCardPage({ params, searchParams }: { params: P
     <main className="min-h-screen bg-zinc-50 px-4 py-8">
       <div className="max-w-2xl mx-auto space-y-6">
         <Breadcrumb items={[{ label: "Accueil", href: "/dashboard" }, { label: "Mes decks", href: "/decks" }, { label: card.deck.name, href: `/decks/${deckId}` }, { label: "Modifier la carte" }]} />
-        <h1 className="text-xl font-bold tracking-tight">Modifier la carte</h1>
 
-        <CardForm
+        <CardEditClient
           deckId={deckId}
           cardId={cardId}
-          returnTo={safeReturnTo}
-          action={updateCard}
+          deckName={card.deck.name}
           accentColor={card.deck.accentColor}
+          action={updateCard}
+          returnTo={safeReturnTo}
           defaultValues={{
             notion: card.notion,
             developpement: card.developpement ?? undefined,
@@ -78,12 +76,7 @@ export default async function EditCardPage({ params, searchParams }: { params: P
             imageUrl: card.imageUrl,
             verified: card.verified,
           }}
-          submitLabel="Enregistrer"
         />
-
-        <div className="pt-2">
-          <DeleteCardButton cardId={cardId} deckId={deckId} />
-        </div>
       </div>
     </main>
   )

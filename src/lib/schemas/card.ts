@@ -15,10 +15,10 @@ export const CreateCardSchema = z.object({
 
 export const UpdateCardSchema = z.object({
   notion: z.string().min(1).max(500).optional(),
-  developpement: z.string().max(2000).optional(),
-  source: z.string().max(200).optional(),
+  developpement: z.string().max(2000).nullable().optional(),
+  source: z.string().max(200).nullable().optional(),
   template: z.enum(['poster', 'quote', 'magazine', 'color-block', 'photo-overlay', 'minimaliste', 'equation', 'sature']).optional(),
-  imageUrl: z.string().url().optional(),
+  imageUrl: z.string().url().nullable().optional(),
   verified: z.boolean().optional(),
 })
 

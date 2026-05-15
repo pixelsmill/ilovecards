@@ -25,6 +25,8 @@ export interface TemplateProps {
   accentColor: string
   size: CardSize
   imageUrl?: string
+  editMode?: boolean
+  onNotionChange?: (v: string) => void
 }
 
 const TEMPLATES: Record<string, React.ComponentType<TemplateProps>> = {
