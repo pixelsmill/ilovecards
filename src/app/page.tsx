@@ -155,7 +155,7 @@ export default async function HomePage() {
           className="text-xs font-medium uppercase tracking-widest mb-6"
           style={{ color: "#C68A3A", fontFamily: "var(--font-jetbrains-mono), monospace" }}
         >
-          Cartes · Curiosités · IA
+          Collection · Cartes · Mémoriser
         </p>
         <h1
           className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight max-w-2xl mb-6"
