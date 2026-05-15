@@ -32,30 +32,45 @@ export default async function HomePage() {
   const session = await auth()
   if (session) redirect("/dashboard")
 
-  const [verveineImg, cinemaImg] = await Promise.all([
+  const [verveineImg, cinemaImg, aframeImg] = await Promise.all([
     fetchUnsplashImage("verbena plant botanical"),
-    fetchUnsplashImage("retro cinema neon night street"),
+    fetchUnsplashImage("spain melodrama fashion red dramatic"),
+    fetchUnsplashImage("a-frame cabin forest architecture wood"),
   ])
 
   const HERO_CARDS = [
     {
-      notion: "La règle des 2 minutes",
-      developpement: "Si une tâche prend moins de 2 minutes, fais-la maintenant. Sinon, planifie-la.",
-      template: "color-block",
-      color: "#6366f1",
-    },
-    {
-      notion: "Once Upon a Time in Hollywood",
-      developpement: "9e film de Tarantino (2019). Fresque nostalgique sur le crépuscule de l'âge d'or hollywoodien.",
-      template: "photo-overlay",
-      imageUrl: cinemaImg ?? null,
+      notion: "La structure de pions",
+      developpement: "Les pions définissent la structure de partie. Une chaîne solide contrôle le centre et guide le plan stratégique.",
+      template: "poster",
       color: "#334155",
     },
     {
-      notion: "Le syndrome de l'imposteur",
-      developpement: "Sentiment d'être un imposteur malgré ses succès. 70 % des personnes le vivent au moins une fois.",
-      template: "sature",
-      color: "#8b5cf6",
+      notion: "La Verveine officinale",
+      developpement: "Plante aux propriétés apaisantes et digestives. Infusée, elle calme le stress et favorise le sommeil.",
+      template: "photo-overlay",
+      imageUrl: verveineImg ?? null,
+      color: "#22c55e",
+    },
+    {
+      notion: "Tacones Lejanos",
+      developpement: "Film de Pedro Almodóvar (1991). Drame maternel et mélodrame flamboyant sur fond de passion et de trahison.",
+      template: "photo-overlay",
+      imageUrl: cinemaImg ?? null,
+      color: "#f43f5e",
+    },
+    {
+      notion: "L'autoconstruction",
+      developpement: "Construire soi-même sa maison réduit les coûts de 30 à 50 %. L'A-frame, simple et solide, reste l'une des structures les plus accessibles.",
+      template: "photo-overlay",
+      imageUrl: aframeImg ?? null,
+      color: "#C68A3A",
+    },
+    {
+      notion: "Le cycle de vie des émotions",
+      developpement: "Chaque émotion suit un cycle : déclenchement, pic, plateau, déclin. La reconnaître sans la réprimer accélère naturellement sa résolution.",
+      template: "magazine",
+      color: "#6366f1",
     },
   ]
 
@@ -160,20 +175,22 @@ export default async function HomePage() {
         </div>
         <p className="text-xs" style={{ color: "#6B6356" }}>30 cartes offertes · Sans carte bancaire</p>
 
-        {/* Cards fan */}
-        <div className="relative mt-16 flex items-end justify-center" style={{ height: 300 }}>
+        {/* Cards fan — 5 cartes, cinéma au centre */}
+        <div className="relative mt-16 flex items-end justify-center" style={{ height: 320 }}>
           {HERO_CARDS.map((card, i) => {
-            const rotations = [-9, 0, 9]
-            const translateY = [14, -8, 14]
+            const rotations = [-16, -8, 0, 8, 16]
+            const translateY = [22, 10, -8, 10, 22]
+            const zIndexes = [1, 3, 5, 4, 2]
+            const brightness = [0.55, 0.75, 1, 0.75, 0.55]
             return (
               <div
                 key={i}
                 className="flex-shrink-0"
                 style={{
                   transform: `rotate(${rotations[i]}deg) translateY(${translateY[i]}px)`,
-                  zIndex: i === 0 ? 1 : i === 1 ? 3 : 2,
-                  marginLeft: i > 0 ? "-28px" : 0,
-                  filter: i !== 0 ? "none" : "brightness(0.65)",
+                  zIndex: zIndexes[i],
+                  marginLeft: i > 0 ? "-36px" : 0,
+                  filter: `brightness(${brightness[i]})`,
                 }}
               >
                 <CardRenderer
