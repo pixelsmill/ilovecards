@@ -9,17 +9,17 @@ const FEATURES = [
   {
     icon: "✦",
     title: "3 assistants IA par deck",
-    desc: "Ajoute une idée en deux secondes, laisse l'IA compléter ton deck ou importe un texte entier — selon ton humeur du moment.",
+    desc: "Ajoutez une idée en deux secondes, laissez l'IA compléter votre collection ou importez un texte entier — selon votre humeur du moment.",
   },
   {
     icon: "↻",
     title: "Mémorisation sans effort",
-    desc: "L'algorithme apprend ta mémoire et te présente chaque carte au bon moment — ni trop tôt, ni trop tard.",
+    desc: "L'algorithme apprend votre mémoire et vous présente chaque carte au bon moment — ni trop tôt, ni trop tard.",
   },
   {
     icon: "◈",
     title: "8 formats visuels",
-    desc: "Poster, citation, magazine, photo… chaque format met en valeur ce que tu veux retenir.",
+    desc: "Poster, citation, magazine, photo… chaque format met en valeur ce que vous souhaitez retenir.",
   },
   {
     icon: "⊕",
@@ -283,7 +283,7 @@ export default async function HomePage() {
             Simple et gratuit pour commencer
           </h2>
           <p className="text-sm mb-12" style={{ color: "#6B6356" }}>
-            Pas de CB, pas d&apos;engagement. Commence maintenant.
+            Pas de CB, pas d&apos;engagement. Commencez maintenant.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
