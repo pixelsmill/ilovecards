@@ -43,6 +43,8 @@ function imageSourceLabel(url: string | null): string | null {
   return "URL"
 }
 
+interface DeckOption { id: string; name: string; accentColor: string }
+
 interface Props {
   deckId: string
   cardId?: string
@@ -51,6 +53,7 @@ interface Props {
   action: (formData: FormData) => void
   returnTo?: string
   submitLabel?: string
+  decks?: DeckOption[]
   defaultValues: {
     notion: string
     developpement?: string
@@ -61,13 +64,17 @@ interface Props {
   }
 }
 
-export default function CardEditClient({ deckId, cardId, deckName, accentColor, action, returnTo, submitLabel = "Enregistrer", defaultValues }: Props) {
+export default function CardEditClient({ deckId, cardId, deckName, accentColor, action, returnTo, submitLabel = "Enregistrer", decks, defaultValues }: Props) {
   const [notion, setNotion] = useState(defaultValues.notion)
   const [developpement, setDeveloppement] = useState(defaultValues.developpement ?? "")
   const [source, setSource] = useState(defaultValues.source ?? "")
   const [template, setTemplate] = useState(defaultValues.template)
   const [imageUrl, setImageUrl] = useState<string | null>(defaultValues.imageUrl ?? null)
   const [verified, setVerified] = useState(defaultValues.verified)
+  const [targetDeckId, setTargetDeckId] = useState(deckId)
+  const activeDeck = decks?.find(d => d.id === targetDeckId)
+  const previewAccentColor = activeDeck?.accentColor ?? accentColor
+  const previewDeckName = activeDeck?.name ?? deckName
   const [flipped, setFlipped] = useState(false)
   const [showUrlInput, setShowUrlInput] = useState(false)
   const [loadingUnsplash, setLoadingUnsplash] = useState(false)
@@ -154,8 +161,8 @@ export default function CardEditClient({ deckId, cardId, deckName, accentColor, 
             card={previewCard}
             size="preview"
             flipped={flipped}
-            accentColor={accentColor}
-            deckName={deckName}
+            accentColor={previewAccentColor}
+            deckName={previewDeckName}
           />
         </div>
         <div className="flex items-center gap-2 text-[11px] text-zinc-500">
@@ -219,6 +226,7 @@ export default function CardEditClient({ deckId, cardId, deckName, accentColor, 
       {/* Form */}
       <form action={action} className="space-y-5">
         <input type="hidden" name="deckId" value={deckId} />
+        <input type="hidden" name="targetDeckId" value={targetDeckId} />
         <input type="hidden" name="template" value={template} />
         {imageUrl && template === "photo-overlay" && <input type="hidden" name="imageUrl" value={imageUrl} />}
         {returnTo && <input type="hidden" name="returnTo" value={returnTo} />}
@@ -267,9 +275,25 @@ export default function CardEditClient({ deckId, cardId, deckName, accentColor, 
           />
         </div>
 
+        {decks && decks.length > 1 && (
+          <div className="space-y-1.5">
+            <label className="text-sm font-medium text-zinc-700" htmlFor="deck-select">Deck</label>
+            <select
+              id="deck-select"
+              value={targetDeckId}
+              onChange={e => setTargetDeckId(e.target.value)}
+              className="w-full rounded-lg border border-zinc-200 px-4 py-2.5 text-sm outline-none focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900 bg-white"
+            >
+              {decks.map(d => (
+                <option key={d.id} value={d.id}>{d.name}</option>
+              ))}
+            </select>
+          </div>
+        )}
+
         <div className="space-y-2">
           <p className="text-sm font-medium text-zinc-700">Template visuel</p>
-          <TemplatePicker selected={template} onChange={handleTemplateChange} accentColor={accentColor} />
+          <TemplatePicker selected={template} onChange={handleTemplateChange} accentColor={previewAccentColor} />
         </div>
 
         <button type="button" onClick={() => setVerified(v => !v)}

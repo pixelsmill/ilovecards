@@ -13,7 +13,10 @@ export default async function EditCardPage({ params, searchParams }: { params: P
   const { id: deckId, cardId } = await params
   const { returnTo } = await searchParams
   const safeReturnTo = returnTo?.startsWith("/") ? returnTo : undefined
-  const card = await prisma.card.findUnique({ where: { id: cardId }, include: { deck: true } })
+  const [card, decks] = await Promise.all([
+    prisma.card.findUnique({ where: { id: cardId }, include: { deck: true } }),
+    prisma.deck.findMany({ where: { userId: session.user.id }, select: { id: true, name: true, accentColor: true }, orderBy: { name: "asc" } }),
+  ])
   if (!card || card.deck.userId !== session.user.id || card.deckId !== deckId) notFound()
 
   async function updateCard(formData: FormData) {
@@ -48,12 +51,23 @@ export default async function EditCardPage({ params, searchParams }: { params: P
     const c = await prisma.card.findUnique({ where: { id: cardId }, include: { deck: true } })
     if (!c || c.deck.userId !== s.user.id) return
 
+    const targetDeckId = formData.get("targetDeckId") as string | null
+    let resolvedDeckId = c.deckId
+    if (targetDeckId && targetDeckId !== c.deckId) {
+      const targetDeck = await prisma.deck.findUnique({ where: { id: targetDeckId } })
+      if (targetDeck?.userId === s.user.id) resolvedDeckId = targetDeckId
+    }
+
     await prisma.card.update({
       where: { id: cardId },
-      data: imageUrl !== undefined ? { ...parsed.data, imageUrl } : parsed.data,
+      data: {
+        ...(imageUrl !== undefined ? { ...parsed.data, imageUrl } : parsed.data),
+        ...(resolvedDeckId !== c.deckId && { deckId: resolvedDeckId }),
+      },
     })
-    const returnToValue = (formData.get("returnTo") as string | null)
-    redirect(returnToValue?.startsWith("/") ? returnToValue : `/decks/${deckId}`)
+
+    const returnToValue = formData.get("returnTo") as string | null
+    redirect(returnToValue?.startsWith("/") ? returnToValue : `/decks/${resolvedDeckId}`)
   }
 
   return (
@@ -68,6 +82,7 @@ export default async function EditCardPage({ params, searchParams }: { params: P
           accentColor={card.deck.accentColor}
           action={updateCard}
           returnTo={safeReturnTo}
+          decks={decks}
           defaultValues={{
             notion: card.notion,
             developpement: card.developpement ?? undefined,

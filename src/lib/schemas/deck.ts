@@ -1,8 +1,11 @@
 import { z } from "zod"
 
 export const ACCENT_COLORS = [
-  "#6366f1", "#ec4899", "#f97316", "#eab308",
-  "#22c55e", "#06b6d4", "#8b5cf6", "#ef4444",
+  "#ef4444", "#f43f5e", "#ec4899", "#db2777",
+  "#f97316", "#f59e0b", "#eab308", "#84cc16",
+  "#22c55e", "#0d9488", "#06b6d4", "#3b82f6",
+  "#6366f1", "#8b5cf6", "#a855f7", "#7c3aed",
+  "#C68A3A", "#78716c", "#334155", "#1a1814",
 ]
 
 export const CreateDeckSchema = z.object({
