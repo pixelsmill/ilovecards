@@ -10,7 +10,7 @@ export default function CardPoster({ notion, accentColor, size }: TemplateProps)
       style={{ backgroundColor: accentColor }}
     >
       <div className={`absolute left-1/2 -translate-x-1/2 bg-white/40 ${
-        isThumb ? 'top-1.5 w-4 h-px' : isFull ? 'top-6 w-8 h-0.5' : 'top-3 w-6 h-px'
+        isThumb ? 'top-[9px] w-4 h-px' : isFull ? 'top-[34px] w-8 h-0.5' : 'top-[18px] w-6 h-px'
       }`} />
       <p
         className={`text-center font-bold leading-tight ${
