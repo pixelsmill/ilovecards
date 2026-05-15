@@ -2,26 +2,113 @@ import Link from "next/link"
 import { redirect } from "next/navigation"
 import { auth } from "@/lib/auth"
 import CardRenderer from "@/components/card-renderer/CardRenderer"
-
-const DEMO_CARDS = [
-  { notion: "Le rasoir d'Ockham", developpement: "À hypothèses égales, la plus simple est la meilleure.", template: "quote", color: "#6366f1" },
-  { notion: "La loi des grands nombres", developpement: "Plus l'échantillon est grand, plus la moyenne empirique se rapproche de l'espérance théorique.", template: "equation", color: "#ec4899" },
-  { notion: "L'effet de halo", developpement: "Un trait positif d'une personne influence positivement la perception de ses autres traits.", template: "magazine", color: "#f97316" },
-  { notion: "La mémoire de travail", developpement: "Système cognitif de capacité limitée qui maintient et manipule l'information à court terme.", template: "poster", color: "#06b6d4" },
-  { notion: "La répétition espacée", developpement: "Réviser à intervalles croissants optimise la mémorisation à long terme.", template: "color-block", color: "#22c55e" },
-  { notion: "Le biais de confirmation", developpement: "Tendance à favoriser les informations qui confirment ses croyances préexistantes.", template: "sature", color: "#8b5cf6" },
-]
+import { fetchUnsplashImage } from "@/lib/unsplash"
 
 const FEATURES = [
-  { icon: "✦", title: "Import intelligent", desc: "Texte, PDF ou URL — l'IA extrait les concepts clés et génère tes cartes en quelques secondes." },
-  { icon: "↻", title: "Répétition espacée", desc: "L'algorithme SRS adapte le rythme de révision à ta mémoire pour retenir plus longtemps." },
-  { icon: "◈", title: "8 formats de cartes", desc: "Poster, équation, magazine, citation… chaque template est pensé pour un type de notion." },
-  { icon: "⊕", title: "30 cartes offertes", desc: "Commence sans CB. 30 crédits IA à l'inscription, +1 carte générée par jour ensuite." },
+  {
+    icon: "✦",
+    title: "3 assistants IA par deck",
+    desc: "Ajout rapide, complétion intelligente, import massif depuis texte, PDF ou URL — l'IA s'adapte à ton workflow.",
+  },
+  {
+    icon: "↻",
+    title: "Répétition espacée",
+    desc: "L'algorithme SRS calcule le bon moment pour réviser chaque carte et ancre les notions en mémoire longue durée.",
+  },
+  {
+    icon: "◈",
+    title: "8 formats visuels",
+    desc: "Poster, équation, magazine, citation, photo… chaque template est pensé pour un type de notion.",
+  },
+  {
+    icon: "⊕",
+    title: "Gratuit pour commencer",
+    desc: "30 crédits IA à l'inscription, +1 par jour. Révisions et création manuelle illimitées, sans CB.",
+  },
 ]
 
 export default async function HomePage() {
   const session = await auth()
   if (session) redirect("/dashboard")
+
+  const [verveineImg, cinemaImg] = await Promise.all([
+    fetchUnsplashImage("verbena plant botanical"),
+    fetchUnsplashImage("retro cinema neon night street"),
+  ])
+
+  const HERO_CARDS = [
+    {
+      notion: "Once Upon a Time in Hollywood",
+      developpement: "9e film de Tarantino (2019). Fresque nostalgique sur le crépuscule de l'âge d'or hollywoodien.",
+      template: "photo-overlay",
+      imageUrl: cinemaImg ?? null,
+      color: "#334155",
+    },
+    {
+      notion: "La neuroplasticité",
+      developpement: "Le cerveau adulte conserve la capacité de réorganiser ses connexions synaptiques en réponse à l'apprentissage.",
+      template: "magazine",
+      color: "#0d9488",
+    },
+    {
+      notion: "E = mc²",
+      developpement: "L'énergie d'un corps au repos est égale à sa masse multipliée par le carré de la vitesse de la lumière.",
+      template: "equation",
+      color: "#ec4899",
+    },
+  ]
+
+  const TEMPLATE_CARDS = [
+    {
+      notion: "La Verveine officinale",
+      developpement: "Plante herbacée aux propriétés sédatives et digestives, utilisée en phytothérapie depuis l'Antiquité.",
+      template: "photo-overlay",
+      imageUrl: verveineImg ?? null,
+      color: "#22c55e",
+    },
+    {
+      notion: "La mémoire de travail",
+      developpement: "Système cognitif de capacité limitée (7 ± 2 éléments) qui maintient l'information à court terme.",
+      template: "poster",
+      color: "#6366f1",
+    },
+    {
+      notion: "Le rasoir d'Ockham",
+      developpement: "À hypothèses égales, la plus simple est préférable.",
+      template: "quote",
+      color: "#C68A3A",
+    },
+    {
+      notion: "La neuroplasticité",
+      developpement: "Capacité du cerveau à modifier ses connexions synaptiques tout au long de la vie.",
+      template: "magazine",
+      color: "#0d9488",
+    },
+    {
+      notion: "E = mc²",
+      developpement: "L'énergie est égale à la masse multipliée par le carré de la vitesse de la lumière.",
+      template: "equation",
+      color: "#ec4899",
+    },
+    {
+      notion: "La répétition espacée",
+      developpement: "Réviser à intervalles croissants optimise la mémorisation à long terme.",
+      template: "color-block",
+      color: "#22c55e",
+    },
+    {
+      notion: "Le biais de confirmation",
+      developpement: "Tendance à favoriser les informations qui confirment nos croyances préexistantes.",
+      template: "sature",
+      color: "#8b5cf6",
+    },
+    {
+      notion: "Le photon",
+      developpement: "Quantum d'énergie électromagnétique sans masse au repos, se déplaçant à c dans le vide.",
+      template: "minimaliste",
+      color: "#334155",
+    },
+  ]
 
   return (
     <div style={{ fontFamily: "var(--font-spectral), serif" }}>
@@ -50,16 +137,16 @@ export default async function HomePage() {
           className="text-xs font-medium uppercase tracking-widest mb-6"
           style={{ color: "#C68A3A", fontFamily: "var(--font-jetbrains-mono), monospace" }}
         >
-          Mémorisation IA
+          Flashcards assistées par IA
         </p>
         <h1
           className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight max-w-2xl mb-6"
           style={{ color: "#FBF9F4" }}
         >
-          Transforme tout en flashcards.
+          Crée, enrichis et retiens.
         </h1>
         <p className="text-base sm:text-lg max-w-md mb-10 leading-relaxed" style={{ color: "#9B9289" }}>
-          Colle un texte, une URL ou un PDF. L&apos;IA génère des cartes, toi tu révises avec la répétition espacée.
+          L&apos;IA génère tes cartes, complète tes decks et adapte le rythme de révision à ta mémoire.
         </p>
         <div className="flex flex-col sm:flex-row items-center gap-3 mb-4">
           <Link
@@ -72,24 +159,24 @@ export default async function HomePage() {
         </div>
         <p className="text-xs" style={{ color: "#6B6356" }}>30 cartes offertes · Sans carte bancaire</p>
 
-        {/* Cards preview */}
-        <div className="relative mt-16 flex items-end justify-center gap-0" style={{ height: 300 }}>
-          {DEMO_CARDS.slice(0, 3).map((card, i) => {
-            const rotations = [-8, 0, 8]
-            const translateY = [10, -10, 10]
+        {/* Cards fan */}
+        <div className="relative mt-16 flex items-end justify-center" style={{ height: 300 }}>
+          {HERO_CARDS.map((card, i) => {
+            const rotations = [-9, 0, 9]
+            const translateY = [14, -8, 14]
             return (
               <div
                 key={i}
                 className="flex-shrink-0"
                 style={{
                   transform: `rotate(${rotations[i]}deg) translateY(${translateY[i]}px)`,
-                  zIndex: i === 1 ? 3 : i === 0 ? 2 : 1,
-                  marginLeft: i > 0 ? "-24px" : 0,
-                  filter: i !== 1 ? "brightness(0.7)" : "none",
+                  zIndex: i === 0 ? 1 : i === 1 ? 3 : 2,
+                  marginLeft: i > 0 ? "-28px" : 0,
+                  filter: i !== 0 ? "none" : "brightness(0.65)",
                 }}
               >
                 <CardRenderer
-                  card={{ notion: card.notion, developpement: card.developpement, source: null, template: card.template }}
+                  card={{ notion: card.notion, developpement: card.developpement, source: null, template: card.template, imageUrl: "imageUrl" in card ? card.imageUrl : null }}
                   size="preview"
                   accentColor={card.color}
                 />
@@ -102,9 +189,12 @@ export default async function HomePage() {
       {/* FEATURES */}
       <section className="px-6 py-20" style={{ background: "#FBF9F4" }}>
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-14" style={{ color: "#1A1814" }}>
+          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-4" style={{ color: "#1A1814" }}>
             Tout ce qu&apos;il faut pour mémoriser mieux
           </h2>
+          <p className="text-center text-sm mb-14" style={{ color: "#9B9289" }}>
+            De la création à la révision, l&apos;IA t&apos;accompagne à chaque étape
+          </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             {FEATURES.map((f) => (
               <div key={f.title} className="space-y-2">
@@ -124,7 +214,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* CARDS SHOWCASE */}
+      {/* TEMPLATES SHOWCASE */}
       <section className="px-6 py-20 overflow-hidden" style={{ background: "#3f3f46" }}>
         <div className="max-w-4xl mx-auto">
           <h2 className="text-2xl sm:text-3xl font-bold text-center mb-4" style={{ color: "#FBF9F4" }}>
@@ -134,10 +224,16 @@ export default async function HomePage() {
             L&apos;IA choisit le template adapté à chaque notion
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            {DEMO_CARDS.map((card, i) => (
+            {TEMPLATE_CARDS.map((card, i) => (
               <div key={i} className="flex-shrink-0">
                 <CardRenderer
-                  card={{ notion: card.notion, developpement: card.developpement, source: null, template: card.template }}
+                  card={{
+                    notion: card.notion,
+                    developpement: card.developpement,
+                    source: null,
+                    template: card.template,
+                    imageUrl: "imageUrl" in card ? card.imageUrl : null,
+                  }}
                   size="preview"
                   accentColor={card.color}
                 />
@@ -174,6 +270,7 @@ export default async function HomePage() {
                   "+1 carte générée par jour",
                   "Révisions illimitées",
                   "8 templates de cartes",
+                  "3 assistants IA par deck",
                   "Import texte, PDF, URL",
                 ].map(item => (
                   <li key={item} className="flex items-start gap-2">
