@@ -32,9 +32,9 @@ export default async function HomePage() {
   const session = await auth()
   if (session) redirect("/dashboard")
 
-  const [verveineImg, cinemaImg, chessImg, aframeImg] = await Promise.all([
+  const [verveineImg, paellaImg, chessImg, aframeImg] = await Promise.all([
     fetchUnsplashImage("verbena plant botanical"),
-    fetchUnsplashImage("spain melodrama fashion red dramatic"),
+    fetchUnsplashPhotoById("41pjIQyqbHQ"),
     fetchUnsplashPhotoById("G1yhU1Ej-9A"),
     fetchUnsplashPhotoById("NVhD7aGh9gQ"),
   ])
@@ -48,18 +48,18 @@ export default async function HomePage() {
       color: "#06b6d4",
     },
     {
+      notion: "La paëlla est une recette qui cache de nombreuses petites anecdotes",
+      developpement: "Originaire de Valence, elle naît dans les champs au XVIIIe siècle. Lapin, haricots, eau de rizière — rien à voir avec la version aux fruits de mer.",
+      template: "photo-overlay",
+      imageUrl: paellaImg ?? null,
+      color: "#f43f5e",
+    },
+    {
       notion: "La verveine calme le système nerveux là où les médicaments s'arrêtent",
       developpement: "Plante adaptogène aux propriétés sédatives douces. Infusée le soir, elle régule l'anxiété sans accoutumance.",
       template: "photo-overlay",
       imageUrl: verveineImg ?? null,
       color: "#22c55e",
-    },
-    {
-      notion: "Chez Almodóvar, les femmes portent toujours le récit",
-      developpement: "Dans Tacones Lejanos (1991), mère et fille incarnent deux visions du désir et de la liberté. Le mélodrame comme territoire politique.",
-      template: "photo-overlay",
-      imageUrl: cinemaImg ?? null,
-      color: "#f43f5e",
     },
     {
       notion: "Un A-frame se construit seul en 6 semaines pour moins de 30 000 €",
