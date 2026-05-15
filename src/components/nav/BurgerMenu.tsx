@@ -8,8 +8,7 @@ import { signOut } from "next-auth/react"
 const NAV = [
   { href: "/dashboard", label: "Accueil",     num: "01" },
   { href: "/review?mode=browse", label: "Voir les cartes", num: "02" },
-  { href: "/import",    label: "Import IA",  num: "03" },
-  { href: "/account",   label: "Mon compte", num: "04" },
+  { href: "/account",   label: "Mon compte", num: "03" },
 ]
 
 interface Props {

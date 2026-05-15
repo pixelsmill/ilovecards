@@ -33,9 +33,11 @@ interface Props {
   decks: Deck[]
   defaultDeckId?: string
   credits?: number
+  fixedDeckId?: string
+  onSaved?: () => void
 }
 
-export default function ImportFlow({ decks, defaultDeckId, credits }: Props) {
+export default function ImportFlow({ decks, defaultDeckId, credits, fixedDeckId, onSaved }: Props) {
   const [phase, setPhase] = useState<Phase>("input")
   const [deckMode, setDeckMode] = useState<"existing" | "new">(decks.length > 0 ? "existing" : "new")
   const [deckId, setDeckId] = useState(defaultDeckId ?? decks[0]?.id ?? "")
@@ -56,7 +58,7 @@ export default function ImportFlow({ decks, defaultDeckId, credits }: Props) {
     : decks.find(d => d.id === deckId)
   const acceptedCount = cards.filter(c => c.accepted).length
   const hasInput = prompt.trim() || url.trim() || !!file
-  const deckReady = deckMode === "existing" ? !!deckId : !!newDeckName.trim()
+  const deckReady = !!fixedDeckId || (deckMode === "existing" ? !!deckId : !!newDeckName.trim())
 
   function updateCard(index: number, updates: Partial<CardCandidate>) {
     setCards(prev => prev.map((c, i) => i === index ? { ...c, ...updates } : c))
@@ -79,7 +81,7 @@ export default function ImportFlow({ decks, defaultDeckId, credits }: Props) {
 
     try {
       const form = new FormData()
-      form.append("deckId", deckMode === "existing" ? deckId : (decks[0]?.id || "pending"))
+      form.append("deckId", fixedDeckId ?? (deckMode === "existing" ? deckId : (decks[0]?.id || "pending")))
       if (prompt.trim()) form.append("prompt", prompt.trim())
       if (url.trim()) form.append("url", url.trim())
       if (file) form.append("file", file)
@@ -136,9 +138,9 @@ export default function ImportFlow({ decks, defaultDeckId, credits }: Props) {
     if (!accepted.length) return
     setPhase("saving")
 
-    let targetDeckId = deckId
+    let targetDeckId = fixedDeckId ?? deckId
 
-    if (deckMode === "new") {
+    if (!fixedDeckId && deckMode === "new") {
       try {
         const res = await fetch("/api/decks", {
           method: "POST",
@@ -176,7 +178,11 @@ export default function ImportFlow({ decks, defaultDeckId, credits }: Props) {
       } catch {}
     }
     setSavedCount(count)
-    setPhase("done")
+    if (onSaved) {
+      onSaved()
+    } else {
+      setPhase("done")
+    }
   }
 
   function resetInput() {
@@ -328,8 +334,8 @@ export default function ImportFlow({ decks, defaultDeckId, credits }: Props) {
         </div>
       )}
 
-      {/* Deck selector */}
-      <div className="space-y-2">
+      {/* Deck selector — hidden when deck is fixed */}
+      {!fixedDeckId && <div className="space-y-2">
         <div className="flex rounded-lg border border-zinc-200 overflow-hidden text-sm">
           {decks.length > 0 && (
             <button
@@ -384,7 +390,7 @@ export default function ImportFlow({ decks, defaultDeckId, credits }: Props) {
             </div>
           </div>
         )}
-      </div>
+      </div>}
 
       {/* Main prompt area */}
       <div className="space-y-1.5">

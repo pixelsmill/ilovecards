@@ -8,18 +8,25 @@ import VerifyCardButton from "@/features/cards/VerifyCardButton"
 import Breadcrumb from "@/components/Breadcrumb"
 import CompleteDeck from "@/features/decks/CompleteDeck"
 import QuickAddAI from "@/features/decks/QuickAddAI"
+import DeckImportSection from "@/features/decks/DeckImportSection"
+
+const MS_PER_DAY = 86_400_000
+const MAX_CREDITS = 30
 
 export default async function DeckDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth()
   if (!session?.user?.id) redirect("/login")
 
   const { id } = await params
-  const deck = await prisma.deck.findUnique({
-    where: { id },
-    include: { cards: { orderBy: { createdAt: "desc" } } },
-  })
+  const [deck, user] = await Promise.all([
+    prisma.deck.findUnique({ where: { id }, include: { cards: { orderBy: { createdAt: "desc" } } } }),
+    prisma.user.findUnique({ where: { id: session.user.id }, select: { aiCredits: true, lastCreditAt: true } }),
+  ])
 
   if (!deck || deck.userId !== session.user.id) notFound()
+
+  const daysSince = user ? Math.floor((Date.now() - user.lastCreditAt.getTime()) / MS_PER_DAY) : 0
+  const credits = user ? Math.min(MAX_CREDITS, user.aiCredits + daysSince) : 0
 
   return (
     <main className="min-h-screen bg-zinc-50 px-4 py-8">
@@ -62,6 +69,7 @@ export default async function DeckDetailPage({ params }: { params: Promise<{ id:
 
         <QuickAddAI deckId={id} deckName={deck.name} accentColor={deck.accentColor} />
         <CompleteDeck deckId={id} accentColor={deck.accentColor} />
+        <DeckImportSection deckId={id} credits={credits} />
 
         <div className="space-y-2">
           <p className="text-sm font-medium text-zinc-700">{deck.cards.length} carte{deck.cards.length !== 1 ? "s" : ""}</p>
