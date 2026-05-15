@@ -40,10 +40,10 @@ export default async function HomePage() {
 
   const HERO_CARDS = [
     {
-      notion: "La structure de pions",
-      developpement: "Les pions définissent la structure de partie. Une chaîne solide contrôle le centre et guide le plan stratégique.",
+      notion: "Les pions sont l'âme des échecs",
+      developpement: "Ils définissent la structure de toute la partie. Une chaîne solide contrôle le centre et dicte le plan stratégique.",
       template: "poster",
-      color: "#334155",
+      color: "#f43f5e",
     },
     {
       notion: "La Verveine officinale",
@@ -67,8 +67,8 @@ export default async function HomePage() {
       color: "#C68A3A",
     },
     {
-      notion: "Le cycle de vie des émotions",
-      developpement: "Chaque émotion suit un cycle : déclenchement, pic, plateau, déclin. La reconnaître sans la réprimer accélère naturellement sa résolution.",
+      notion: "Les émotions délivrent un message en 5 étapes",
+      developpement: "Déclenchement, montée, pic, plateau, déclin. Traverser le cycle sans l'interrompre est la voie la plus courte vers la résolution.",
       template: "magazine",
       color: "#6366f1",
     },
@@ -83,8 +83,8 @@ export default async function HomePage() {
       color: "#06b6d4",
     },
     {
-      notion: "Le Deep Work",
-      developpement: "Travailler en concentration totale, sans interruption. Quatre heures suffisent à produire ce qu'une journée ordinaire n'accomplit pas.",
+      notion: "4 heures de concentration profonde valent une journée ordinaire",
+      developpement: "Le Deep Work, c'est travailler sans interruption sur ce qui compte vraiment. Cal Newport en a fait une discipline.",
       template: "poster",
       color: "#06b6d4",
     },
@@ -95,8 +95,8 @@ export default async function HomePage() {
       color: "#06b6d4",
     },
     {
-      notion: "Le syndrome de l'imposteur",
-      developpement: "Sentiment persistant d'être un imposteur malgré ses succès. Touche 70 % des personnes au cours de leur vie.",
+      notion: "70 % des gens se croient imposteurs au moins une fois",
+      developpement: "Le syndrome de l'imposteur frappe surtout les plus compétents. Le reconnaître suffit souvent à le désamorcer.",
       template: "magazine",
       color: "#06b6d4",
     },
@@ -113,14 +113,14 @@ export default async function HomePage() {
       color: "#06b6d4",
     },
     {
-      notion: "La procrastination",
-      developpement: "Remettre à demain naît rarement de la paresse — c'est souvent la peur de l'échec ou du regard des autres.",
+      notion: "On ne procrastine pas par paresse, mais par peur",
+      developpement: "La peur de l'échec ou du regard des autres bloque plus que la fatigue. Identifier la peur, c'est déjà commencer.",
       template: "sature",
       color: "#06b6d4",
     },
     {
-      notion: "Le flow",
-      developpement: "État de concentration absolue où l'effort disparaît et le temps s'efface. Décrit par Csikszentmihalyi.",
+      notion: "Le flow commence là où défi et compétence se rejoignent",
+      developpement: "Ni trop facile, ni trop difficile. Csikszentmihalyi a découvert que cet équilibre produit un état de concentration absolue.",
       template: "minimaliste",
       color: "#06b6d4",
     },
