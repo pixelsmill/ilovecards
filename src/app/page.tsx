@@ -256,7 +256,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* TEMPLATES SHOWCASE */}
+      {/* TEMPLATES SHOWCASE — désactivé temporairement
       <section className="px-6 py-20 overflow-hidden" style={{ background: "#3f3f46" }}>
         <div className="max-w-4xl mx-auto">
           <h2 className="text-2xl sm:text-3xl font-bold text-center mb-4" style={{ color: "#FBF9F4" }}>
@@ -299,6 +299,7 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+      */}
 
       {/* PRICING */}
       <section className="px-6 py-20" style={{ background: "#FBF9F4" }}>
