@@ -2,6 +2,7 @@ import Link from "next/link"
 import { redirect } from "next/navigation"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import DeckCard from "@/features/dashboard/DeckCard"
 
 const QUOTES = [
   { text: "L'esprit n'est pas un vase à remplir, mais un feu à allumer.", author: "Plutarque" },
@@ -91,54 +92,14 @@ export default async function DashboardPage() {
 
         {/* Deck cards */}
         {decks.map((deck, i) => (
-          <div
+          <DeckCard
             key={deck.id}
-            className={`relative group w-36 aspect-[3/4] rounded-[18px] flex-shrink-0 ${ROTATIONS[i % ROTATIONS.length]} hover:rotate-0 hover:scale-105 transition-all duration-300 hover:shadow-2xl`}
-            style={{ backgroundColor: deck.accentColor }}
-          >
-            {/* Mobile tap → deck detail */}
-            <Link href={`/decks/${deck.id}`} className="absolute inset-0 z-0 rounded-[18px]" aria-label={deck.name} />
-
-            {/* Card content */}
-            <div className="relative z-[1] h-full p-4 flex flex-col pointer-events-none">
-              <span className="text-[11px]" style={{ color: "rgba(255,255,255,0.5)" }}>
-                {deck._count.cards} carte{deck._count.cards !== 1 ? "s" : ""}
-              </span>
-              <span
-                className="mt-auto font-semibold text-[15px] leading-snug text-white"
-                style={{ fontFamily: "var(--font-spectral), serif" }}
-              >
-                {deck.name}
-              </span>
-            </div>
-
-            {/* Hover overlay */}
-            <div
-              className="absolute inset-0 z-[2] rounded-[18px] flex flex-col items-center justify-center gap-2 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-200"
-              style={{ background: "rgba(0,0,0,0.62)" }}
-            >
-              <Link
-                href={`/review?deckId=${deck.id}&mode=browse`}
-                className="w-[112px] text-center rounded-[9px] bg-white text-zinc-900 py-2 text-[11px] font-semibold hover:bg-zinc-100 transition-colors"
-              >
-                Voir
-              </Link>
-              <Link
-                href={`/review?deckId=${deck.id}&mode=learn`}
-                className="w-[112px] text-center rounded-[9px] py-2 text-[11px] font-semibold text-white transition-colors"
-                style={{ background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.3)" }}
-              >
-                Mémoriser
-              </Link>
-              <Link
-                href={`/decks/${deck.id}`}
-                className="w-[112px] text-center rounded-[9px] py-2 text-[11px] font-semibold text-white transition-colors"
-                style={{ background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.3)" }}
-              >
-                Modifier
-              </Link>
-            </div>
-          </div>
+            id={deck.id}
+            name={deck.name}
+            accentColor={deck.accentColor}
+            cardCount={deck._count.cards}
+            rotation={ROTATIONS[i % ROTATIONS.length]}
+          />
         ))}
 
         {/* New deck */}
