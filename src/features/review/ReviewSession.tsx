@@ -216,9 +216,11 @@ export default function ReviewSession({ initialCards, mode, backHref, initialCar
                 >
                   Modifier
                 </Link>
-                <button onClick={handleToggleVerified} className="w-full text-left px-4 py-3 text-sm text-zinc-700 hover:bg-zinc-50 transition-colors">
-                  {current.verified ? "Marquer non vérifiée" : "Marquer comme vérifiée"}
-                </button>
+                {!current.verified && (
+                  <button onClick={handleToggleVerified} className="w-full text-left px-4 py-3 text-sm text-zinc-700 hover:bg-zinc-50 transition-colors">
+                    Valider le contenu
+                  </button>
+                )}
                 <button onClick={handleDelete} className="w-full text-left px-4 py-3 text-sm text-red-500 hover:bg-red-50 transition-colors">
                   Supprimer
                 </button>
