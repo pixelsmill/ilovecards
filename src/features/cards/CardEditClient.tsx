@@ -75,6 +75,7 @@ export default function CardEditClient({ deckId, cardId, deckName, accentColor, 
   const activeDeck = decks?.find(d => d.id === targetDeckId)
   const previewAccentColor = activeDeck?.accentColor ?? accentColor
   const previewDeckName = activeDeck?.name ?? deckName
+  const [generatingDev, setGeneratingDev] = useState(false)
   const [flipped, setFlipped] = useState(false)
   const [showUrlInput, setShowUrlInput] = useState(false)
   const [loadingUnsplash, setLoadingUnsplash] = useState(false)
@@ -82,6 +83,24 @@ export default function CardEditClient({ deckId, cardId, deckName, accentColor, 
   const [urlInput, setUrlInput] = useState("")
   const [unsplashResults, setUnsplashResults] = useState<UnsplashPhoto[]>([])
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  async function handleGenerateDev() {
+    if (!notion.trim() || generatingDev) return
+    setGeneratingDev(true)
+    try {
+      const res = await fetch("/api/ai/developpement", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ notion, deckName: previewDeckName }),
+      }).catch(() => null)
+      if (res?.ok) {
+        const data = await res.json()
+        if (data.developpement) setDeveloppement(data.developpement)
+      }
+    } finally {
+      setGeneratingDev(false)
+    }
+  }
 
   function handleTemplateChange(t: string) {
     setTemplate(t)
@@ -248,7 +267,13 @@ export default function CardEditClient({ deckId, cardId, deckName, accentColor, 
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-sm font-medium text-zinc-700" htmlFor="developpement">Développement (optionnel)</label>
+          <div className="flex items-center justify-between">
+            <label className="text-sm font-medium text-zinc-700" htmlFor="developpement">Développement (optionnel)</label>
+            <button type="button" onClick={handleGenerateDev} disabled={!notion.trim() || generatingDev}
+              className="text-xs text-zinc-400 hover:text-zinc-600 disabled:opacity-40 transition-colors">
+              {generatingDev ? "…" : "✦ Générer"}
+            </button>
+          </div>
           <textarea
             id="developpement"
             name="developpement"
