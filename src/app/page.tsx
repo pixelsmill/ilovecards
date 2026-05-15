@@ -155,16 +155,16 @@ export default async function HomePage() {
           className="text-xs font-medium uppercase tracking-widest mb-6"
           style={{ color: "#C68A3A", fontFamily: "var(--font-jetbrains-mono), monospace" }}
         >
-          Flashcards assistées par IA
+          Cartes · Curiosités · IA
         </p>
         <h1
           className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight max-w-2xl mb-6"
           style={{ color: "#FBF9F4" }}
         >
-          Crée, enrichis et mémorise.
+          Cultivez ce qui vous fascine.
         </h1>
         <p className="text-base sm:text-lg max-w-md mb-10 leading-relaxed" style={{ color: "#9B9289" }}>
-          L&apos;IA génère tes cartes, complète tes decks et s&apos;adapte à ta façon d&apos;apprendre.
+          L&apos;IA met en forme ce qui te fascine. L&apos;algorithme se souvient pour toi.
         </p>
         <div className="flex flex-col sm:flex-row items-center gap-3 mb-4">
           <Link
@@ -208,10 +208,10 @@ export default async function HomePage() {
       <section className="px-6 py-20" style={{ background: "#FBF9F4" }}>
         <div className="max-w-3xl mx-auto">
           <h2 className="text-2xl sm:text-3xl font-bold text-center mb-4" style={{ color: "#1A1814" }}>
-            Tout ce qu&apos;il faut pour mémoriser mieux
+            Des outils à la hauteur de vos curiosités
           </h2>
           <p className="text-center text-sm mb-14" style={{ color: "#9B9289" }}>
-            De la première idée à la maîtrise, l&apos;IA t&apos;accompagne à chaque étape
+            De l&apos;idée qui surgit à la connaissance qui reste
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             {FEATURES.map((f) => (
@@ -236,7 +236,7 @@ export default async function HomePage() {
       <section className="px-6 py-20 overflow-hidden" style={{ background: "#3f3f46" }}>
         <div className="max-w-4xl mx-auto">
           <h2 className="text-2xl sm:text-3xl font-bold text-center mb-4" style={{ color: "#FBF9F4" }}>
-            8 formats pour mémoriser autrement
+            8 formats pour mettre en valeur ce qui compte
           </h2>
           <p className="text-center text-sm mb-14" style={{ color: "#6B6356" }}>
             L&apos;IA choisit le template adapté à chaque notion
