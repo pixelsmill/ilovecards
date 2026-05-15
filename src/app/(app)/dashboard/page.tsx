@@ -2,160 +2,157 @@ import Link from "next/link"
 import { redirect } from "next/navigation"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
-import RetentionChart from "@/features/dashboard/RetentionChart"
 
-function computeStreak(reviewedAts: (Date | null)[]): number {
-  const dateSet = new Set(
-    reviewedAts
-      .filter((d): d is Date => d !== null)
-      .map(d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`)
-  )
-  let streak = 0
-  const cursor = new Date()
-  while (true) {
-    const ds = `${cursor.getFullYear()}-${String(cursor.getMonth() + 1).padStart(2, "0")}-${String(cursor.getDate()).padStart(2, "0")}`
-    if (dateSet.has(ds)) {
-      streak++
-      cursor.setDate(cursor.getDate() - 1)
-    } else break
-  }
-  return streak
-}
+const QUOTES = [
+  { text: "L'esprit n'est pas un vase à remplir, mais un feu à allumer.", author: "Plutarque" },
+  { text: "Enseigner, c'est apprendre deux fois.", author: "Joseph Joubert" },
+  { text: "Ce que l'on conçoit bien s'énonce clairement, et les mots pour le dire viennent aisément.", author: "Boileau" },
+  { text: "Apprendre sans réfléchir est vain. Réfléchir sans apprendre est dangereux.", author: "Confucius" },
+  { text: "La mémoire est le trésor et le gardien de toutes choses.", author: "Cicéron" },
+  { text: "La répétition est la mère de toutes les sciences.", author: "Proverbe" },
+  { text: "On ne sait bien que ce qu'on a pris la peine d'apprendre.", author: "Voltaire" },
+  { text: "Le secret de l'avance, c'est de commencer.", author: "Mark Twain" },
+  { text: "Toute connaissance est souvenir.", author: "Platon" },
+  { text: "Ce qu'on apprend en faisant, on le retient en refaisant.", author: "Aristote" },
+]
+
+const ROTATIONS = [
+  "-rotate-[1.5deg]",
+  "rotate-[2deg]",
+  "-rotate-[2deg]",
+  "rotate-[1.5deg]",
+  "-rotate-[1deg]",
+  "rotate-[2.5deg]",
+  "-rotate-[2.5deg]",
+  "rotate-[1deg]",
+]
 
 export default async function DashboardPage() {
   const session = await auth()
   if (!session?.user?.id) redirect("/login")
 
-  const endOfToday = new Date()
-  endOfToday.setHours(23, 59, 59, 999)
-
-  const startOfToday = new Date()
-  startOfToday.setHours(0, 0, 0, 0)
-
-  const thirtyDaysAgo = new Date(startOfToday)
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
-
-  const [dueDecks, allCards, recentReviews, decks] = await Promise.all([
-    prisma.deck.findMany({
-      where: { userId: session.user.id },
-      select: {
-        id: true,
-        name: true,
-        cards: {
-          where: { nextReviewAt: { lte: endOfToday } },
-          select: { id: true },
-        },
-      },
-    }),
-    prisma.card.findMany({
-      where: { deck: { userId: session.user.id }, lastReviewAt: { not: null } },
-      select: { lastReviewAt: true },
-    }),
-    prisma.review.findMany({
-      where: { userId: session.user.id, reviewedAt: { gte: thirtyDaysAgo } },
-      select: { action: true, reviewedAt: true, deckId: true },
-    }),
-    prisma.deck.findMany({
-      where: { userId: session.user.id },
-      select: { id: true, name: true },
-    }),
-  ])
-
-  const dueCount = dueDecks.reduce((sum, d) => sum + d.cards.length, 0)
-  const dueByDeck = dueDecks.filter(d => d.cards.length > 0)
-  const streak = computeStreak(allCards.map(c => c.lastReviewAt))
-
-  // Build 30-day retention data for chart
-  const reviewMap = new Map<string, { dismiss: number; total: number }>()
-  const deckReviewMap = new Map<string, Map<string, { dismiss: number; total: number }>>()
-
-  for (const r of recentReviews) {
-    const d = r.reviewedAt
-    const ds = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
-
-    const global = reviewMap.get(ds) ?? { dismiss: 0, total: 0 }
-    global.total++
-    if (r.action === "dismiss") global.dismiss++
-    reviewMap.set(ds, global)
-
-    const deckMap = deckReviewMap.get(r.deckId) ?? new Map()
-    const deckDay = deckMap.get(ds) ?? { dismiss: 0, total: 0 }
-    deckDay.total++
-    if (r.action === "dismiss") deckDay.dismiss++
-    deckMap.set(ds, deckDay)
-    deckReviewMap.set(r.deckId, deckMap)
-  }
-
-  const chartDays = Array.from({ length: 30 }, (_, i) => {
-    const d = new Date(startOfToday)
-    d.setDate(d.getDate() - (29 - i))
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
+  const decks = await prisma.deck.findMany({
+    where: { userId: session.user.id },
+    select: { id: true, name: true, accentColor: true, _count: { select: { cards: true } } },
+    orderBy: { createdAt: "asc" },
   })
 
-  const globalChartData = chartDays.map(date => ({
-    date: date.slice(5),
-    ...( reviewMap.get(date) ?? { dismiss: 0, total: 0 }),
-  }))
-
-  const deckChartData = decks.map(deck => ({
-    id: deck.id,
-    name: deck.name,
-    data: chartDays.map(date => ({
-      date: date.slice(5),
-      ...(deckReviewMap.get(deck.id)?.get(date) ?? { dismiss: 0, total: 0 }),
-    })),
-  }))
-
-  const sessionCount = new Set(recentReviews.map(r => {
-    const d = r.reviewedAt
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
-  })).size
+  const quote = QUOTES[Math.floor(Math.random() * QUOTES.length)]
 
   return (
-    <main className="flex min-h-screen flex-col items-center bg-zinc-50 gap-6 px-4 py-10">
-      <h1 className="text-2xl font-bold tracking-tight">ilovecards</h1>
+    <main className="flex min-h-screen flex-col items-center bg-zinc-50 px-4 py-12">
 
-      {streak > 0 && (
-        <div className="flex items-center gap-2 text-sm font-medium text-zinc-700 bg-white border border-zinc-200 rounded-full px-4 py-1.5">
-          <span>🔥</span>
-          <span>{streak} jour{streak !== 1 ? "s" : ""} de streak</span>
+      {/* Intro */}
+      <header className="text-center mb-12 space-y-4 max-w-xs">
+        <h1 className="text-[22px] font-bold tracking-tight text-zinc-900">ilovecards</h1>
+        <blockquote
+          className="text-sm text-zinc-500 italic leading-relaxed"
+          style={{ fontFamily: "var(--font-spectral), serif" }}
+        >
+          « {quote.text} »
+          <cite className="not-italic block mt-2 text-[11px] text-zinc-400 tracking-widest uppercase">
+            {quote.author}
+          </cite>
+        </blockquote>
+      </header>
+
+      {/* Floating deck grid */}
+      <div className="flex flex-wrap gap-3 justify-center max-w-[480px]">
+
+        {/* Rainbow CTA card */}
+        <div
+          className="-rotate-[1.5deg] hover:rotate-0 hover:scale-105 transition-all duration-300 hover:shadow-2xl w-36 aspect-[3/4] rounded-[18px] flex-shrink-0"
+          style={{ background: "linear-gradient(145deg,#f43f5e 0%,#f97316 22%,#eab308 44%,#22c55e 62%,#3b82f6 80%,#8b5cf6 100%)" }}
+        >
+          <div className="h-full flex flex-col items-center justify-between p-4 py-6">
+            <span
+              className="text-white font-semibold text-sm text-center leading-snug"
+              style={{ fontFamily: "var(--font-spectral), serif" }}
+            >
+              Tous les decks
+            </span>
+            <div className="flex flex-col gap-2 w-full">
+              <Link
+                href="/review?mode=browse"
+                className="block text-center rounded-[9px] bg-white text-zinc-900 py-2 text-[11px] font-semibold hover:bg-zinc-100 transition-colors"
+              >
+                Voir les cartes
+              </Link>
+              <Link
+                href="/review?mode=learn"
+                className="block text-center rounded-[9px] py-2 text-[11px] font-semibold text-white transition-colors"
+                style={{ background: "rgba(255,255,255,0.18)", border: "1px solid rgba(255,255,255,0.35)" }}
+              >
+                Mémoriser
+              </Link>
+            </div>
+          </div>
         </div>
-      )}
 
-      <div className="flex flex-col gap-3 w-full max-w-xs">
+        {/* Deck cards */}
+        {decks.map((deck, i) => (
+          <div
+            key={deck.id}
+            className={`relative group w-36 aspect-[3/4] rounded-[18px] flex-shrink-0 ${ROTATIONS[i % ROTATIONS.length]} hover:rotate-0 hover:scale-105 transition-all duration-300 hover:shadow-2xl`}
+            style={{ backgroundColor: deck.accentColor }}
+          >
+            {/* Mobile tap → deck detail */}
+            <Link href={`/decks/${deck.id}`} className="absolute inset-0 z-0 rounded-[18px]" aria-label={deck.name} />
+
+            {/* Card content */}
+            <div className="relative z-[1] h-full p-4 flex flex-col pointer-events-none">
+              <span className="text-[11px]" style={{ color: "rgba(255,255,255,0.5)" }}>
+                {deck._count.cards} carte{deck._count.cards !== 1 ? "s" : ""}
+              </span>
+              <span
+                className="mt-auto font-semibold text-[15px] leading-snug text-white"
+                style={{ fontFamily: "var(--font-spectral), serif" }}
+              >
+                {deck.name}
+              </span>
+            </div>
+
+            {/* Hover overlay */}
+            <div
+              className="absolute inset-0 z-[2] rounded-[18px] flex flex-col items-center justify-center gap-2 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-200"
+              style={{ background: "rgba(0,0,0,0.62)" }}
+            >
+              <Link
+                href={`/review?deckId=${deck.id}&mode=browse`}
+                className="w-[112px] text-center rounded-[9px] bg-white text-zinc-900 py-2 text-[11px] font-semibold hover:bg-zinc-100 transition-colors"
+              >
+                Voir
+              </Link>
+              <Link
+                href={`/review?deckId=${deck.id}&mode=learn`}
+                className="w-[112px] text-center rounded-[9px] py-2 text-[11px] font-semibold text-white transition-colors"
+                style={{ background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.3)" }}
+              >
+                Mémoriser
+              </Link>
+              <Link
+                href={`/decks/${deck.id}`}
+                className="w-[112px] text-center rounded-[9px] py-2 text-[11px] font-semibold text-white transition-colors"
+                style={{ background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.3)" }}
+              >
+                Modifier
+              </Link>
+            </div>
+          </div>
+        ))}
+
+        {/* New deck */}
         <Link
-          href="/review?mode=browse"
-          className="flex items-center justify-center rounded-lg bg-zinc-900 px-4 py-3 text-sm font-medium text-white hover:bg-zinc-700 transition-colors"
+          href="/decks/new"
+          className="w-36 aspect-[3/4] rounded-[18px] flex-shrink-0 flex flex-col items-center justify-center gap-1.5 rotate-[1deg] hover:rotate-0 hover:scale-105 transition-all duration-300 hover:border-zinc-400 hover:text-zinc-500"
+          style={{ border: "2px dashed #d4d4d8" }}
         >
-          Voir les cartes
+          <span className="text-3xl text-zinc-400 leading-none">+</span>
+          <span className="text-[11px] text-zinc-400">Nouveau deck</span>
         </Link>
-        <Link
-          href="/decks"
-          className="flex items-center justify-center rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-700 hover:bg-zinc-50 transition-colors"
-        >
-          Mes decks
-        </Link>
-        <Link
-          href="/import"
-          className="flex items-center justify-center rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-700 hover:bg-zinc-50 transition-colors"
-        >
-          Import IA
-        </Link>
-        <Link
-          href="/account"
-          className="flex items-center justify-center rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-700 hover:bg-zinc-50 transition-colors"
-        >
-          Mon compte
-        </Link>
+
       </div>
 
-      <div className="w-full max-w-xs">
-        <RetentionChart
-          globalData={globalChartData}
-          deckData={deckChartData}
-          sessionCount={sessionCount}
-        />
-      </div>
     </main>
   )
 }
