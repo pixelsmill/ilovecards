@@ -43,7 +43,7 @@ export default async function HomePage() {
       notion: "Aux échecs, les pions sont les seules pièces qui ne reculent jamais",
       developpement: "Ils définissent toute la structure de la partie. Une chaîne de pions solide contrôle le centre et dicte le plan stratégique.",
       template: "poster",
-      color: "#a855f7",
+      color: "#06b6d4",
     },
     {
       notion: "La verveine calme le système nerveux là où les médicaments s'arrêtent",
@@ -70,7 +70,7 @@ export default async function HomePage() {
       notion: "Une émotion non traversée revient plus forte",
       developpement: "Déclenchement, montée, pic, plateau, déclin — chaque émotion suit ce cycle. L'interrompre la fige. La traverser la libère.",
       template: "sature",
-      color: "#8b5cf6",
+      color: "#ef4444",
     },
   ]
 
