@@ -232,16 +232,17 @@ export default async function HomePage() {
       <section className="px-6 py-20" style={{ background: "#F0EDE8" }}>
         <div className="max-w-3xl mx-auto">
           <h2 className="text-2xl sm:text-3xl font-bold text-center mb-4" style={{ color: "#1A1814" }}>
-            Trois sources pour illustrer vos cartes
+            Quatre façons d&apos;illustrer vos cartes
           </h2>
           <p className="text-center text-sm mb-14" style={{ color: "#9B9289" }}>
-            Pour les formats avec photo, choisissez votre image en un clic
+            Chaque carte peut avoir son propre style visuel
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             {[
-              { icon: "01", title: "Unsplash", desc: "Recherchez parmi des millions de photos libres de droits, directement depuis l'éditeur." },
-              { icon: "02", title: "Votre appareil", desc: "Importez n'importe quelle photo depuis votre téléphone ou votre ordinateur." },
-              { icon: "03", title: "Une URL", desc: "Collez le lien d'une image en ligne pour l'utiliser instantanément sur votre carte." },
+              { icon: "01", title: "Photo Unsplash", desc: "Recherchez parmi des millions de photos libres de droits, directement depuis l'éditeur." },
+              { icon: "02", title: "Photo depuis votre téléphone", desc: "Importez n'importe quelle photo depuis votre appareil photo ou votre galerie." },
+              { icon: "03", title: "Une URL à importer", desc: "Collez le lien d'une image en ligne pour l'utiliser instantanément sur votre carte." },
+              { icon: "04", title: "Un style graphique sans image", desc: "Poster, citation, magazine, couleur… chaque format crée une carte visuelle forte sans nécessiter de photo." },
             ].map((f) => (
               <div key={f.title} className="space-y-2">
                 <div className="flex items-center gap-3">
