@@ -201,22 +201,22 @@ export default async function HomePage() {
       </section>
 
       {/* FEATURES */}
-      <section className="px-6 py-20" style={{ background: "#06b6d4" }}>
+      <section className="px-6 py-20" style={{ background: "#FBF9F4" }}>
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-4" style={{ color: "#FBF9F4" }}>
+          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-4" style={{ color: "#1A1814" }}>
             Trois façons de construire vos collections
           </h2>
-          <p className="text-center text-sm mb-14" style={{ color: "rgba(255,255,255,0.65)" }}>
+          <p className="text-center text-sm mb-14" style={{ color: "#9B9289" }}>
             Choisissez votre style — ou combinez-les
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
             {FEATURES.map((f) => (
               <div key={f.title} className="space-y-2">
                 <div className="flex items-center gap-3">
-                  <span className="text-lg" style={{ color: "rgba(255,255,255,0.5)", fontFamily: "var(--font-jetbrains-mono), monospace" }}>{f.icon}</span>
-                  <h3 className="font-bold text-base" style={{ color: "#FBF9F4" }}>{f.title}</h3>
+                  <span className="text-lg" style={{ color: "#C68A3A", fontFamily: "var(--font-jetbrains-mono), monospace" }}>{f.icon}</span>
+                  <h3 className="font-bold text-base" style={{ color: "#1A1814" }}>{f.title}</h3>
                 </div>
-                <p className="text-sm leading-relaxed pl-8" style={{ color: "rgba(255,255,255,0.65)" }}>{f.desc}</p>
+                <p className="text-sm leading-relaxed pl-8" style={{ color: "#6B6356" }}>{f.desc}</p>
               </div>
             ))}
           </div>
@@ -224,12 +224,12 @@ export default async function HomePage() {
       </section>
 
       {/* IMAGE SOURCES */}
-      <section className="px-6 py-20" style={{ background: "#f97316" }}>
+      <section className="px-6 py-20" style={{ background: "#1A1814" }}>
         <div className="max-w-3xl mx-auto">
           <h2 className="text-2xl sm:text-3xl font-bold text-center mb-4" style={{ color: "#FBF9F4" }}>
             Quatre façons d&apos;illustrer vos cartes
           </h2>
-          <p className="text-center text-sm mb-14" style={{ color: "rgba(255,255,255,0.65)" }}>
+          <p className="text-center text-sm mb-14" style={{ color: "#6B6356" }}>
             Chaque carte peut avoir son propre style visuel
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
@@ -241,10 +241,10 @@ export default async function HomePage() {
             ].map((f) => (
               <div key={f.title} className="space-y-2">
                 <div className="flex items-center gap-3">
-                  <span className="text-lg" style={{ color: "rgba(255,255,255,0.5)", fontFamily: "var(--font-jetbrains-mono), monospace" }}>{f.icon}</span>
+                  <span className="text-lg" style={{ color: "#C68A3A", fontFamily: "var(--font-jetbrains-mono), monospace" }}>{f.icon}</span>
                   <h3 className="font-bold text-base" style={{ color: "#FBF9F4" }}>{f.title}</h3>
                 </div>
-                <p className="text-sm leading-relaxed pl-8" style={{ color: "rgba(255,255,255,0.65)" }}>{f.desc}</p>
+                <p className="text-sm leading-relaxed pl-8" style={{ color: "#6B6356" }}>{f.desc}</p>
               </div>
             ))}
           </div>
@@ -252,15 +252,15 @@ export default async function HomePage() {
       </section>
 
       {/* ALGORITHME */}
-      <section className="px-6 py-20" style={{ background: "#6366f1" }}>
+      <section className="px-6 py-20" style={{ background: "#FBF9F4" }}>
         <div className="max-w-2xl mx-auto">
-          <p className="text-xs font-medium uppercase tracking-widest text-center mb-6" style={{ color: "rgba(255,255,255,0.5)", fontFamily: "var(--font-jetbrains-mono), monospace" }}>
+          <p className="text-xs font-medium uppercase tracking-widest text-center mb-6" style={{ color: "#C68A3A", fontFamily: "var(--font-jetbrains-mono), monospace" }}>
             La méthode SM-2
           </p>
-          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8" style={{ color: "#FBF9F4" }}>
+          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8" style={{ color: "#1A1814" }}>
             Un assistant qui apprend comment vous apprenez
           </h2>
-          <p className="text-base leading-relaxed text-center mb-14" style={{ color: "rgba(255,255,255,0.75)" }}>
+          <p className="text-base leading-relaxed text-center mb-14" style={{ color: "#6B6356" }}>
             Imaginez que vous feuilletez vos notes et que, pour chaque page, vous vous dites simplement : « ça, je le savais » ou « ça, j&apos;avais oublié ». Quelqu&apos;un note vos impressions et décide quand vous représenter chaque note. Ce que vous maîtrisez bien revient moins souvent. Ce qui vous échappe revient vite.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
@@ -271,10 +271,10 @@ export default async function HomePage() {
             ].map((f) => (
               <div key={f.title} className="space-y-2">
                 <div className="flex items-center gap-3">
-                  <span className="text-lg" style={{ color: "rgba(255,255,255,0.5)", fontFamily: "var(--font-jetbrains-mono), monospace" }}>{f.icon}</span>
-                  <h3 className="font-bold text-base" style={{ color: "#FBF9F4" }}>{f.title}</h3>
+                  <span className="text-lg" style={{ color: "#C68A3A", fontFamily: "var(--font-jetbrains-mono), monospace" }}>{f.icon}</span>
+                  <h3 className="font-bold text-base" style={{ color: "#1A1814" }}>{f.title}</h3>
                 </div>
-                <p className="text-sm leading-relaxed pl-8" style={{ color: "rgba(255,255,255,0.65)" }}>{f.desc}</p>
+                <p className="text-sm leading-relaxed pl-8" style={{ color: "#6B6356" }}>{f.desc}</p>
               </div>
             ))}
           </div>
