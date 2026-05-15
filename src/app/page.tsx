@@ -158,27 +158,14 @@ export default async function HomePage() {
           Collection · Cartes · Mémoriser
         </p>
         <h1
-          className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight max-w-2xl mb-6"
+          className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight max-w-2xl mb-16"
           style={{ color: "#FBF9F4" }}
         >
           Collections de cartes à mémoriser.
         </h1>
-        <p className="text-base sm:text-lg max-w-md mb-10 leading-relaxed" style={{ color: "#9B9289" }}>
-          Organisez vos passions en collections de cartes. Parcourez-les librement ou passez en mode apprentissage. Fondée sur la répétition à intervalles optimisés et validée en sciences cognitives, la méthode SM-2 ancre durablement ce qui compte.
-        </p>
-        <div className="flex flex-col sm:flex-row items-center gap-3 mb-4">
-          <Link
-            href="/login"
-            className="rounded-full px-8 py-3 text-sm font-semibold transition-opacity hover:opacity-90"
-            style={{ background: "#FBF9F4", color: "#1A1814" }}
-          >
-            Commencer — c&apos;est gratuit
-          </Link>
-        </div>
-        <p className="text-xs" style={{ color: "#6B6356" }}>30 cartes offertes · Sans carte bancaire</p>
 
-        {/* Cards fan — 5 cartes, cinéma au centre */}
-        <div className="relative mt-16 flex items-end justify-center" style={{ height: 320 }}>
+        {/* Cards fan — 5 cartes */}
+        <div className="relative flex items-end justify-center" style={{ height: 320 }}>
           {HERO_CARDS.map((card, i) => {
             const rotations = [-16, -8, 0, 8, 16]
             const translateY = [22, 10, -8, 10, 22]
@@ -202,6 +189,20 @@ export default async function HomePage() {
             )
           })}
         </div>
+
+        <p className="text-base sm:text-lg max-w-lg mt-16 mb-10 leading-relaxed" style={{ color: "#9B9289" }}>
+          Organisez vos passions en collections de cartes. Parcourez-les librement ou passez en mode apprentissage. Fondée sur la répétition à intervalles optimisés et validée en sciences cognitives, la méthode SM-2 ancre durablement ce qui compte.
+        </p>
+        <div className="flex flex-col sm:flex-row items-center gap-3 mb-4">
+          <Link
+            href="/login"
+            className="rounded-full px-8 py-3 text-sm font-semibold transition-opacity hover:opacity-90"
+            style={{ background: "#FBF9F4", color: "#1A1814" }}
+          >
+            Commencer — c&apos;est gratuit
+          </Link>
+        </div>
+        <p className="text-xs" style={{ color: "#6B6356" }}>30 cartes offertes · Sans carte bancaire</p>
       </section>
 
       {/* FEATURES */}
