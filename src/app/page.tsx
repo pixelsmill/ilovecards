@@ -3,6 +3,7 @@ import { redirect } from "next/navigation"
 import { auth } from "@/lib/auth"
 import CardRenderer from "@/components/card-renderer/CardRenderer"
 import { fetchUnsplashImage } from "@/lib/unsplash"
+import { ACCENT_COLORS } from "@/lib/schemas/deck"
 
 const FEATURES = [
   {
@@ -64,49 +65,49 @@ export default async function HomePage() {
       developpement: "Plante aux propriétés apaisantes et digestives. Infusée, elle calme le stress et favorise le sommeil.",
       template: "photo-overlay",
       imageUrl: verveineImg ?? null,
-      color: "#22c55e",
+      color: "#06b6d4",
     },
     {
       notion: "Le Deep Work",
       developpement: "Travailler en concentration totale, sans interruption. Quatre heures suffisent à produire ce qu'une journée ordinaire n'accomplit pas.",
       template: "poster",
-      color: "#6366f1",
+      color: "#06b6d4",
     },
     {
       notion: "La perfection est l'ennemie du bien.",
       developpement: "Voltaire. Attendre d'être prêt, c'est souvent ne jamais commencer.",
       template: "quote",
-      color: "#C68A3A",
+      color: "#06b6d4",
     },
     {
       notion: "Le syndrome de l'imposteur",
       developpement: "Sentiment persistant d'être un imposteur malgré ses succès. Touche 70 % des personnes au cours de leur vie.",
       template: "magazine",
-      color: "#0d9488",
+      color: "#06b6d4",
     },
     {
       notion: "1 % mieux chaque jour",
       developpement: "S'améliorer de 1 % par jour produit une progression de 37× en un an. La régularité bat l'intensité.",
       template: "equation",
-      color: "#ec4899",
+      color: "#06b6d4",
     },
     {
       notion: "La règle du 80/20",
       developpement: "20 % des actions produisent 80 % des résultats. Identifier ces leviers change tout.",
       template: "color-block",
-      color: "#f97316",
+      color: "#06b6d4",
     },
     {
       notion: "La procrastination",
       developpement: "Remettre à demain naît rarement de la paresse — c'est souvent la peur de l'échec ou du regard des autres.",
       template: "sature",
-      color: "#8b5cf6",
+      color: "#06b6d4",
     },
     {
       notion: "Le flow",
       developpement: "État de concentration absolue où l'effort disparaît et le temps s'efface. Décrit par Csikszentmihalyi.",
       template: "minimaliste",
-      color: "#334155",
+      color: "#06b6d4",
     },
   ]
 
@@ -239,6 +240,21 @@ export default async function HomePage() {
                 />
               </div>
             ))}
+          </div>
+
+          <div className="mt-14 space-y-3">
+            <p className="text-center text-xs uppercase tracking-widest" style={{ color: "#6B6356", fontFamily: "var(--font-jetbrains-mono), monospace" }}>
+              20 couleurs disponibles
+            </p>
+            <div className="flex flex-wrap justify-center gap-3">
+              {ACCENT_COLORS.map(color => (
+                <div
+                  key={color}
+                  className="w-7 h-7 rounded-full"
+                  style={{ backgroundColor: color }}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </section>
