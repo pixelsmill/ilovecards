@@ -40,37 +40,37 @@ export default async function HomePage() {
 
   const HERO_CARDS = [
     {
-      notion: "Les pions sont l'âme des échecs",
-      developpement: "Ils définissent la structure de toute la partie. Une chaîne solide contrôle le centre et dicte le plan stratégique.",
+      notion: "Aux échecs, les pions sont les seules pièces qui ne reculent jamais",
+      developpement: "Ils définissent toute la structure de la partie. Une chaîne de pions solide contrôle le centre et dicte le plan stratégique.",
       template: "poster",
-      color: "#f43f5e",
+      color: "#a855f7",
     },
     {
-      notion: "La Verveine officinale",
-      developpement: "Plante aux propriétés apaisantes et digestives. Infusée, elle calme le stress et favorise le sommeil.",
+      notion: "La verveine calme le système nerveux là où les médicaments s'arrêtent",
+      developpement: "Plante adaptogène aux propriétés sédatives douces. Infusée le soir, elle régule l'anxiété sans accoutumance.",
       template: "photo-overlay",
       imageUrl: verveineImg ?? null,
       color: "#22c55e",
     },
     {
-      notion: "Tacones Lejanos",
-      developpement: "Film de Pedro Almodóvar (1991). Drame maternel et mélodrame flamboyant sur fond de passion et de trahison.",
+      notion: "Chez Almodóvar, les femmes portent toujours le récit",
+      developpement: "Dans Tacones Lejanos (1991), mère et fille incarnent deux visions du désir et de la liberté. Le mélodrame comme territoire politique.",
       template: "photo-overlay",
       imageUrl: cinemaImg ?? null,
       color: "#f43f5e",
     },
     {
-      notion: "L'autoconstruction",
-      developpement: "Construire soi-même sa maison réduit les coûts de 30 à 50 %. L'A-frame, simple et solide, reste l'une des structures les plus accessibles.",
+      notion: "Un A-frame se construit seul en 6 semaines pour moins de 30 000 €",
+      developpement: "La structure triangulaire répartit les charges sans calcul complexe. Accessible à tout autoconstructeur motivé, même sans expérience.",
       template: "photo-overlay",
       imageUrl: aframeImg ?? null,
-      color: "#C68A3A",
+      color: "#f97316",
     },
     {
-      notion: "Les émotions délivrent un message en 5 étapes",
-      developpement: "Déclenchement, montée, pic, plateau, déclin. Traverser le cycle sans l'interrompre est la voie la plus courte vers la résolution.",
+      notion: "Une émotion non traversée revient plus forte",
+      developpement: "Déclenchement, montée, pic, plateau, déclin — chaque émotion suit ce cycle. L'interrompre la fige. La traverser la libère.",
       template: "magazine",
-      color: "#6366f1",
+      color: "#8b5cf6",
     },
   ]
 
