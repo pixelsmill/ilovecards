@@ -2,7 +2,7 @@ import Link from "next/link"
 import { redirect } from "next/navigation"
 import { auth } from "@/lib/auth"
 import CardRenderer from "@/components/card-renderer/CardRenderer"
-import { fetchUnsplashImage, fetchUnsplashPhotoById } from "@/lib/unsplash"
+import { fetchUnsplashImage } from "@/lib/unsplash"
 import { ACCENT_COLORS } from "@/lib/schemas/deck"
 
 const FEATURES = [
@@ -32,11 +32,11 @@ export default async function HomePage() {
   const session = await auth()
   if (session) redirect("/dashboard")
 
-  const [verveineImg, cinemaImg, aframeImg] = await Promise.all([
+  const [verveineImg, cinemaImg] = await Promise.all([
     fetchUnsplashImage("verbena plant botanical"),
     fetchUnsplashImage("spain melodrama fashion red dramatic"),
-    fetchUnsplashPhotoById("5j8nd3QpRbo"),
   ])
+  const aframeImg = "/863A6929-1.avif"
 
   const HERO_CARDS = [
     {
