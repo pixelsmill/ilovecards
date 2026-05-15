@@ -164,7 +164,7 @@ export default async function HomePage() {
           Cultivez ce qui vous fascine.
         </h1>
         <p className="text-base sm:text-lg max-w-md mb-10 leading-relaxed" style={{ color: "#9B9289" }}>
-          Organisez vos passions en collections de cartes. Parcourez-les librement ou passez en mode apprentissage. La méthode SM-2 — répétition à intervalles optimisés, validée en sciences cognitives — ancre durablement ce qui compte.
+          Organisez vos passions en collections de cartes. Parcourez-les librement ou passez en mode apprentissage. Fondée sur la répétition à intervalles optimisés et validée en sciences cognitives, la méthode SM-2 ancre durablement ce qui compte.
         </p>
         <div className="flex flex-col sm:flex-row items-center gap-3 mb-4">
           <Link
