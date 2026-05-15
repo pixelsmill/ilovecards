@@ -36,7 +36,7 @@ export default async function HomePage() {
     fetchUnsplashImage("verbena plant botanical"),
     fetchUnsplashImage("spain melodrama fashion red dramatic"),
   ])
-  const aframeImg = "/863A6929-1.avif"
+  const aframeImg = "/863A6929-1.jpg"
 
   const HERO_CARDS = [
     {
