@@ -6,6 +6,7 @@ import DeleteDeckButton from "./DeleteDeckButton"
 import ShareButton from "@/features/decks/ShareButton"
 import VerifyCardButton from "@/features/cards/VerifyCardButton"
 import Breadcrumb from "@/components/Breadcrumb"
+import CompleteDeck from "@/features/decks/CompleteDeck"
 
 export default async function DeckDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth()
@@ -57,6 +58,8 @@ export default async function DeckDetailPage({ params }: { params: Promise<{ id:
           </Link>
           <ShareButton deckId={id} initialToken={deck.shareToken} />
         </div>
+
+        <CompleteDeck deckId={id} accentColor={deck.accentColor} />
 
         <div className="space-y-2">
           <p className="text-sm font-medium text-zinc-700">{deck.cards.length} carte{deck.cards.length !== 1 ? "s" : ""}</p>
