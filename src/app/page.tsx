@@ -266,13 +266,13 @@ export default async function HomePage() {
             Un assistant qui apprend comment vous apprenez
           </h2>
           <p className="text-base leading-relaxed text-center mb-14" style={{ color: "#9B9289" }}>
-            Imaginez quelqu&apos;un qui vous pose des questions régulièrement. Quand vous répondez sans hésiter, il attend plus longtemps avant de vous la reposer. Quand vous butez, il revient dès le lendemain. Résultat : vous ne passez du temps que sur ce que vous n&apos;avez pas encore bien ancré.
+            Imaginez que vous feuilletez vos notes et que, pour chaque page, vous vous dites simplement : « ça, je le savais » ou « ça, j&apos;avais oublié ». Quelqu&apos;un note vos impressions et décide quand vous représenter chaque note. Ce que vous maîtrisez bien revient moins souvent. Ce qui vous échappe revient vite.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
             {[
-              { icon: "01", title: "Vous répondez", desc: "À chaque carte, vous indiquez si vous l'aviez bien en tête ou non." },
-              { icon: "02", title: "L'algorithme calcule", desc: "Il détermine le moment idéal pour vous représenter cette carte — ni trop tôt, ni trop tard." },
-              { icon: "03", title: "Vous mémorisez mieux", desc: "Avec le temps, chaque notion s'ancre durablement. Vous travaillez moins, vous retenez plus." },
+              { icon: "01", title: "Vous consultez une carte", desc: "Vous la lisez, prenez le temps de vous souvenir. Pas de bonne ou mauvaise réponse." },
+              { icon: "02", title: "Vous vous évaluez", desc: "Vous indiquez simplement si vous le saviez ou non. C'est vous qui décidez." },
+              { icon: "03", title: "La méthode adapte", desc: "Elle calcule le prochain moment idéal pour vous présenter cette carte à nouveau." },
             ].map((f) => (
               <div key={f.title} className="space-y-2">
                 <div className="flex items-center gap-3">
