@@ -95,6 +95,12 @@ model Card {
   reviews       Review[]
 }
 
+model VipWaitlist {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
 model Review {
   id         String   @id @default(cuid())
   cardId     String

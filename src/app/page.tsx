@@ -3,6 +3,7 @@ import { redirect } from "next/navigation"
 import { auth } from "@/lib/auth"
 import CardRenderer from "@/components/card-renderer/CardRenderer"
 import { fetchUnsplashImage, fetchUnsplashPhotoById } from "@/lib/unsplash"
+import VIPForm from "@/components/VIPForm"
 import { ACCENT_COLORS } from "@/lib/schemas/deck"
 
 const FEATURES = [
@@ -374,37 +375,19 @@ export default async function HomePage() {
               </Link>
             </div>
 
-            {/* Pro */}
+            {/* VIP */}
             <div
               className="flex-1 max-w-xs rounded-2xl p-8 text-left space-y-4 border"
-              style={{ background: "rgba(251,249,244,0.05)", borderColor: "rgba(251,249,244,0.08)" }}
+              style={{ background: "rgba(251,249,244,0.05)", borderColor: "rgba(198,138,58,0.3)" }}
             >
               <div>
-                <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: "#C68A3A", fontFamily: "var(--font-jetbrains-mono), monospace" }}>Pro</p>
-                <p className="text-4xl font-bold" style={{ color: "#FBF9F4" }}>Bientôt</p>
-                <p className="text-xs mt-1" style={{ color: "#6B6356" }}>en préparation</p>
+                <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: "#C68A3A", fontFamily: "var(--font-jetbrains-mono), monospace" }}>VIP</p>
+                <p className="text-4xl font-bold" style={{ color: "#FBF9F4" }}>Early<br />adopter</p>
+                <p className="text-xs mt-2 leading-relaxed" style={{ color: "#9B9289" }}>
+                  Un accès réservé à quelques personnes qui contribuent à faire évoluer le produit.
+                </p>
               </div>
-              <ul className="space-y-2 text-sm" style={{ color: "#9B9289" }}>
-                {[
-                  "Génération IA illimitée",
-                  "Partage de decks",
-                  "Export Anki / CSV",
-                  "Statistiques avancées",
-                  "Support prioritaire",
-                ].map(item => (
-                  <li key={item} className="flex items-start gap-2">
-                    <span style={{ color: "#6B6356" }}>·</span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <button
-                disabled
-                className="w-full rounded-xl py-2.5 text-sm font-semibold opacity-40 cursor-not-allowed mt-4"
-                style={{ background: "#FBF9F4", color: "#1A1814" }}
-              >
-                Bientôt disponible
-              </button>
+              <VIPForm />
             </div>
           </div>
         </div>
