@@ -36,7 +36,7 @@ export default async function HomePage() {
     fetchUnsplashImage("verbena plant botanical"),
     fetchUnsplashImage("spain melodrama fashion red dramatic"),
     fetchUnsplashPhotoById("G1yhU1Ej-9A"),
-    fetchUnsplashImage("a-frame house cabin forest architecture"),
+    fetchUnsplashPhotoById("NVhD7aGh9gQ"),
   ])
 
   const HERO_CARDS = [
