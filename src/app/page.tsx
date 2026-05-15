@@ -2,7 +2,7 @@ import Link from "next/link"
 import { redirect } from "next/navigation"
 import { auth } from "@/lib/auth"
 import CardRenderer from "@/components/card-renderer/CardRenderer"
-import { fetchUnsplashImage } from "@/lib/unsplash"
+import { fetchUnsplashImage, fetchUnsplashPhotoById } from "@/lib/unsplash"
 import { ACCENT_COLORS } from "@/lib/schemas/deck"
 
 const FEATURES = [
@@ -32,17 +32,19 @@ export default async function HomePage() {
   const session = await auth()
   if (session) redirect("/dashboard")
 
-  const [verveineImg, cinemaImg] = await Promise.all([
+  const [verveineImg, cinemaImg, chessImg, aframeImg] = await Promise.all([
     fetchUnsplashImage("verbena plant botanical"),
     fetchUnsplashImage("spain melodrama fashion red dramatic"),
+    fetchUnsplashPhotoById("G1yhU1Ej-9A"),
+    fetchUnsplashImage("a-frame house cabin forest architecture"),
   ])
-  const aframeImg = "/863A6929-1.jpg"
 
   const HERO_CARDS = [
     {
       notion: "Aux échecs, les pions sont les seules pièces qui ne reculent jamais",
       developpement: "Ils définissent toute la structure de la partie. Une chaîne de pions solide contrôle le centre et dicte le plan stratégique.",
-      template: "poster",
+      template: "photo-overlay",
+      imageUrl: chessImg ?? null,
       color: "#06b6d4",
     },
     {
