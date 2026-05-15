@@ -7,6 +7,7 @@ import ShareButton from "@/features/decks/ShareButton"
 import VerifyCardButton from "@/features/cards/VerifyCardButton"
 import Breadcrumb from "@/components/Breadcrumb"
 import CompleteDeck from "@/features/decks/CompleteDeck"
+import QuickAddAI from "@/features/decks/QuickAddAI"
 
 export default async function DeckDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth()
@@ -59,6 +60,7 @@ export default async function DeckDetailPage({ params }: { params: Promise<{ id:
           <ShareButton deckId={id} initialToken={deck.shareToken} />
         </div>
 
+        <QuickAddAI deckId={id} deckName={deck.name} accentColor={deck.accentColor} />
         <CompleteDeck deckId={id} accentColor={deck.accentColor} />
 
         <div className="space-y-2">
