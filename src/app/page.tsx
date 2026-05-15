@@ -260,6 +260,9 @@ export default async function HomePage() {
           <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8" style={{ color: "#1A1814" }}>
             Un assistant qui s&apos;adapte à votre rythme d&apos;apprentissage
           </h2>
+          <p className="text-xs text-center mb-6" style={{ color: "#C68A3A", fontFamily: "var(--font-jetbrains-mono), monospace" }}>
+            Développée en 1987 par Piotr Wozniak · fondée sur la courbe de l&apos;oubli d&apos;Ebbinghaus · utilisée par des millions d&apos;apprenants
+          </p>
           <p className="text-base leading-relaxed text-center mb-14" style={{ color: "#6B6356" }}>
             Imaginez que vous feuilletez vos notes et que, pour chaque page, vous vous dites simplement : « ça, je le savais » ou « ça, j&apos;avais oublié ». Quelqu&apos;un note vos impressions et décide quand vous représenter chaque note. Ce que vous maîtrisez bien revient moins souvent. Ce qui vous échappe revient vite.
           </p>
