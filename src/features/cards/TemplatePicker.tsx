@@ -14,7 +14,7 @@ const TEMPLATE_LABELS: Record<string, string> = {
   sature: "Saturé",
 }
 
-const SAMPLE_NOTION = "Concept"
+const SAMPLE_NOTION = "Notion"
 
 interface Props {
   selected: string
