@@ -8,10 +8,9 @@ interface Props {
   name: string
   accentColor: string
   cardCount: number
-  rotation: string
 }
 
-export default function DeckCard({ id, name, accentColor, cardCount, rotation }: Props) {
+export default function DeckCard({ id, name, accentColor, cardCount }: Props) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -28,7 +27,7 @@ export default function DeckCard({ id, name, accentColor, cardCount, rotation }:
     <div
       ref={ref}
       onClick={() => setOpen(o => !o)}
-      className={`relative group w-36 aspect-[3/4] rounded-[18px] flex-shrink-0 cursor-pointer ${rotation} hover:rotate-0 hover:scale-105 transition-all duration-300 hover:shadow-2xl`}
+      className={`relative group w-36 aspect-[3/4] rounded-[18px] flex-shrink-0 cursor-pointer hover:scale-105 transition-all duration-300 hover:shadow-2xl`}
       style={{ backgroundColor: accentColor }}
     >
       {/* Card content */}

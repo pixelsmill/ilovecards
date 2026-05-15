@@ -17,16 +17,6 @@ const QUOTES = [
   { text: "Ce qu'on apprend en faisant, on le retient en refaisant.", author: "Aristote" },
 ]
 
-const ROTATIONS = [
-  "-rotate-[1.5deg]",
-  "rotate-[2deg]",
-  "-rotate-[2deg]",
-  "rotate-[1.5deg]",
-  "-rotate-[1deg]",
-  "rotate-[2.5deg]",
-  "-rotate-[2.5deg]",
-  "rotate-[1deg]",
-]
 
 export default async function DashboardPage() {
   const session = await auth()
@@ -62,7 +52,7 @@ export default async function DashboardPage() {
 
         {/* Rainbow CTA card */}
         <div
-          className="-rotate-[1.5deg] hover:rotate-0 hover:scale-105 transition-all duration-300 hover:shadow-2xl w-36 aspect-[3/4] rounded-[18px] flex-shrink-0"
+          className="hover:scale-105 transition-all duration-300 hover:shadow-2xl w-36 aspect-[3/4] rounded-[18px] flex-shrink-0"
           style={{ background: "linear-gradient(145deg,#f43f5e 0%,#f97316 22%,#eab308 44%,#22c55e 62%,#3b82f6 80%,#8b5cf6 100%)" }}
         >
           <div className="h-full flex flex-col items-center justify-between p-4 py-6">
@@ -91,14 +81,13 @@ export default async function DashboardPage() {
         </div>
 
         {/* Deck cards */}
-        {decks.map((deck, i) => (
+        {decks.map((deck) => (
           <DeckCard
             key={deck.id}
             id={deck.id}
             name={deck.name}
             accentColor={deck.accentColor}
             cardCount={deck._count.cards}
-            rotation={ROTATIONS[i % ROTATIONS.length]}
           />
         ))}
 
