@@ -8,22 +8,22 @@ const FEATURES = [
   {
     icon: "✦",
     title: "3 assistants IA par deck",
-    desc: "Ajout rapide, complétion intelligente, import massif depuis texte, PDF ou URL — l'IA s'adapte à ton workflow.",
+    desc: "Ajoute une idée en deux secondes, laisse l'IA compléter ton deck ou importe un texte entier — selon ton humeur du moment.",
   },
   {
     icon: "↻",
-    title: "Répétition espacée",
-    desc: "L'algorithme SRS calcule le bon moment pour réviser chaque carte et ancre les notions en mémoire longue durée.",
+    title: "Mémorisation sans effort",
+    desc: "L'algorithme apprend ta mémoire et te présente chaque carte au bon moment — ni trop tôt, ni trop tard.",
   },
   {
     icon: "◈",
     title: "8 formats visuels",
-    desc: "Poster, équation, magazine, citation, photo… chaque template est pensé pour un type de notion.",
+    desc: "Poster, citation, magazine, photo… chaque format met en valeur ce que tu veux retenir.",
   },
   {
     icon: "⊕",
     title: "Gratuit pour commencer",
-    desc: "30 crédits IA à l'inscription, +1 par jour. Révisions et création manuelle illimitées, sans CB.",
+    desc: "30 crédits IA à l'inscription, +1 par jour. Sessions illimitées et création manuelle sans restriction.",
   },
 ]
 
@@ -38,6 +38,12 @@ export default async function HomePage() {
 
   const HERO_CARDS = [
     {
+      notion: "La règle des 2 minutes",
+      developpement: "Si une tâche prend moins de 2 minutes, fais-la maintenant. Sinon, planifie-la.",
+      template: "color-block",
+      color: "#6366f1",
+    },
+    {
       notion: "Once Upon a Time in Hollywood",
       developpement: "9e film de Tarantino (2019). Fresque nostalgique sur le crépuscule de l'âge d'or hollywoodien.",
       template: "photo-overlay",
@@ -45,66 +51,60 @@ export default async function HomePage() {
       color: "#334155",
     },
     {
-      notion: "La neuroplasticité",
-      developpement: "Le cerveau adulte conserve la capacité de réorganiser ses connexions synaptiques en réponse à l'apprentissage.",
-      template: "magazine",
-      color: "#0d9488",
-    },
-    {
-      notion: "E = mc²",
-      developpement: "L'énergie d'un corps au repos est égale à sa masse multipliée par le carré de la vitesse de la lumière.",
-      template: "equation",
-      color: "#ec4899",
+      notion: "Le syndrome de l'imposteur",
+      developpement: "Sentiment d'être un imposteur malgré ses succès. 70 % des personnes le vivent au moins une fois.",
+      template: "sature",
+      color: "#8b5cf6",
     },
   ]
 
   const TEMPLATE_CARDS = [
     {
       notion: "La Verveine officinale",
-      developpement: "Plante herbacée aux propriétés sédatives et digestives, utilisée en phytothérapie depuis l'Antiquité.",
+      developpement: "Plante aux propriétés apaisantes et digestives. Infusée, elle calme le stress et favorise le sommeil.",
       template: "photo-overlay",
       imageUrl: verveineImg ?? null,
       color: "#22c55e",
     },
     {
-      notion: "La mémoire de travail",
-      developpement: "Système cognitif de capacité limitée (7 ± 2 éléments) qui maintient l'information à court terme.",
+      notion: "Le Deep Work",
+      developpement: "Travailler en concentration totale, sans interruption. Quatre heures suffisent à produire ce qu'une journée ordinaire n'accomplit pas.",
       template: "poster",
       color: "#6366f1",
     },
     {
-      notion: "Le rasoir d'Ockham",
-      developpement: "À hypothèses égales, la plus simple est préférable.",
+      notion: "La perfection est l'ennemie du bien.",
+      developpement: "Voltaire. Attendre d'être prêt, c'est souvent ne jamais commencer.",
       template: "quote",
       color: "#C68A3A",
     },
     {
-      notion: "La neuroplasticité",
-      developpement: "Capacité du cerveau à modifier ses connexions synaptiques tout au long de la vie.",
+      notion: "Le syndrome de l'imposteur",
+      developpement: "Sentiment persistant d'être un imposteur malgré ses succès. Touche 70 % des personnes au cours de leur vie.",
       template: "magazine",
       color: "#0d9488",
     },
     {
-      notion: "E = mc²",
-      developpement: "L'énergie est égale à la masse multipliée par le carré de la vitesse de la lumière.",
+      notion: "1 % mieux chaque jour",
+      developpement: "S'améliorer de 1 % par jour produit une progression de 37× en un an. La régularité bat l'intensité.",
       template: "equation",
       color: "#ec4899",
     },
     {
-      notion: "La répétition espacée",
-      developpement: "Réviser à intervalles croissants optimise la mémorisation à long terme.",
+      notion: "La règle du 80/20",
+      developpement: "20 % des actions produisent 80 % des résultats. Identifier ces leviers change tout.",
       template: "color-block",
-      color: "#22c55e",
+      color: "#f97316",
     },
     {
-      notion: "Le biais de confirmation",
-      developpement: "Tendance à favoriser les informations qui confirment nos croyances préexistantes.",
+      notion: "La procrastination",
+      developpement: "Remettre à demain naît rarement de la paresse — c'est souvent la peur de l'échec ou du regard des autres.",
       template: "sature",
       color: "#8b5cf6",
     },
     {
-      notion: "Le photon",
-      developpement: "Quantum d'énergie électromagnétique sans masse au repos, se déplaçant à c dans le vide.",
+      notion: "Le flow",
+      developpement: "État de concentration absolue où l'effort disparaît et le temps s'efface. Décrit par Csikszentmihalyi.",
       template: "minimaliste",
       color: "#334155",
     },
@@ -143,10 +143,10 @@ export default async function HomePage() {
           className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight max-w-2xl mb-6"
           style={{ color: "#FBF9F4" }}
         >
-          Crée, enrichis et retiens.
+          Crée, enrichis et mémorise.
         </h1>
         <p className="text-base sm:text-lg max-w-md mb-10 leading-relaxed" style={{ color: "#9B9289" }}>
-          L&apos;IA génère tes cartes, complète tes decks et adapte le rythme de révision à ta mémoire.
+          L&apos;IA génère tes cartes, complète tes decks et s&apos;adapte à ta façon d&apos;apprendre.
         </p>
         <div className="flex flex-col sm:flex-row items-center gap-3 mb-4">
           <Link
@@ -193,7 +193,7 @@ export default async function HomePage() {
             Tout ce qu&apos;il faut pour mémoriser mieux
           </h2>
           <p className="text-center text-sm mb-14" style={{ color: "#9B9289" }}>
-            De la création à la révision, l&apos;IA t&apos;accompagne à chaque étape
+            De la première idée à la maîtrise, l&apos;IA t&apos;accompagne à chaque étape
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             {FEATURES.map((f) => (
@@ -268,7 +268,7 @@ export default async function HomePage() {
                 {[
                   "30 cartes IA à l'inscription",
                   "+1 carte générée par jour",
-                  "Révisions illimitées",
+                  "Sessions de mémorisation illimitées",
                   "8 templates de cartes",
                   "3 assistants IA par deck",
                   "Import texte, PDF, URL",
