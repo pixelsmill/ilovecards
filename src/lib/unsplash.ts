@@ -1,3 +1,19 @@
+export async function fetchUnsplashPhotoById(id: string): Promise<string | undefined> {
+  const accessKey = process.env.UNSPLASH_ACCESS_KEY
+  if (!accessKey) return undefined
+  try {
+    const res = await fetch(
+      `https://api.unsplash.com/photos/${id}`,
+      { headers: { Authorization: `Client-ID ${accessKey}` }, signal: AbortSignal.timeout(5000) }
+    )
+    if (!res.ok) return undefined
+    const data = await res.json()
+    return (data as { urls: { regular: string } }).urls.regular
+  } catch {
+    return undefined
+  }
+}
+
 export async function fetchUnsplashImage(query: string, currentUrl?: string): Promise<string | undefined> {
   const accessKey = process.env.UNSPLASH_ACCESS_KEY
   if (!accessKey) return undefined

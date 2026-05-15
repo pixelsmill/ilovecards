@@ -2,7 +2,7 @@ import Link from "next/link"
 import { redirect } from "next/navigation"
 import { auth } from "@/lib/auth"
 import CardRenderer from "@/components/card-renderer/CardRenderer"
-import { fetchUnsplashImage } from "@/lib/unsplash"
+import { fetchUnsplashImage, fetchUnsplashPhotoById } from "@/lib/unsplash"
 import { ACCENT_COLORS } from "@/lib/schemas/deck"
 
 const FEATURES = [
@@ -35,7 +35,7 @@ export default async function HomePage() {
   const [verveineImg, cinemaImg, aframeImg] = await Promise.all([
     fetchUnsplashImage("verbena plant botanical"),
     fetchUnsplashImage("spain melodrama fashion red dramatic"),
-    fetchUnsplashImage("a-frame cabin forest architecture wood"),
+    fetchUnsplashPhotoById("5j8nd3QpRbo"),
   ])
 
   const HERO_CARDS = [
