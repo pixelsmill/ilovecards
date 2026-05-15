@@ -158,14 +158,14 @@ export default async function HomePage() {
           Collection · Cartes · Mémoriser
         </p>
         <h1
-          className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight max-w-2xl mb-16"
+          className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight max-w-2xl mb-6"
           style={{ color: "#FBF9F4" }}
         >
           Collections de cartes à mémoriser.
         </h1>
 
         {/* Cards fan — 5 cartes */}
-        <div className="relative flex items-end justify-center" style={{ height: 320 }}>
+        <div className="relative flex items-end justify-center mt-8" style={{ height: 320 }}>
           {HERO_CARDS.map((card, i) => {
             const rotations = [-16, -8, 0, 8, 16]
             const translateY = [22, 10, -8, 10, 22]
