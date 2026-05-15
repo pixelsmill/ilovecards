@@ -181,7 +181,6 @@ export default async function HomePage() {
             const rotations = [-16, -8, 0, 8, 16]
             const translateY = [22, 10, -8, 10, 22]
             const zIndexes = [1, 3, 5, 4, 2]
-            const brightness = [0.55, 0.75, 1, 0.75, 0.55]
             return (
               <div
                 key={i}
@@ -190,7 +189,6 @@ export default async function HomePage() {
                   transform: `rotate(${rotations[i]}deg) translateY(${translateY[i]}px)`,
                   zIndex: zIndexes[i],
                   marginLeft: i > 0 ? "-36px" : 0,
-                  filter: `brightness(${brightness[i]})`,
                 }}
               >
                 <CardRenderer
