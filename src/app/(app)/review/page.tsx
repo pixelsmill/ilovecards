@@ -13,7 +13,7 @@ export default async function ReviewPage({
   if (!session?.user?.id) redirect("/login")
 
   const { all, deckId, mode: modeParam, cardId } = await searchParams
-  const mode = modeParam === "browse" ? "browse" : "learn"
+  const mode = modeParam === "learn" ? "learn" : "browse"
   const forceAll = all === "1" || mode === "browse"
 
   const endOfToday = new Date()
@@ -37,35 +37,15 @@ export default async function ReviewPage({
     return (
       <main className="h-[calc(100dvh-3.5rem)] bg-zinc-700 flex flex-col items-center justify-center gap-6 px-6">
         <div className="text-center space-y-2">
-          {mode === "learn" ? (
-            <>
-              <p className="text-4xl">🎉</p>
-              <p className="text-white text-xl font-semibold">Rien à mémoriser aujourd&apos;hui !</p>
-              <p className="text-zinc-300 text-sm">Toutes tes cartes sont à jour.</p>
-            </>
-          ) : (
-            <>
-              <p className="text-4xl">🃏</p>
-              <p className="text-white text-xl font-semibold">Ce deck est vide.</p>
-            </>
-          )}
+          <p className="text-4xl">🃏</p>
+          <p className="text-white text-xl font-semibold">Ce deck est vide.</p>
         </div>
-        <div className="flex flex-col items-center gap-3">
-          {mode === "learn" && (
-            <Link
-              href={`/review?all=1${deckId ? `&deckId=${deckId}` : ""}`}
-              className="rounded-lg bg-zinc-600 px-6 py-3 text-sm font-medium text-white hover:bg-zinc-500 transition-colors"
-            >
-              Mémoriser quand même
-            </Link>
-          )}
-          <Link
-            href={backHref}
-            className="text-sm text-zinc-400 hover:text-zinc-200 transition-colors"
-          >
-            ← Retour
-          </Link>
-        </div>
+        <Link
+          href={backHref}
+          className="text-sm text-zinc-400 hover:text-zinc-200 transition-colors"
+        >
+          ← Retour
+        </Link>
       </main>
     )
   }

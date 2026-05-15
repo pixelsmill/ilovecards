@@ -123,32 +123,12 @@ export default async function DashboardPage() {
       )}
 
       <div className="flex flex-col gap-3 w-full max-w-xs">
-        {dueCount > 0 ? (
-          <div className="space-y-2">
-            <Link
-              href="/review"
-              className="flex items-center justify-between rounded-lg bg-zinc-900 px-4 py-3 text-sm font-medium text-white hover:bg-zinc-700 transition-colors"
-            >
-              <span>Mémoriser</span>
-              <span className="text-xs bg-white/20 rounded-full px-2 py-0.5">{dueCount} due{dueCount !== 1 ? "s" : ""}</span>
-            </Link>
-            {dueByDeck.length > 1 && (
-              <div className="text-xs text-zinc-500 px-1 space-y-0.5">
-                {dueByDeck.map(d => (
-                  <div key={d.id} className="flex justify-between">
-                    <span className="truncate">{d.name}</span>
-                    <span className="ml-2 shrink-0">{d.cards.length}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        ) : (
-          <div className="flex items-center justify-between rounded-lg bg-zinc-100 px-4 py-3 text-sm text-zinc-400">
-            <span>Mémoriser</span>
-            <span className="text-xs">À jour ✓</span>
-          </div>
-        )}
+        <Link
+          href="/review?mode=browse"
+          className="flex items-center justify-center rounded-lg bg-zinc-900 px-4 py-3 text-sm font-medium text-white hover:bg-zinc-700 transition-colors"
+        >
+          Voir les cartes
+        </Link>
         <Link
           href="/decks"
           className="flex items-center justify-center rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-700 hover:bg-zinc-50 transition-colors"

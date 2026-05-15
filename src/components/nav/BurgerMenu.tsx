@@ -7,7 +7,7 @@ import { signOut } from "next-auth/react"
 
 const NAV = [
   { href: "/dashboard", label: "Accueil",     num: "01" },
-  { href: "/review",    label: "Mémoriser",  num: "02" },
+  { href: "/review?mode=browse", label: "Voir les cartes", num: "02" },
   { href: "/decks",     label: "Mes decks",  num: "03" },
   { href: "/import",    label: "Import IA",  num: "04" },
   { href: "/account",   label: "Mon compte", num: "05" },
