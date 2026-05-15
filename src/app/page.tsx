@@ -161,7 +161,7 @@ export default async function HomePage() {
           className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight max-w-2xl mb-6"
           style={{ color: "#FBF9F4" }}
         >
-          Construisez vos collections de cartes pour mieux les mémoriser.
+          Vos collections de cartes à mémoriser.
         </h1>
         <p className="text-base sm:text-lg max-w-md mb-10 leading-relaxed" style={{ color: "#9B9289" }}>
           Organisez vos passions en collections de cartes. Parcourez-les librement ou passez en mode apprentissage. Fondée sur la répétition à intervalles optimisés et validée en sciences cognitives, la méthode SM-2 ancre durablement ce qui compte.
