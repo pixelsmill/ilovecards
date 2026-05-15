@@ -256,6 +256,36 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* ALGORITHME */}
+      <section className="px-6 py-20" style={{ background: "#3f3f46" }}>
+        <div className="max-w-2xl mx-auto">
+          <p className="text-xs font-medium uppercase tracking-widest text-center mb-6" style={{ color: "#C68A3A", fontFamily: "var(--font-jetbrains-mono), monospace" }}>
+            La méthode SM-2
+          </p>
+          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8" style={{ color: "#FBF9F4" }}>
+            Un assistant qui apprend comment vous apprenez
+          </h2>
+          <p className="text-base leading-relaxed text-center mb-14" style={{ color: "#9B9289" }}>
+            Imaginez quelqu&apos;un qui vous pose des questions régulièrement. Quand vous répondez sans hésiter, il attend plus longtemps avant de vous la reposer. Quand vous butez, il revient dès le lendemain. Résultat : vous ne passez du temps que sur ce que vous n&apos;avez pas encore bien ancré.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+            {[
+              { icon: "01", title: "Vous répondez", desc: "À chaque carte, vous indiquez si vous l'aviez bien en tête ou non." },
+              { icon: "02", title: "L'algorithme calcule", desc: "Il détermine le moment idéal pour vous représenter cette carte — ni trop tôt, ni trop tard." },
+              { icon: "03", title: "Vous mémorisez mieux", desc: "Avec le temps, chaque notion s'ancre durablement. Vous travaillez moins, vous retenez plus." },
+            ].map((f) => (
+              <div key={f.title} className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <span className="text-lg" style={{ color: "#C68A3A", fontFamily: "var(--font-jetbrains-mono), monospace" }}>{f.icon}</span>
+                  <h3 className="font-bold text-base" style={{ color: "#FBF9F4" }}>{f.title}</h3>
+                </div>
+                <p className="text-sm leading-relaxed pl-8" style={{ color: "#6B6356" }}>{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* TEMPLATES SHOWCASE — désactivé temporairement
       <section className="px-6 py-20 overflow-hidden" style={{ background: "#3f3f46" }}>
         <div className="max-w-4xl mx-auto">
