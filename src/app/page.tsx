@@ -7,24 +7,19 @@ import { ACCENT_COLORS } from "@/lib/schemas/deck"
 
 const FEATURES = [
   {
-    icon: "✦",
-    title: "3 assistants IA par deck",
-    desc: "Ajoutez une idée en deux secondes, laissez l'IA compléter votre collection ou importez un texte entier — selon votre humeur du moment.",
+    icon: "01",
+    title: "Ajoutez carte par carte",
+    desc: "Créez vos collections et enrichissez-les jour après jour, au fil de vos découvertes.",
   },
   {
-    icon: "↻",
-    title: "Mémorisation sans effort",
-    desc: "L'algorithme apprend votre mémoire et vous présente chaque carte au bon moment — ni trop tôt, ni trop tard.",
+    icon: "02",
+    title: "Importez un document",
+    desc: "Créez une collection complète à partir de l'analyse d'un document, d'un PDF ou d'une page web.",
   },
   {
-    icon: "◈",
-    title: "8 formats visuels",
-    desc: "Poster, citation, magazine, photo… chaque format met en valeur ce que vous souhaitez retenir.",
-  },
-  {
-    icon: "⊕",
-    title: "Gratuit pour commencer",
-    desc: "30 crédits IA à l'inscription, +1 par jour. Sessions illimitées et création manuelle sans restriction.",
+    icon: "03",
+    title: "Laissez l'IA suggérer",
+    desc: "Demandez à l'IA de vous proposer de nouvelles cartes pour compléter votre collection.",
   },
 ]
 
@@ -209,12 +204,12 @@ export default async function HomePage() {
       <section className="px-6 py-20" style={{ background: "#FBF9F4" }}>
         <div className="max-w-3xl mx-auto">
           <h2 className="text-2xl sm:text-3xl font-bold text-center mb-4" style={{ color: "#1A1814" }}>
-            Des outils à la hauteur de vos curiosités
+            Trois façons de construire vos collections
           </h2>
           <p className="text-center text-sm mb-14" style={{ color: "#9B9289" }}>
-            De l&apos;idée qui surgit à la connaissance qui reste
+            Choisissez votre style — ou combinez-les
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
             {FEATURES.map((f) => (
               <div key={f.title} className="space-y-2">
                 <div className="flex items-center gap-3">
