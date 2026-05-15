@@ -10,12 +10,6 @@ export default function CardMagazine({ notion, size, accentColor = '#C68A3A' }: 
       style={{ backgroundColor: '#1A1814' }}
     >
       <div className={isThumb ? 'p-1.5' : isFull ? 'p-7' : 'p-3'}>
-        <p
-          className={`font-semibold uppercase tracking-widest ${isThumb ? 'text-[4px]' : isFull ? 'text-[10px]' : 'text-[5px]'}`}
-          style={{ color: accentColor }}
-        >
-          Concept
-        </p>
         <div
           className={`${isThumb ? 'mt-1 pt-1' : isFull ? 'mt-[22px] pt-4' : 'mt-1.5 pt-1.5'}`}
           style={{ borderTop: `1px solid ${accentColor}` }}
