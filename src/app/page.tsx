@@ -69,7 +69,7 @@ export default async function HomePage() {
     {
       notion: "Une émotion non traversée revient plus forte",
       developpement: "Déclenchement, montée, pic, plateau, déclin — chaque émotion suit ce cycle. L'interrompre la fige. La traverser la libère.",
-      template: "magazine",
+      template: "sature",
       color: "#8b5cf6",
     },
   ]
