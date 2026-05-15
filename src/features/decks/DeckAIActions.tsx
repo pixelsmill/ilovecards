@@ -14,9 +14,10 @@ interface Props {
   deckId: string
   accentColor: string
   credits: number
+  cardCount: number
 }
 
-export default function DeckAIActions({ deckId, accentColor, credits }: Props) {
+export default function DeckAIActions({ deckId, accentColor, credits, cardCount }: Props) {
   const router = useRouter()
   const [panel, setPanel] = useState<"complete" | "import" | null>(null)
   const [loading, setLoading] = useState(false)
@@ -95,18 +96,6 @@ export default function DeckAIActions({ deckId, accentColor, credits }: Props) {
       <div className="flex gap-2">
         <button
           type="button"
-          onClick={openComplete}
-          disabled={loading && panel === "complete"}
-          className={`flex-1 rounded-lg border px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50 ${
-            panel === "complete"
-              ? "border-zinc-900 bg-zinc-900 text-white"
-              : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50"
-          }`}
-        >
-          {loading && panel === "complete" ? "Génération…" : "✦ Compléter"}
-        </button>
-        <button
-          type="button"
           onClick={() => setPanel(p => p === "import" ? null : "import")}
           className={`flex-1 rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
             panel === "import"
@@ -115,6 +104,19 @@ export default function DeckAIActions({ deckId, accentColor, credits }: Props) {
           }`}
         >
           ✦ Importer
+        </button>
+        <button
+          type="button"
+          onClick={openComplete}
+          disabled={cardCount < 3 || (loading && panel === "complete")}
+          title={cardCount < 3 ? "3 cartes minimum" : undefined}
+          className={`flex-1 rounded-lg border px-4 py-2 text-sm font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
+            panel === "complete"
+              ? "border-zinc-900 bg-zinc-900 text-white"
+              : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50"
+          }`}
+        >
+          {loading && panel === "complete" ? "Génération…" : cardCount < 3 ? "✦ Compléter (3 cartes mini)" : "✦ Compléter"}
         </button>
       </div>
 

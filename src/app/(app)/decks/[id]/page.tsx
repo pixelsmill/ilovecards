@@ -67,7 +67,7 @@ export default async function DeckDetailPage({ params }: { params: Promise<{ id:
         </div>
 
         <QuickAddAI deckId={id} deckName={deck.name} accentColor={deck.accentColor} />
-        <DeckAIActions deckId={id} accentColor={deck.accentColor} credits={credits} />
+        <DeckAIActions deckId={id} accentColor={deck.accentColor} credits={credits} cardCount={deck.cards.length} />
 
         <div className="space-y-2">
           <p className="text-sm font-medium text-zinc-700">{deck.cards.length} carte{deck.cards.length !== 1 ? "s" : ""}</p>
