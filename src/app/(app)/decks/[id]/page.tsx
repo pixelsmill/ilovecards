@@ -6,9 +6,8 @@ import DeleteDeckButton from "./DeleteDeckButton"
 import ShareButton from "@/features/decks/ShareButton"
 import VerifyCardButton from "@/features/cards/VerifyCardButton"
 import Breadcrumb from "@/components/Breadcrumb"
-import CompleteDeck from "@/features/decks/CompleteDeck"
 import QuickAddAI from "@/features/decks/QuickAddAI"
-import DeckImportSection from "@/features/decks/DeckImportSection"
+import DeckAIActions from "@/features/decks/DeckAIActions"
 
 const MS_PER_DAY = 86_400_000
 const MAX_CREDITS = 30
@@ -68,8 +67,7 @@ export default async function DeckDetailPage({ params }: { params: Promise<{ id:
         </div>
 
         <QuickAddAI deckId={id} deckName={deck.name} accentColor={deck.accentColor} />
-        <CompleteDeck deckId={id} accentColor={deck.accentColor} />
-        <DeckImportSection deckId={id} credits={credits} />
+        <DeckAIActions deckId={id} accentColor={deck.accentColor} credits={credits} />
 
         <div className="space-y-2">
           <p className="text-sm font-medium text-zinc-700">{deck.cards.length} carte{deck.cards.length !== 1 ? "s" : ""}</p>

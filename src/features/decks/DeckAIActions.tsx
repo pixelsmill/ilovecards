@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import ImportFlow from "@/features/extraction/ImportFlow"
 
 interface SuggestedCard {
   notion: string
@@ -12,19 +13,25 @@ interface SuggestedCard {
 interface Props {
   deckId: string
   accentColor: string
+  credits: number
 }
 
-export default function CompleteDeck({ deckId, accentColor }: Props) {
+export default function DeckAIActions({ deckId, accentColor, credits }: Props) {
   const router = useRouter()
-  const [open, setOpen] = useState(false)
+  const [panel, setPanel] = useState<"complete" | "import" | null>(null)
   const [loading, setLoading] = useState(false)
-  const [cards, setCards] = useState<SuggestedCard[]>([])
+  const [suggestions, setSuggestions] = useState<SuggestedCard[]>([])
   const [saved, setSaved] = useState<Set<number>>(new Set())
 
-  async function generate() {
-    setOpen(true)
+  function openComplete() {
+    if (panel === "complete") { setPanel(null); return }
+    setPanel("complete")
+    runComplete()
+  }
+
+  async function runComplete() {
     setLoading(true)
-    setCards([])
+    setSuggestions([])
     setSaved(new Set())
 
     const res = await fetch("/api/ai/complete-deck", {
@@ -33,10 +40,7 @@ export default function CompleteDeck({ deckId, accentColor }: Props) {
       body: JSON.stringify({ deckId }),
     }).catch(() => null)
 
-    if (!res?.ok || !res.body) {
-      setLoading(false)
-      return
-    }
+    if (!res?.ok || !res.body) { setLoading(false); return }
 
     const reader = res.body.getReader()
     const decoder = new TextDecoder()
@@ -54,7 +58,7 @@ export default function CompleteDeck({ deckId, accentColor }: Props) {
         try {
           const obj = JSON.parse(trimmed)
           if (obj._done || obj._error) continue
-          if (obj.notion) setCards(prev => [...prev, obj as SuggestedCard])
+          if (obj.notion) setSuggestions(prev => [...prev, obj as SuggestedCard])
         } catch {}
       }
     }
@@ -79,36 +83,62 @@ export default function CompleteDeck({ deckId, accentColor }: Props) {
     }
   }
 
+  function handleImportSaved() {
+    router.refresh()
+    setPanel(null)
+  }
+
+  const unsaved = suggestions.filter((_, i) => !saved.has(i))
+
   return (
     <div className="space-y-3">
-      <button
-        type="button"
-        onClick={generate}
-        disabled={loading}
-        className="rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 transition-colors disabled:opacity-50"
-      >
-        {loading ? "Génération…" : "✦ Compléter ce deck"}
-      </button>
+      <div className="flex gap-2">
+        <button
+          type="button"
+          onClick={openComplete}
+          disabled={loading && panel === "complete"}
+          className={`flex-1 rounded-lg border px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50 ${
+            panel === "complete"
+              ? "border-zinc-900 bg-zinc-900 text-white"
+              : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50"
+          }`}
+        >
+          {loading && panel === "complete" ? "Génération…" : "✦ Compléter"}
+        </button>
+        <button
+          type="button"
+          onClick={() => setPanel(p => p === "import" ? null : "import")}
+          className={`flex-1 rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
+            panel === "import"
+              ? "border-zinc-900 bg-zinc-900 text-white"
+              : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50"
+          }`}
+        >
+          ✦ Importer
+        </button>
+      </div>
 
-      {open && (
+      {panel === "complete" && (
         <div className="rounded-xl border border-zinc-200 bg-white p-4 space-y-3">
           <div className="flex items-center justify-between">
             <p className="text-sm font-medium text-zinc-700">Suggestions IA</p>
-            <button
-              type="button"
-              onClick={() => { setOpen(false); setCards([]) }}
-              className="text-xs text-zinc-400 hover:text-zinc-600 transition-colors"
-            >
-              Fermer
-            </button>
+            {!loading && (
+              <button
+                type="button"
+                onClick={runComplete}
+                className="text-xs text-zinc-400 hover:text-zinc-600 transition-colors"
+              >
+                ↺ Regénérer
+              </button>
+            )}
           </div>
 
-          {loading && cards.length === 0 && (
+          {loading && suggestions.length === 0 && (
             <p className="text-sm text-zinc-400 text-center py-4">Analyse du deck en cours…</p>
           )}
 
           <div className="space-y-2">
-            {cards.map((card, i) => (
+            {suggestions.map((card, i) => (
               <div
                 key={i}
                 className={`rounded-lg border px-3 py-2.5 flex items-start gap-3 transition-opacity ${saved.has(i) ? "opacity-50" : "border-zinc-200"}`}
@@ -125,7 +155,7 @@ export default function CompleteDeck({ deckId, accentColor }: Props) {
                   <button
                     type="button"
                     onClick={() => saveCard(card, i)}
-                    className="text-xs font-semibold text-white rounded-md px-2.5 py-1 flex-shrink-0 transition-opacity hover:opacity-80"
+                    className="text-xs font-semibold text-white rounded-md px-2.5 py-1 flex-shrink-0 hover:opacity-80 transition-opacity"
                     style={{ backgroundColor: accentColor }}
                   >
                     Ajouter
@@ -135,15 +165,26 @@ export default function CompleteDeck({ deckId, accentColor }: Props) {
             ))}
           </div>
 
-          {!loading && cards.length > 0 && saved.size < cards.length && (
+          {!loading && unsaved.length > 1 && (
             <button
               type="button"
-              onClick={() => cards.forEach((c, i) => { if (!saved.has(i)) saveCard(c, i) })}
+              onClick={() => unsaved.forEach((c, i) => saveCard(c, suggestions.indexOf(c)))}
               className="w-full rounded-lg border border-zinc-200 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-50 transition-colors"
             >
-              Tout ajouter
+              Tout ajouter ({unsaved.length})
             </button>
           )}
+        </div>
+      )}
+
+      {panel === "import" && (
+        <div className="rounded-xl border border-zinc-200 bg-white p-4">
+          <ImportFlow
+            decks={[]}
+            fixedDeckId={deckId}
+            credits={credits}
+            onSaved={handleImportSaved}
+          />
         </div>
       )}
     </div>
