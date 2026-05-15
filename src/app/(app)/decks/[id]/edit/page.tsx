@@ -31,7 +31,7 @@ export default async function EditDeckPage({ params }: { params: Promise<{ id: s
   return (
     <main className="min-h-screen bg-zinc-50 px-4 py-8">
       <div className="max-w-2xl mx-auto space-y-6">
-        <Breadcrumb items={[{ label: "Accueil", href: "/dashboard" }, { label: "Mes decks", href: "/decks" }, { label: deck.name, href: `/decks/${id}` }, { label: "Modifier" }]} />
+        <Breadcrumb items={[{ label: "Accueil", href: "/dashboard" }, { label: deck.name, href: `/decks/${id}` }, { label: "Modifier" }]} />
         <h1 className="text-xl font-bold tracking-tight">Modifier le deck</h1>
         <DeckForm
           action={updateDeck}

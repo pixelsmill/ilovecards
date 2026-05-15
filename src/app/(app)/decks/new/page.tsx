@@ -21,13 +21,13 @@ export default async function NewDeckPage() {
     })
     if (!parsed.success) return
     await prisma.deck.create({ data: { ...parsed.data, userId: s.user.id } })
-    redirect("/decks")
+    redirect("/dashboard")
   }
 
   return (
     <main className="min-h-screen bg-zinc-50 px-4 py-8">
       <div className="max-w-2xl mx-auto space-y-6">
-        <Breadcrumb items={[{ label: "Accueil", href: "/dashboard" }, { label: "Mes decks", href: "/decks" }, { label: "Nouveau deck" }]} />
+        <Breadcrumb items={[{ label: "Accueil", href: "/dashboard" }, { label: "Nouveau deck" }]} />
         <h1 className="text-xl font-bold tracking-tight">Nouveau deck</h1>
         <DeckForm action={createDeck} submitLabel="Créer le deck" />
       </div>

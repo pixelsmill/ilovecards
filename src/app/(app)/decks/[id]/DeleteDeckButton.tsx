@@ -8,7 +8,7 @@ export default function DeleteDeckButton({ id }: { id: string }) {
   async function handleDelete() {
     if (!confirm("Supprimer ce deck et toutes ses cartes ? Cette action est irréversible.")) return
     const res = await fetch(`/api/decks/${id}`, { method: "DELETE" })
-    if (res.ok) router.push("/decks")
+    if (res.ok) router.push("/dashboard")
   }
 
   return (
