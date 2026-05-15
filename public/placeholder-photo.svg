@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 260" width="400" height="260">
+  <!-- Sky -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4A90D9"/>
+      <stop offset="100%" stop-color="#A8D4F5"/>
+    </linearGradient>
+    <linearGradient id="hill1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5A8A5A"/>
+      <stop offset="100%" stop-color="#3D6B3D"/>
+    </linearGradient>
+    <linearGradient id="hill2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#6B9E6B"/>
+      <stop offset="100%" stop-color="#4A7A4A"/>
+    </linearGradient>
+    <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8BBE6A"/>
+      <stop offset="100%" stop-color="#5A8A3A"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Sky background -->
+  <rect width="400" height="260" fill="url(#sky)"/>
+
+  <!-- Sun -->
+  <circle cx="310" cy="60" r="28" fill="#FFD93D" opacity="0.9"/>
+  <circle cx="310" cy="60" r="38" fill="#FFD93D" opacity="0.2"/>
+
+  <!-- Clouds -->
+  <ellipse cx="80" cy="55" rx="45" ry="18" fill="white" opacity="0.85"/>
+  <ellipse cx="110" cy="48" rx="35" ry="22" fill="white" opacity="0.85"/>
+  <ellipse cx="55" cy="52" rx="30" ry="15" fill="white" opacity="0.85"/>
+
+  <ellipse cx="220" cy="75" rx="35" ry="14" fill="white" opacity="0.7"/>
+  <ellipse cx="245" cy="69" rx="28" ry="17" fill="white" opacity="0.7"/>
+
+  <!-- Far mountains -->
+  <polygon points="0,180 60,110 120,160 180,100 240,145 300,95 360,130 400,105 400,200 0,200" fill="#7A9E7E" opacity="0.6"/>
+
+  <!-- Mid hills -->
+  <polygon points="-10,200 50,145 130,170 210,135 290,160 370,140 410,155 410,220 -10,220" fill="url(#hill1)"/>
+
+  <!-- Foreground ground -->
+  <polygon points="-10,210 80,185 180,200 280,180 400,195 410,260 -10,260" fill="url(#ground)"/>
+
+  <!-- Small trees (dark triangles) -->
+  <polygon points="60,185 68,155 76,185" fill="#2D5A2D"/>
+  <polygon points="72,190 81,157 90,190" fill="#2D5A2D"/>
+  <polygon points="300,180 308,152 316,180" fill="#2D5A2D"/>
+  <polygon points="315,185 324,155 333,185" fill="#2D5A2D"/>
+  <polygon points="160,195 170,162 180,195" fill="#3A6A3A"/>
+</svg>

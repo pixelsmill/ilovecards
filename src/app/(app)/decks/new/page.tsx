@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { CreateDeckSchema } from "@/lib/schemas/deck"
 import DeckForm from "@/features/decks/DeckForm"
+import Breadcrumb from "@/components/Breadcrumb"
 
 export default async function NewDeckPage() {
   const session = await auth()
@@ -25,13 +26,9 @@ export default async function NewDeckPage() {
 
   return (
     <main className="min-h-screen bg-zinc-50 px-4 py-8">
-      <div className="max-w-sm mx-auto space-y-6">
-        <div className="space-y-1">
-          <h1 className="text-xl font-bold tracking-tight">Nouveau deck</h1>
-          <Link href="/decks" className="text-sm text-zinc-400 hover:text-zinc-600 transition-colors">
-            ← Retour
-          </Link>
-        </div>
+      <div className="max-w-2xl mx-auto space-y-6">
+        <Breadcrumb items={[{ label: "Accueil", href: "/dashboard" }, { label: "Mes decks", href: "/decks" }, { label: "Nouveau deck" }]} />
+        <h1 className="text-xl font-bold tracking-tight">Nouveau deck</h1>
         <DeckForm action={createDeck} submitLabel="Créer le deck" />
       </div>
     </main>

@@ -6,12 +6,15 @@ import { UpdateCardSchema } from "@/lib/schemas/card"
 import { fetchUnsplashImage } from "@/lib/unsplash"
 import CardForm from "@/features/cards/CardForm"
 import DeleteCardButton from "@/features/cards/DeleteCardButton"
+import Breadcrumb from "@/components/Breadcrumb"
 
-export default async function EditCardPage({ params }: { params: Promise<{ id: string; cardId: string }> }) {
+export default async function EditCardPage({ params, searchParams }: { params: Promise<{ id: string; cardId: string }>; searchParams: Promise<{ returnTo?: string }> }) {
   const session = await auth()
   if (!session?.user?.id) redirect("/login")
 
   const { id: deckId, cardId } = await params
+  const { returnTo } = await searchParams
+  const safeReturnTo = returnTo?.startsWith("/") ? returnTo : undefined
   const card = await prisma.card.findUnique({ where: { id: cardId }, include: { deck: true } })
   if (!card || card.deck.userId !== session.user.id || card.deckId !== deckId) notFound()
 
@@ -39,6 +42,7 @@ export default async function EditCardPage({ params }: { params: Promise<{ id: s
       developpement: formData.get("developpement") || undefined,
       source: formData.get("source") || undefined,
       template,
+      verified: formData.get("verified") === "true",
       ...(imageUrl !== undefined && { imageUrl: imageUrl ?? undefined }),
     })
     if (!parsed.success) return
@@ -50,22 +54,20 @@ export default async function EditCardPage({ params }: { params: Promise<{ id: s
       where: { id: cardId },
       data: imageUrl !== undefined ? { ...parsed.data, imageUrl } : parsed.data,
     })
-    redirect(`/decks/${deckId}`)
+    const returnToValue = (formData.get("returnTo") as string | null)
+    redirect(returnToValue?.startsWith("/") ? returnToValue : `/decks/${deckId}`)
   }
 
   return (
     <main className="min-h-screen bg-zinc-50 px-4 py-8">
-      <div className="max-w-sm mx-auto space-y-6">
-        <div className="space-y-1">
-          <h1 className="text-xl font-bold tracking-tight">Modifier la carte</h1>
-          <Link href={`/decks/${deckId}`} className="text-sm text-zinc-400 hover:text-zinc-600 transition-colors">
-            ← {card.deck.name}
-          </Link>
-        </div>
+      <div className="max-w-2xl mx-auto space-y-6">
+        <Breadcrumb items={[{ label: "Accueil", href: "/dashboard" }, { label: "Mes decks", href: "/decks" }, { label: card.deck.name, href: `/decks/${deckId}` }, { label: "Modifier la carte" }]} />
+        <h1 className="text-xl font-bold tracking-tight">Modifier la carte</h1>
 
         <CardForm
           deckId={deckId}
           cardId={cardId}
+          returnTo={safeReturnTo}
           action={updateCard}
           accentColor={card.deck.accentColor}
           defaultValues={{
@@ -74,6 +76,7 @@ export default async function EditCardPage({ params }: { params: Promise<{ id: s
             source: card.source ?? undefined,
             template: card.template,
             imageUrl: card.imageUrl,
+            verified: card.verified,
           }}
           submitLabel="Enregistrer"
         />

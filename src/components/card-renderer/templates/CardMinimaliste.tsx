@@ -8,8 +8,7 @@ export default function CardMinimaliste({ notion, accentColor, size }: TemplateP
     <div
       className="h-full w-full flex items-center justify-center"
       style={{
-        background: `radial-gradient(circle at 50% 38%, ${accentColor}28 0%, ${accentColor}55 100%),
-                     linear-gradient(160deg, #F0EBE0 0%, #DDD5C5 100%)`,
+        backgroundColor: `color-mix(in srgb, ${accentColor} 12%, white 88%)`,
       }}
     >
       <div className={`text-center ${isThumb ? 'px-2' : isFull ? 'px-10' : 'px-5'}`}>

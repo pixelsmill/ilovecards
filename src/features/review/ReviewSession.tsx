@@ -101,18 +101,18 @@ interface Props {
   initialCards: ReviewCard[]
   mode: "browse" | "learn"
   backHref: string
+  initialCardId?: string
 }
 
-export default function ReviewSession({ initialCards, mode, backHref }: Props) {
+export default function ReviewSession({ initialCards, mode, backHref, initialCardId }: Props) {
   const total = initialCards.length
   const [state, dispatch] = useReducer(sessionReducer, {
     cards: initialCards,
-    index: 0,
+    index: initialCardId ? Math.max(0, initialCards.findIndex(c => c.id === initialCardId)) : 0,
     side: "recto",
     dismissed: 0,
   })
   const [menuOpen, setMenuOpen] = useState(false)
-  const [changingPhoto, setChangingPhoto] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
 
   // Computed once from the full initial session — doesn't change as cards are dismissed
@@ -166,18 +166,6 @@ export default function ReviewSession({ initialCards, mode, backHref }: Props) {
       body: JSON.stringify({ verified: newVerified }),
     }).catch(() => null)
     dispatch({ type: "TOGGLE_VERIFIED", cardId: current.id, verified: newVerified })
-  }
-
-  async function handleChangePhoto() {
-    if (!current) return
-    setMenuOpen(false)
-    setChangingPhoto(true)
-    const res = await fetch(`/api/cards/${current.id}`, { method: "PATCH" }).catch(() => null)
-    if (res?.ok) {
-      const data = await res.json()
-      dispatch({ type: "UPDATE_IMAGE", cardId: current.id, imageUrl: data.imageUrl })
-    }
-    setChangingPhoto(false)
   }
 
   if (!current) {
@@ -253,7 +241,7 @@ export default function ReviewSession({ initialCards, mode, backHref }: Props) {
             {menuOpen && (
               <div className="absolute right-0 top-full mt-1 w-44 rounded-xl bg-white shadow-lg overflow-hidden z-30">
                 <Link
-                  href={`/decks/${current.deck.id}/cards/${current.id}/edit`}
+                  href={`/decks/${current.deck.id}/cards/${current.id}/edit?returnTo=${encodeURIComponent(`/review?deckId=${current.deck.id}&mode=${mode}&cardId=${current.id}`)}`}
                   className="block px-4 py-3 text-sm text-zinc-700 hover:bg-zinc-50 transition-colors"
                   onClick={() => setMenuOpen(false)}
                 >
@@ -265,15 +253,6 @@ export default function ReviewSession({ initialCards, mode, backHref }: Props) {
                 >
                   {current.verified ? "Marquer non vérifiée" : "Marquer comme vérifiée"}
                 </button>
-                {current.imageUrl && (
-                  <button
-                    onClick={handleChangePhoto}
-                    disabled={changingPhoto}
-                    className="w-full text-left px-4 py-3 text-sm text-zinc-700 hover:bg-zinc-50 transition-colors disabled:opacity-40"
-                  >
-                    {changingPhoto ? "Chargement…" : "Changer la photo"}
-                  </button>
-                )}
                 <button
                   onClick={handleDelete}
                   className="w-full text-left px-4 py-3 text-sm text-red-500 hover:bg-red-50 transition-colors"

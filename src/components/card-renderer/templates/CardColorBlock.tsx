@@ -22,7 +22,7 @@ export default function CardColorBlock({ notion, accentColor, size }: TemplatePr
 
       <div
         className={`flex items-center ${isThumb ? 'px-1.5 py-1' : isFull ? 'px-7 py-5' : 'px-3 py-2.5'}`}
-        style={{ backgroundColor: '#F5EFE2', flex: '1' }}
+        style={{ backgroundColor: `color-mix(in srgb, ${accentColor} 12%, white 88%)`, flex: '1' }}
       >
         <div
           className={`rounded-full flex-shrink-0 ${isThumb ? 'w-1 h-1' : isFull ? 'w-3 h-3' : 'w-1.5 h-1.5'}`}

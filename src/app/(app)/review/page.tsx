@@ -7,12 +7,12 @@ import ReviewSession from "@/features/review/ReviewSession"
 export default async function ReviewPage({
   searchParams,
 }: {
-  searchParams: Promise<{ all?: string; deckId?: string; mode?: string }>
+  searchParams: Promise<{ all?: string; deckId?: string; mode?: string; cardId?: string }>
 }) {
   const session = await auth()
   if (!session?.user?.id) redirect("/login")
 
-  const { all, deckId, mode: modeParam } = await searchParams
+  const { all, deckId, mode: modeParam, cardId } = await searchParams
   const mode = modeParam === "browse" ? "browse" : "learn"
   const forceAll = all === "1" || mode === "browse"
 
@@ -70,5 +70,5 @@ export default async function ReviewPage({
     )
   }
 
-  return <ReviewSession initialCards={cards} mode={mode} backHref={backHref} />
+  return <ReviewSession initialCards={cards} mode={mode} backHref={backHref} initialCardId={cardId} />
 }

@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation"
-import Link from "next/link"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import ImportFlow from "@/features/extraction/ImportFlow"
+import Breadcrumb from "@/components/Breadcrumb"
 
 const MS_PER_DAY = 86_400_000
 const MAX_CREDITS = 30
@@ -30,13 +30,9 @@ export default async function ImportPage({ searchParams }: { searchParams: Promi
 
   return (
     <main className="min-h-screen bg-zinc-50 px-4 py-8">
-      <div className="max-w-md mx-auto space-y-6">
-        <div className="space-y-1">
-          <h1 className="text-xl font-bold tracking-tight">Générer des cartes</h1>
-          <Link href="/dashboard" className="text-sm text-zinc-400 hover:text-zinc-600 transition-colors">
-            ← Accueil
-          </Link>
-        </div>
+      <div className="max-w-2xl mx-auto space-y-6">
+        <Breadcrumb items={[{ label: "Accueil", href: "/dashboard" }, { label: "Import IA" }]} />
+        <h1 className="text-xl font-bold tracking-tight">Générer des cartes</h1>
         <ImportFlow decks={decks} defaultDeckId={deckId} credits={credits} />
       </div>
     </main>

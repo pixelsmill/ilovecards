@@ -23,11 +23,6 @@ export default function CardSature({ notion, accentColor, size }: TemplateProps)
           )`,
         }}
       />
-      <div
-        className={`absolute bottom-0 right-0 bg-black/25 ${
-          isThumb ? 'w-6 h-6' : isFull ? 'w-24 h-24' : 'w-12 h-12'
-        }`}
-      />
       <p
         className={`relative z-10 text-white font-black text-center leading-tight ${
           isThumb ? 'text-[7px] px-2' : isFull ? 'text-4xl px-8' : 'text-[12px] px-4'

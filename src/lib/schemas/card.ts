@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-export const TEMPLATES = ['poster', 'quote', 'magazine', 'color-block', 'photo-overlay', 'minimaliste', 'equation', 'sature'] as const
+export const TEMPLATES = ['poster', 'quote', 'magazine', 'color-block', 'minimaliste', 'equation', 'sature', 'photo-overlay'] as const
 export type TemplateType = typeof TEMPLATES[number]
 
 export const CreateCardSchema = z.object({

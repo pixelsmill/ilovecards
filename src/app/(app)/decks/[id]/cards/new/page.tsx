@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma"
 import { CreateCardSchema } from "@/lib/schemas/card"
 import { fetchUnsplashImage } from "@/lib/unsplash"
 import CardForm from "@/features/cards/CardForm"
+import Breadcrumb from "@/components/Breadcrumb"
 
 export default async function NewCardPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth()
@@ -42,13 +43,9 @@ export default async function NewCardPage({ params }: { params: Promise<{ id: st
 
   return (
     <main className="min-h-screen bg-zinc-50 px-4 py-8">
-      <div className="max-w-sm mx-auto space-y-6">
-        <div className="space-y-1">
-          <h1 className="text-xl font-bold tracking-tight">Nouvelle carte</h1>
-          <Link href={`/decks/${deckId}`} className="text-sm text-zinc-400 hover:text-zinc-600 transition-colors">
-            ← {deck.name}
-          </Link>
-        </div>
+      <div className="max-w-2xl mx-auto space-y-6">
+        <Breadcrumb items={[{ label: "Accueil", href: "/dashboard" }, { label: "Mes decks", href: "/decks" }, { label: deck.name, href: `/decks/${deckId}` }, { label: "Nouvelle carte" }]} />
+        <h1 className="text-xl font-bold tracking-tight">Nouvelle carte</h1>
         <CardForm
           deckId={deckId}
           action={createCard}

@@ -9,7 +9,7 @@ const TEMPLATE_LABELS: Record<string, string> = {
   quote: "Citation",
   magazine: "Magazine",
   "color-block": "Bloc",
-  "photo-overlay": "Overlay",
+  "photo-overlay": "Image",
   equation: "Équation",
   sature: "Saturé",
 }
@@ -41,7 +41,11 @@ export default function TemplatePicker({ selected, onChange, accentColor = "#636
             }}
           >
             <CardRenderer
-              card={{ notion: SAMPLE_NOTION, template }}
+              card={{
+                notion: SAMPLE_NOTION,
+                template,
+                ...(template === "photo-overlay" ? { imageUrl: "/placeholder-photo.svg" } : {}),
+              }}
               size="thumb"
               accentColor={accentColor}
             />

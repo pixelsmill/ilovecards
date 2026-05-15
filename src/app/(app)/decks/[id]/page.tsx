@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma"
 import DeleteDeckButton from "./DeleteDeckButton"
 import ShareButton from "@/features/decks/ShareButton"
 import VerifyCardButton from "@/features/cards/VerifyCardButton"
+import Breadcrumb from "@/components/Breadcrumb"
 
 export default async function DeckDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth()
@@ -21,14 +22,10 @@ export default async function DeckDetailPage({ params }: { params: Promise<{ id:
   return (
     <main className="min-h-screen bg-zinc-50 px-4 py-8">
       <div className="max-w-2xl mx-auto space-y-6">
-        <div className="space-y-1">
-          <Link href="/decks" className="text-sm text-zinc-400 hover:text-zinc-600 transition-colors">
-            ← Mes decks
-          </Link>
-          <div className="flex items-center gap-3">
-            <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: deck.accentColor }} />
-            <h1 className="text-xl font-bold tracking-tight flex-1">{deck.name}</h1>
-          </div>
+        <Breadcrumb items={[{ label: "Accueil", href: "/dashboard" }, { label: "Mes decks", href: "/decks" }, { label: deck.name }]} />
+        <div className="flex items-center gap-3">
+          <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: deck.accentColor }} />
+          <h1 className="text-xl font-bold tracking-tight flex-1">{deck.name}</h1>
         </div>
 
         {deck.description && <p className="text-sm text-zinc-500">{deck.description}</p>}

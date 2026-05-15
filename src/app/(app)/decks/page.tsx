@@ -3,6 +3,7 @@ import { redirect } from "next/navigation"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import DeckCard from "@/features/decks/DeckCard"
+import Breadcrumb from "@/components/Breadcrumb"
 
 export default async function DecksPage() {
   const session = await auth()
@@ -26,6 +27,7 @@ export default async function DecksPage() {
   return (
     <main className="min-h-screen bg-zinc-50 px-4 py-8">
       <div className="max-w-2xl mx-auto space-y-6">
+        <Breadcrumb items={[{ label: "Accueil", href: "/dashboard" }, { label: "Mes decks" }]} />
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold tracking-tight">Mes decks</h1>
           <Link

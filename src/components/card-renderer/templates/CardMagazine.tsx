@@ -1,6 +1,6 @@
 import type { TemplateProps } from '../CardRenderer'
 
-export default function CardMagazine({ notion, size }: TemplateProps) {
+export default function CardMagazine({ notion, size, accentColor = '#C68A3A' }: TemplateProps) {
   const isThumb = size === 'thumb'
   const isFull = size === 'full'
 
@@ -12,13 +12,13 @@ export default function CardMagazine({ notion, size }: TemplateProps) {
       <div className={isThumb ? 'p-1.5' : isFull ? 'p-7' : 'p-3'}>
         <p
           className={`font-semibold uppercase tracking-widest ${isThumb ? 'text-[4px]' : isFull ? 'text-[10px]' : 'text-[5px]'}`}
-          style={{ color: '#C68A3A' }}
+          style={{ color: accentColor }}
         >
           Concept
         </p>
         <div
           className={`${isThumb ? 'mt-1 pt-1' : isFull ? 'mt-[22px] pt-4' : 'mt-1.5 pt-1.5'}`}
-          style={{ borderTop: '1px solid #C68A3A' }}
+          style={{ borderTop: `1px solid ${accentColor}` }}
         >
           <p
             className={`font-semibold leading-tight ${

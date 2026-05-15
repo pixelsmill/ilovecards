@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation"
-import Link from "next/link"
 import { auth, signOut } from "@/lib/auth"
 import DeleteAccountButton from "./DeleteAccountButton"
+import Breadcrumb from "@/components/Breadcrumb"
 
 export default async function AccountPage() {
   const session = await auth()
@@ -9,7 +9,8 @@ export default async function AccountPage() {
 
   return (
     <main className="flex min-h-screen items-start justify-center bg-zinc-50 pt-16">
-      <div className="w-full max-w-sm space-y-8 p-8">
+      <div className="w-full max-w-2xl space-y-8 p-8">
+        <Breadcrumb items={[{ label: "Accueil", href: "/dashboard" }, { label: "Mon compte" }]} />
         <div className="space-y-1">
           <h1 className="text-xl font-bold tracking-tight">Mon compte</h1>
           <p className="text-sm text-zinc-500">{session.user?.email}</p>
@@ -40,12 +41,6 @@ export default async function AccountPage() {
           <DeleteAccountButton />
         </div>
 
-        <Link
-          href="/dashboard"
-          className="block text-center text-sm text-zinc-400 hover:text-zinc-600 transition-colors"
-        >
-          ← Accueil
-        </Link>
       </div>
     </main>
   )
