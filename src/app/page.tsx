@@ -327,9 +327,9 @@ export default async function HomePage() {
       */}
 
       {/* PRICING */}
-      <section className="px-6 py-20" style={{ background: "#FBF9F4" }}>
+      <section className="px-6 py-20" style={{ background: "#1A1814" }}>
         <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4" style={{ color: "#1A1814" }}>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4" style={{ color: "#FBF9F4" }}>
             Simple et gratuit pour commencer
           </h2>
           <p className="text-sm mb-12" style={{ color: "#6B6356" }}>
@@ -374,7 +374,7 @@ export default async function HomePage() {
             {/* Pro */}
             <div
               className="flex-1 max-w-xs rounded-2xl p-8 text-left space-y-4 border"
-              style={{ background: "#1A1814", borderColor: "transparent" }}
+              style={{ background: "rgba(251,249,244,0.05)", borderColor: "rgba(251,249,244,0.08)" }}
             >
               <div>
                 <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: "#C68A3A", fontFamily: "var(--font-jetbrains-mono), monospace" }}>Pro</p>
