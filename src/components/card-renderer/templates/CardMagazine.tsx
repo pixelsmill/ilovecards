@@ -11,7 +11,7 @@ export default function CardMagazine({ notion, size, accentColor = '#C68A3A' }: 
     >
       <div className={isThumb ? 'p-1.5' : isFull ? 'p-7' : 'p-3'}>
         <div
-          className={`${isThumb ? 'mt-1 pt-1' : isFull ? 'mt-[22px] pt-4' : 'mt-1.5 pt-1.5'}`}
+          className={`${isThumb ? 'mt-[6px] pt-1' : isFull ? 'mt-[32px] pt-4' : 'mt-[10px] pt-1.5'}`}
           style={{ borderTop: `1px solid ${accentColor}` }}
         >
           <p
