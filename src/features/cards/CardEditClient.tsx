@@ -6,6 +6,14 @@ import TemplatePicker from "./TemplatePicker"
 import DeleteCardButton from "./DeleteCardButton"
 import type { UnsplashPhoto } from "@/lib/unsplash"
 
+function TapIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M8 13V4.5a1.5 1.5 0 0 1 3 0V12m0 0v-2a1.5 1.5 0 0 1 3 0v2m0 0a1.5 1.5 0 0 1 3 0v1m0 0a5 5 0 0 1-5 6H9a5 5 0 0 1-5-5v-2a1.5 1.5 0 0 1 3 0v2" />
+    </svg>
+  )
+}
+
 const MAX_PX = 800
 
 function resizeImage(file: File): Promise<Blob> {
@@ -151,7 +159,7 @@ export default function CardEditClient({ deckId, cardId, deckName, accentColor, 
           />
         </div>
         <div className="flex items-center gap-2 text-[11px] text-zinc-500">
-          <span>· clic pour retourner ·</span>
+          <span className="flex items-center gap-1"><TapIcon /> retourner</span>
           {template === "photo-overlay" && imageUrl && (
             <span className="rounded-full bg-zinc-600 px-2 py-0.5 text-zinc-300">
               {imageSourceLabel(imageUrl)}

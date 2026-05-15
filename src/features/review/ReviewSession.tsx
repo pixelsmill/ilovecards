@@ -5,6 +5,14 @@ import Link from "next/link"
 import CardRenderer from "@/components/card-renderer/CardRenderer"
 import SwipeCard from "./SwipeCard"
 
+function TapIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M8 13V4.5a1.5 1.5 0 0 1 3 0V12m0 0v-2a1.5 1.5 0 0 1 3 0v2m0 0a1.5 1.5 0 0 1 3 0v1m0 0a5 5 0 0 1-5 6H9a5 5 0 0 1-5-5v-2a1.5 1.5 0 0 1 3 0v2" />
+    </svg>
+  )
+}
+
 interface ReviewCard {
   id: string
   notion: string
@@ -247,13 +255,13 @@ export default function ReviewSession({ initialCards, mode, backHref, initialCar
           {mode === "browse" ? (
             <>
               <span>← préc</span>
-              <span>· clic : retourner ·</span>
+              <span className="flex items-center gap-1"><TapIcon /> retourner</span>
               <span>suiv →</span>
             </>
           ) : (
             <>
               <span style={{ color: "#ef4444" }}>↓ à revoir</span>
-              <span>· clic : retourner ·</span>
+              <span className="flex items-center gap-1"><TapIcon /> retourner</span>
               <span style={{ color: "#22c55e" }}>↑ maîtrisé</span>
             </>
           )}
