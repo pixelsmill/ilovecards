@@ -258,7 +258,7 @@ export default async function HomePage() {
             La méthode SM-2
           </p>
           <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8" style={{ color: "#1A1814" }}>
-            Un assistant qui apprend comment vous apprenez
+            Un assistant qui s&apos;adapte à votre rythme d&apos;apprentissage
           </h2>
           <p className="text-base leading-relaxed text-center mb-14" style={{ color: "#6B6356" }}>
             Imaginez que vous feuilletez vos notes et que, pour chaque page, vous vous dites simplement : « ça, je le savais » ou « ça, j&apos;avais oublié ». Quelqu&apos;un note vos impressions et décide quand vous représenter chaque note. Ce que vous maîtrisez bien revient moins souvent. Ce qui vous échappe revient vite.
